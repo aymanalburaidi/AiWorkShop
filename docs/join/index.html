@@ -99,6 +99,13 @@ details.prompt .btn{margin:0 14px 14px;min-height:44px;font-size:.95rem;backgrou
 .sheet-card p{color:var(--muted);font-size:.95rem;margin-bottom:14px}
 .sheet-card .err{color:#b42318;font-size:.88rem;margin-top:8px}
 .sheet-card .btn{margin-top:14px}
+.school-label{margin-top:14px;margin-bottom:6px;font-size:.92rem;color:var(--muted)}
+.school-pick{display:grid;gap:8px}
+.school-opt{display:flex;align-items:center;gap:10px;min-height:52px;padding:10px 14px;border-radius:14px;border:1.5px solid var(--line);background:#fff;color:var(--ink);font-size:1.02rem;text-align:right;transition:border-color .15s,background .15s}
+.school-opt i{width:14px;height:14px;border-radius:50%;background:var(--sc);flex:none;box-shadow:0 0 0 3px color-mix(in srgb,var(--sc) 20%,transparent)}
+.school-opt.on{border-color:var(--sc);background:color-mix(in srgb,var(--sc) 9%,#fff);color:var(--sc);font-weight:500}
+.me .sc{display:inline-flex;align-items:center;gap:5px;font-size:.78rem;background:rgba(255,255,255,.14);border-radius:999px;padding:2px 8px}
+.me .sc i{width:8px;height:8px;border-radius:50%;background:var(--sc)}
 .toast{position:fixed;z-index:70;top:calc(env(safe-area-inset-top) + 12px);right:16px;left:16px;max-width:528px;margin:0 auto;background:var(--green);color:#fff;padding:12px 16px;border-radius:14px;box-shadow:0 12px 30px -10px rgba(0,0,0,.35);transform:translateY(-160%);transition:transform .3s var(--ease);text-align:center}
 .toast.err{background:#b42318}
 .toast.on{transform:none}
@@ -143,6 +150,7 @@ details.prompt .btn{margin:0 14px 14px;min-height:44px;font-size:.95rem;backgrou
     <symbol id="i-alert" viewBox="0 0 24 24"><path d="M12 4l9 16H3z"/><path d="M12 10v4M12 17h.01"/></symbol>
     <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M17 7 7 17M16 17H7V8"/></symbol>
     <symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-8 8-8s8 3.6 8 8"/></symbol>
+    <symbol id="i-grad" viewBox="0 0 24 24"><path d="M2 9l10-5 10 5-10 5z"/><path d="M6 11v5c0 1.5 2.7 3 6 3s6-1.5 6-3v-5M22 9v5"/></symbol>
     <symbol id="i-award" viewBox="0 0 24 24"><circle cx="12" cy="9" r="6"/><path d="M8.5 14 7 22l5-3 5 3-1.5-8"/></symbol>
     <symbol id="i-qr" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><path d="M14 14h3v3h-3zM20 14v.01M14 20h.01M17 20h4v-3"/></symbol>
     <symbol id="i-school" viewBox="0 0 24 24"><path d="M3 21h18M5 21V10l7-5 7 5v11"/><path d="M10 21v-5h4v5"/></symbol>
@@ -174,7 +182,7 @@ details.prompt .btn{margin:0 14px 14px;min-height:44px;font-size:.95rem;backgrou
     <h1>الذكاء الاصطناعي في خدمة المعلم والمعلمة</h1>
     <div class="hero-row">
       <div class="status" id="status"><span class="dot"></span><span id="statusTxt"></span></div>
-      <div class="me" id="me" hidden><span id="meName"></span><button id="changeName">تغيير الاسم</button></div>
+      <div class="me" id="me" hidden><span id="meName"></span><span class="sc" id="meSchool"></span><button id="changeName">تعديل</button></div>
     </div>
   </section>
 
@@ -218,16 +226,19 @@ details.prompt .btn{margin:0 14px 14px;min-height:44px;font-size:.95rem;backgrou
 <div class="sheet" id="sheet" hidden>
   <form class="sheet-card" id="nameForm">
     <h2>أهلًا بك في ورشة العمل</h2>
-    <p>الاسم الثلاثي مرة واحدة فقط، ويظهر مع المشاركات على الشاشة. يحفظه الجوال فلا حاجة لكتابته مرة أخرى.</p>
+    <p>الاسم الثلاثي والمدرسة مرة واحدة فقط، ويظهران مع المشاركات على الشاشة. يحفظهما الجوال فلا حاجة لكتابتهما مرة أخرى.</p>
     <input id="nameInput" maxlength="80" autocomplete="name" enterkeyhint="done" placeholder="مثال: نورة عبدالله الشمري">
     <div class="err" id="nameErr" hidden>الاسم الثلاثي كاملًا مطلوب (ثلاث كلمات على الأقل).</div>
+    <div class="school-label">المدرسة</div>
+    <div class="school-pick" id="schoolPick"></div>
+    <div class="err" id="schoolErr" hidden>اختيار المدرسة مطلوب.</div>
     <button class="btn full" type="submit">دخول</button>
   </form>
 </div>
 <div class="toast" id="toast"></div>
 
 <script>
-const D = {"url":"https://dqedhfwaquqaddbtfvtx.supabase.co","key":"sb_publishable_zROcySsWThanD_me0Dq8dw_tGAHzGKk","room":"hs7-ai","joinUrl":"https://aymanalburaidi.github.io/AiWorkShop/join/","bucket":"aiws-uploads","polls":{"p1":{"question":"ما المهمة التي تأخذ أكثر وقتك كل أسبوع؟","options":["تحضير الدروس وتخطيطها","إعداد الأسئلة والاختبارات","التصحيح وكتابة التغذية الراجعة","تكييف المحتوى لمستويات الطالبات"]},"p2":{"question":"ما أول استخدام للتجربة هذا الأسبوع؟","options":["تخطيط درس","إعداد اختبار قصير","كتابة تغذية راجعة","تبسيط نص لطالباتي"]}},"prompts":[{"title":"تخطيط درس","text":"أنت معلم [اسم المادة] خبير في المرحلة الثانوية. أعدّ خطة درس لموضوع [اسم الموضوع] لطالبات [الصف]، مدة الحصة [45] دقيقة. تضمّن: 3 أهداف قابلة للقياس، وتهيئة من واقع الطالبة، وخطوات الشرح، ونشاطًا تعاونيًا، وتقويمًا ختاميًا من 3 أسئلة، وواجبًا قصيرًا. اعرض الخطة في جدول مع زمن كل مرحلة.","icon":"clipboard"},{"title":"اختبار قصير","text":"أعدّ اختبارًا قصيرًا في موضوع [اسم الموضوع] لمادة [اسم المادة]، [الصف]، من [5] أسئلة اختيار من متعدد وسؤالين مقاليين قصيرين، بمستويات متدرجة (تذكّر، فهم، تطبيق، تفكير عليا). اجعل البدائل الخاطئة من أخطاء الطالبات الشائعة، وأضف مفتاح الإجابة مع تعليل مختصر لكل إجابة.","icon":"chart"},{"title":"تغذية راجعة","text":"هذه إجابة طالبة (دون اسمها) عن السؤال: [نص السؤال]. الإجابة: [إجابة الطالبة]. اكتب لها تغذية راجعة في 3 أسطر: نقطة قوة، وخطأ واحد مع توضيحه، وخطوة عملية للتحسين، بلغة مشجعة تناسب طالبة [الصف].","icon":"msg"},{"title":"تبسيط نص","text":"بسّط الفقرة الآتية لطالبة في [الصف] تجد صعوبة في مادة [اسم المادة]، مع الحفاظ على الدقة العلمية. استخدم جملًا قصيرة ومثالًا من الحياة اليومية، ثم أضف سؤالين للتحقق من الفهم. النص: [الصق النص هنا]","icon":"refresh"},{"title":"صورة توضيحية لدرسك","text":"ارسم صورة توضيحية ملونة بأسلوب رسوم تعليمية مبسطة لطالبات المرحلة الثانوية، تشرح مفهوم [اسم المفهوم] في مادة [اسم المادة]. أضف عناصر بصرية تساعد على الفهم، واجعل الخلفية بسيطة، ولا تضع نصوصًا طويلة داخل الصورة.","icon":"image"},{"title":"صفحة تفاعلية لطالباتك","text":"أنشئ صفحة ويب تفاعلية باللغة العربية (من اليمين إلى اليسار) لمراجعة درس [اسم الدرس] في مادة [اسم المادة] لطالبات [الصف]. تحتوي الصفحة على [8] بطاقات تنقلب عند الضغط لتظهر الإجابة، واختبار قصير من [5] أسئلة يعرض الدرجة في النهاية. اجعل التصميم بألوان هادئة ومناسبًا للجوال.","icon":"layout"}],"t":{"page_title":"المشاركة في ورشة العمل","name_title":"أهلًا بك في ورشة العمل","name_text":"الاسم الثلاثي مرة واحدة فقط، ويظهر مع المشاركات على الشاشة. يحفظه الجوال فلا حاجة لكتابته مرة أخرى.","name_placeholder":"مثال: نورة عبدالله الشمري","name_error":"الاسم الثلاثي كاملًا مطلوب (ثلاث كلمات على الأقل).","name_button":"دخول","hello":"مرحبًا","change_name":"تغيير الاسم","welcome_title":"الصفحة مفتوحة طوال ورشة العمل","welcome_text":"عندما يبدأ التصويت أو نشاط جديد يظهر هنا تلقائيًا.","poll_now":"تصويت الآن","poll_done":"سجّلنا صوتك، والنتيجة على الشاشة الآن.","share_title":"مشاركة جديدة","share_hint":"الأمر المجرَّب أو النتيجة كاملة مهما طالت، وتظهر المشاركة على الشاشة أمام الجميع.","create_title":"تحدّي الإبداع: رفع العمل","create_hint":"صورة من صنعك أو رابط صفحتك، مع وصف قصير.","share_placeholder":"النص أو الرابط هنا","attach_image":"إرفاق صورة","remove_image":"حذف الصورة","share_button":"إرسال","sending":"جارٍ الإرسال","share_sent":"وصلت مشاركتك، وتظهر الآن على الشاشة.","share_privacy":"بدون أسماء الطالبات أو بياناتهن.","sent_title":"مشاركاتك","prompts_title":"الأوامر الجاهزة","contact_title":"الصفحات الاجتماعية للمدرب","contact_button":"حسابات التواصل","error_rate":"مشاركات متتالية كثيرة، والإرسال متاح مجددًا بعد دقيقة.","error_net":"تعذّر الإرسال بسبب ضعف الاتصال بالإنترنت. المحاولة مجددًا بعد لحظات.","error_image":"تعذّر رفع الصورة، والمحاولة ممكنة بصورة أخرى.","offline":"الاتصال ضعيف، نعيد المحاولة تلقائيًا","online":"متصل بالعرض","word_title":"بكلمة واحدة","word_question":"ما أول كلمة تخطر ببالك عند سماع \"الذكاء الاصطناعي في التعليم\"؟","word_placeholder":"كلمة أو كلمتان","word_button":"إرسال","word_sent":"وصلت الكلمة، ويمكن إرسال كلمة أخرى."},"copy":"نسخ","copied":"تم"};
+const D = {"url":"https://dqedhfwaquqaddbtfvtx.supabase.co","key":"sb_publishable_zROcySsWThanD_me0Dq8dw_tGAHzGKk","room":"hs7-ai","joinUrl":"https://aymanalburaidi.github.io/AiWorkShop/join/","bucket":"aiws-uploads","polls":{"p1":{"question":"ما المهمة التي تأخذ أكثر وقتك كل أسبوع؟","options":["تحضير الدروس وتخطيطها","إعداد الأسئلة والاختبارات","التصحيح وكتابة التغذية الراجعة","تكييف المحتوى لمستويات الطالبات"]},"p2":{"question":"ما أول استخدام للتجربة هذا الأسبوع؟","options":["تخطيط درس","إعداد اختبار قصير","كتابة تغذية راجعة","تبسيط نص لطالباتي"]}},"schools":[{"key":"p16","name":"الابتدائية السادسة عشر","color":"#7258a4"},{"key":"s7","name":"الثانوية السابعة","color":"#0a8f8c"}],"prompts":[{"title":"تخطيط درس","text":"أنت معلم [اسم المادة] خبير في [المرحلة: الابتدائية أو الثانوية]. أعدّ خطة درس لموضوع [اسم الموضوع] لطالبات [الصف]، مدة الحصة [45] دقيقة. تضمّن: 3 أهداف قابلة للقياس، وتهيئة من واقع الطالبة، وخطوات الشرح، ونشاطًا تعاونيًا، وتقويمًا ختاميًا من 3 أسئلة، وواجبًا قصيرًا. اعرض الخطة في جدول مع زمن كل مرحلة.","icon":"clipboard"},{"title":"اختبار قصير","text":"أعدّ اختبارًا قصيرًا في موضوع [اسم الموضوع] لمادة [اسم المادة]، [الصف]، من [5] أسئلة اختيار من متعدد وسؤالين مقاليين قصيرين، بمستويات متدرجة (تذكّر، فهم، تطبيق، تفكير عليا). اجعل البدائل الخاطئة من أخطاء الطالبات الشائعة، وأضف مفتاح الإجابة مع تعليل مختصر لكل إجابة.","icon":"chart"},{"title":"تغذية راجعة","text":"هذه إجابة طالبة (دون اسمها) عن السؤال: [نص السؤال]. الإجابة: [إجابة الطالبة]. اكتب لها تغذية راجعة في 3 أسطر: نقطة قوة، وخطأ واحد مع توضيحه، وخطوة عملية للتحسين، بلغة مشجعة تناسب طالبة [الصف].","icon":"msg"},{"title":"تبسيط نص","text":"بسّط الفقرة الآتية لطالبة في [الصف] تجد صعوبة في مادة [اسم المادة]، مع الحفاظ على الدقة العلمية. استخدم جملًا قصيرة ومثالًا من الحياة اليومية، ثم أضف سؤالين للتحقق من الفهم. النص: [الصق النص هنا]","icon":"refresh"},{"title":"صورة توضيحية لدرسك","text":"ارسم صورة توضيحية ملونة بأسلوب رسوم تعليمية مبسطة لطالبات [الصف]، تشرح مفهوم [اسم المفهوم] في مادة [اسم المادة]. أضف عناصر بصرية تساعد على الفهم، واجعل الخلفية بسيطة، ولا تضع نصوصًا طويلة داخل الصورة.","icon":"image"},{"title":"صفحة تفاعلية لطالباتك","text":"أنشئ صفحة ويب تفاعلية باللغة العربية (من اليمين إلى اليسار) لمراجعة درس [اسم الدرس] في مادة [اسم المادة] لطالبات [الصف]. تحتوي الصفحة على [8] بطاقات تنقلب عند الضغط لتظهر الإجابة، واختبار قصير من [5] أسئلة يعرض الدرجة في النهاية. اجعل التصميم بألوان هادئة ومناسبًا للجوال.","icon":"layout"}],"t":{"page_title":"المشاركة في ورشة العمل","name_title":"أهلًا بك في ورشة العمل","name_text":"الاسم الثلاثي والمدرسة مرة واحدة فقط، ويظهران مع المشاركات على الشاشة. يحفظهما الجوال فلا حاجة لكتابتهما مرة أخرى.","name_placeholder":"مثال: نورة عبدالله الشمري","name_error":"الاسم الثلاثي كاملًا مطلوب (ثلاث كلمات على الأقل).","school_label":"المدرسة","school_error":"اختيار المدرسة مطلوب.","name_button":"دخول","hello":"مرحبًا","change_name":"تعديل","welcome_title":"الصفحة مفتوحة طوال ورشة العمل","welcome_text":"عندما يبدأ التصويت أو نشاط جديد يظهر هنا تلقائيًا.","poll_now":"تصويت الآن","poll_done":"سجّلنا صوتك، والنتيجة على الشاشة الآن.","share_title":"مشاركة جديدة","share_hint":"الأمر المجرَّب أو النتيجة كاملة مهما طالت، وتظهر المشاركة على الشاشة أمام الجميع.","create_title":"تحدّي الإبداع: رفع العمل","create_hint":"صورة من صنعك أو رابط صفحتك، مع وصف قصير.","share_placeholder":"النص أو الرابط هنا","attach_image":"إرفاق صورة","remove_image":"حذف الصورة","share_button":"إرسال","sending":"جارٍ الإرسال","share_sent":"وصلت مشاركتك، وتظهر الآن على الشاشة.","share_privacy":"بدون أسماء الطالبات أو بياناتهن.","sent_title":"مشاركاتك","prompts_title":"الأوامر الجاهزة","contact_title":"الصفحات الاجتماعية للمدرب","contact_button":"حسابات التواصل","error_rate":"مشاركات متتالية كثيرة، والإرسال متاح مجددًا بعد دقيقة.","error_net":"تعذّر الإرسال بسبب ضعف الاتصال بالإنترنت. المحاولة مجددًا بعد لحظات.","error_image":"تعذّر رفع الصورة، والمحاولة ممكنة بصورة أخرى.","offline":"الاتصال ضعيف، نعيد المحاولة تلقائيًا","online":"متصل بالعرض","word_title":"بكلمة واحدة","word_question":"ما أول كلمة تخطر ببالك عند سماع \"الذكاء الاصطناعي في التعليم\"؟","word_placeholder":"كلمة أو كلمتان","word_button":"إرسال","word_sent":"وصلت الكلمة، ويمكن إرسال كلمة أخرى."},"copy":"نسخ","copied":"تم"};
 const $ = s => document.querySelector(s);
 const ico = id => `<svg class="icon"><use href="#${id}"/></svg>`;
 const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
@@ -245,30 +256,44 @@ function toast(msg, err){ const t = $('#toast'); t.textContent = msg; t.classNam
 
 let sb = null, state = { mode: 'idle', poll_key: null }, presence = null;
 let name = store.get('name', '');
+let school = store.get('school', '');
+const SCHOOLS = Object.fromEntries((D.schools || []).map(x => [x.key, x]));
+if (school && !SCHOOLS[school]) school = '';
 
 /* ---------- الاسم الثلاثي (مرة واحدة، يُحفظ في الجوال) ---------- */
 const validName = n => n.trim().split(/\s+/).filter(w => w.length >= 2).length >= 3;
 function showName(){
   $('#me').hidden = !name;
   $('#meName').textContent = name ? D.t.hello + '، ' + name.split(/\s+/)[0] : '';
+  const sc = SCHOOLS[school];
+  $('#meSchool').hidden = !sc;
+  if (sc) { $('#meSchool').style.setProperty('--sc', sc.color); $('#meSchool').innerHTML = '<i></i>'; $('#meSchool').append(sc.name); }
 }
-function openSheet(){ $('#nameInput').value = name; $('#nameErr').hidden = true; $('#sheet').hidden = false; setTimeout(() => $('#nameInput').focus(), 250); }
+let pickedSchool = '';
+function renderPick(){
+  $('#schoolPick').innerHTML = (D.schools || []).map(sc => `<button type="button" class="school-opt ${sc.key === pickedSchool ? 'on' : ''}" data-k="${esc(sc.key)}" style="--sc:${esc(sc.color)}"><i></i>${esc(sc.name)}</button>`).join('');
+  document.querySelectorAll('.school-opt').forEach(b => b.onclick = () => { pickedSchool = b.dataset.k; $('#schoolErr').hidden = true; renderPick(); });
+}
+function openSheet(){ $('#nameInput').value = name; $('#nameErr').hidden = true; $('#schoolErr').hidden = true; pickedSchool = school; renderPick(); $('#sheet').hidden = false; setTimeout(() => $('#nameInput').focus(), 250); }
 $('#changeName').onclick = openSheet;
 $('#nameForm').onsubmit = e => {
   e.preventDefault();
   const v = $('#nameInput').value.trim().replace(/\s+/g, ' ');
-  if (!validName(v)) { $('#nameErr').hidden = false; return; }
+  const okName = validName(v), okSchool = !!SCHOOLS[pickedSchool];
+  $('#nameErr').hidden = okName; $('#schoolErr').hidden = okSchool;
+  if (!okName || !okSchool) return;
   name = v; store.set('name', v);
+  school = pickedSchool; store.set('school', school);
   $('#sheet').hidden = true; $('#nameInput').blur();
   showName(); register();
 };
 async function register(){
   if (!sb || !name) return;
-  await sb.rpc('aiws_join', { p_room: D.room, p_device: device, p_name: name });
-  if (presence) presence.track({ role: 'phone', name });
+  await sb.rpc('aiws_join', { p_room: D.room, p_device: device, p_name: name, p_school: school || null });
+  if (presence) presence.track({ role: 'phone', name, school });
 }
 showName();
-if (!validName(name)) openSheet();
+if (!validName(name) || !SCHOOLS[school]) openSheet();
 
 /* ---------- الأوامر الجاهزة ---------- */
 $('#prompts').innerHTML = D.prompts.map((p, i) => `<details class="prompt"><summary>${ico('i-' + (p.icon || 'spark'))}<span>${esc(p.title)}</span><svg class="icon chev"><use href="#i-next"/></svg></summary><p></p><button class="btn copy" data-i="${i}">${ico('i-copy')}<span>${esc(D.copy)}</span></button></details>`).join('');

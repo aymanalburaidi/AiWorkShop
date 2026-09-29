@@ -61,8 +61,10 @@ const R = {
   pills: ref => items(get(ref)).map(([t]) => `<span>${inline(t)}</span>`).join(''),
   roles: ref => items(get(ref)).map(([icon, t]) =>
     `<div class="role reveal"><span class="ic c-teal">${ico(icon)}</span><p>${inline(t)}</p></div>`).join('\n'),
-  schools: ref => items(get(ref)).map(([icon, school, label, name], i) =>
-    `<div class="school-card" style="--n:${i}"><span class="ic c-green">${ico(icon)}</span><h3>${inline(school)}</h3><small>${inline(label)}</small><b>${inline(name)}</b></div>`).join('\n'),
+  schools: ref => items(get(ref)).map(([icon, school, label, name, , color], i) =>
+    `<div class="school-card" style="--n:${i};--sc:${esc(color || '#07a869')}"><span class="ic">${ico(icon)}</span><h3>${inline(school)}</h3><small>${inline(label)}</small><b>${inline(name)}</b></div>`).join('\n'),
+  compare: ref => items(get(ref)).map(([k, a, b]) =>
+    `<div class="k">${inline(k)}</div><div class="p">${inline(a)}</div><div class="s">${inline(b)}</div>`).join(''),
   chips: ref => items(get(ref)).map(([k, name, hint]) =>
     `<button class="fchip k-${k}" data-k="${esc(k)}">${inline(name)}<small>${inline(hint)}</small></button>`).join('<span class="plus">+</span>'),
   segs: ref => items(get(ref)).map(([k, t]) => `<span class="seg s-${k}" data-k="${esc(k)}">${inline(t)}</span>`).join(' '),
@@ -83,6 +85,7 @@ const poll = id => ({ question: plain(get(id + '.question')), options: items(get
 const live = {
   url: cfg.supabaseUrl, key: cfg.supabaseKey, room: cfg.room, joinUrl, bucket: 'aiws-uploads',
   polls: { p1: poll('poll-open'), p2: poll('poll-close') },
+  schools: items(get('partners.schools')).map(([, name, , , key, color]) => ({ key, name: plain(name), color })),
 };
 const deckData = {
   ...live,

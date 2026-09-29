@@ -99,6 +99,13 @@ details.prompt .btn{margin:0 14px 14px;min-height:44px;font-size:.95rem;backgrou
 .sheet-card p{color:var(--muted);font-size:.95rem;margin-bottom:14px}
 .sheet-card .err{color:#b42318;font-size:.88rem;margin-top:8px}
 .sheet-card .btn{margin-top:14px}
+.school-label{margin-top:14px;margin-bottom:6px;font-size:.92rem;color:var(--muted)}
+.school-pick{display:grid;gap:8px}
+.school-opt{display:flex;align-items:center;gap:10px;min-height:52px;padding:10px 14px;border-radius:14px;border:1.5px solid var(--line);background:#fff;color:var(--ink);font-size:1.02rem;text-align:right;transition:border-color .15s,background .15s}
+.school-opt i{width:14px;height:14px;border-radius:50%;background:var(--sc);flex:none;box-shadow:0 0 0 3px color-mix(in srgb,var(--sc) 20%,transparent)}
+.school-opt.on{border-color:var(--sc);background:color-mix(in srgb,var(--sc) 9%,#fff);color:var(--sc);font-weight:500}
+.me .sc{display:inline-flex;align-items:center;gap:5px;font-size:.78rem;background:rgba(255,255,255,.14);border-radius:999px;padding:2px 8px}
+.me .sc i{width:8px;height:8px;border-radius:50%;background:var(--sc)}
 .toast{position:fixed;z-index:70;top:calc(env(safe-area-inset-top) + 12px);right:16px;left:16px;max-width:528px;margin:0 auto;background:var(--green);color:#fff;padding:12px 16px;border-radius:14px;box-shadow:0 12px 30px -10px rgba(0,0,0,.35);transform:translateY(-160%);transition:transform .3s var(--ease);text-align:center}
 .toast.err{background:#b42318}
 .toast.on{transform:none}
@@ -119,7 +126,7 @@ details.prompt .btn{margin:0 14px 14px;min-height:44px;font-size:.95rem;backgrou
     <h1>{{cover.title}} {{cover.title_accent}}</h1>
     <div class="hero-row">
       <div class="status" id="status"><span class="dot"></span><span id="statusTxt"></span></div>
-      <div class="me" id="me" hidden><span id="meName"></span><button id="changeName">{{join-page.change_name}}</button></div>
+      <div class="me" id="me" hidden><span id="meName"></span><span class="sc" id="meSchool"></span><button id="changeName">{{join-page.change_name}}</button></div>
     </div>
   </section>
 
@@ -166,6 +173,9 @@ details.prompt .btn{margin:0 14px 14px;min-height:44px;font-size:.95rem;backgrou
     <p>{{join-page.name_text}}</p>
     <input id="nameInput" maxlength="80" autocomplete="name" enterkeyhint="done" placeholder="{{join-page.name_placeholder|text}}">
     <div class="err" id="nameErr" hidden>{{join-page.name_error}}</div>
+    <div class="school-label">{{join-page.school_label}}</div>
+    <div class="school-pick" id="schoolPick"></div>
+    <div class="err" id="schoolErr" hidden>{{join-page.school_error}}</div>
     <button class="btn full" type="submit">{{join-page.name_button}}</button>
   </form>
 </div>
@@ -190,30 +200,44 @@ function toast(msg, err){ const t = $('#toast'); t.textContent = msg; t.classNam
 
 let sb = null, state = { mode: 'idle', poll_key: null }, presence = null;
 let name = store.get('name', '');
+let school = store.get('school', '');
+const SCHOOLS = Object.fromEntries((D.schools || []).map(x => [x.key, x]));
+if (school && !SCHOOLS[school]) school = '';
 
 /* ---------- الاسم الثلاثي (مرة واحدة، يُحفظ في الجوال) ---------- */
 const validName = n => n.trim().split(/\s+/).filter(w => w.length >= 2).length >= 3;
 function showName(){
   $('#me').hidden = !name;
   $('#meName').textContent = name ? D.t.hello + '، ' + name.split(/\s+/)[0] : '';
+  const sc = SCHOOLS[school];
+  $('#meSchool').hidden = !sc;
+  if (sc) { $('#meSchool').style.setProperty('--sc', sc.color); $('#meSchool').innerHTML = '<i></i>'; $('#meSchool').append(sc.name); }
 }
-function openSheet(){ $('#nameInput').value = name; $('#nameErr').hidden = true; $('#sheet').hidden = false; setTimeout(() => $('#nameInput').focus(), 250); }
+let pickedSchool = '';
+function renderPick(){
+  $('#schoolPick').innerHTML = (D.schools || []).map(sc => `<button type="button" class="school-opt ${sc.key === pickedSchool ? 'on' : ''}" data-k="${esc(sc.key)}" style="--sc:${esc(sc.color)}"><i></i>${esc(sc.name)}</button>`).join('');
+  document.querySelectorAll('.school-opt').forEach(b => b.onclick = () => { pickedSchool = b.dataset.k; $('#schoolErr').hidden = true; renderPick(); });
+}
+function openSheet(){ $('#nameInput').value = name; $('#nameErr').hidden = true; $('#schoolErr').hidden = true; pickedSchool = school; renderPick(); $('#sheet').hidden = false; setTimeout(() => $('#nameInput').focus(), 250); }
 $('#changeName').onclick = openSheet;
 $('#nameForm').onsubmit = e => {
   e.preventDefault();
   const v = $('#nameInput').value.trim().replace(/\s+/g, ' ');
-  if (!validName(v)) { $('#nameErr').hidden = false; return; }
+  const okName = validName(v), okSchool = !!SCHOOLS[pickedSchool];
+  $('#nameErr').hidden = okName; $('#schoolErr').hidden = okSchool;
+  if (!okName || !okSchool) return;
   name = v; store.set('name', v);
+  school = pickedSchool; store.set('school', school);
   $('#sheet').hidden = true; $('#nameInput').blur();
   showName(); register();
 };
 async function register(){
   if (!sb || !name) return;
-  await sb.rpc('aiws_join', { p_room: D.room, p_device: device, p_name: name });
-  if (presence) presence.track({ role: 'phone', name });
+  await sb.rpc('aiws_join', { p_room: D.room, p_device: device, p_name: name, p_school: school || null });
+  if (presence) presence.track({ role: 'phone', name, school });
 }
 showName();
-if (!validName(name)) openSheet();
+if (!validName(name) || !SCHOOLS[school]) openSheet();
 
 /* ---------- الأوامر الجاهزة ---------- */
 $('#prompts').innerHTML = D.prompts.map((p, i) => `<details class="prompt"><summary>${ico('i-' + (p.icon || 'spark'))}<span>${esc(p.title)}</span><svg class="icon chev"><use href="#i-next"/></svg></summary><p></p><button class="btn copy" data-i="${i}">${ico('i-copy')}<span>${esc(D.copy)}</span></button></details>`).join('');

@@ -163,8 +163,9 @@ h3{font-size:1.16rem;margin-bottom:4px}
 .school-cards{display:grid;grid-template-columns:1fr 1fr;gap:40px;width:80%;margin:0 auto}
 .school-card{background:#fff;border:1px solid var(--line);border-radius:22px;padding:24px 22px;box-shadow:0 24px 50px -26px rgba(21,68,90,.4);opacity:0}
 .slide.active .school-card{animation:rise .9s var(--ease-out-expo) both;animation-delay:calc(var(--n) * 180ms + 2.2s)}
-.school-card .ic{margin:0 auto 12px;width:58px;height:58px}
-.school-card h3{font-size:1.6rem;color:var(--green);margin-bottom:10px}
+.school-card .ic{margin:0 auto 12px;width:58px;height:58px;color:var(--sc);background:color-mix(in srgb,var(--sc) 12%,transparent)}
+.school-card h3{font-size:1.6rem;color:var(--sc);margin-bottom:10px}
+.school-card{border-top:4px solid var(--sc)}
 .school-card small{display:block;color:var(--muted);font-size:.95rem}
 .school-card b{display:block;font-size:1.25rem;margin-top:2px}
 
@@ -250,6 +251,33 @@ h3{font-size:1.16rem;margin-bottom:4px}
 .seg.hl{box-shadow:0 0 0 2px currentColor}
 .s-role{background:rgba(7,168,105,.12);color:#067a4d} .s-task{background:rgba(61,126,185,.12);color:#2c5f8f} .s-ctx{background:rgba(193,180,137,.25);color:#6b5d30}
 .s-fmt{background:rgba(114,88,164,.12);color:#5a4585} .s-lim{background:rgba(13,169,166,.12);color:#0a7f7d}
+
+
+/* ========== المرحلة المستهدفة ========== */
+.stage-prompt{display:flex;align-items:center;gap:12px;background:#fff;border:1px solid var(--line);border-radius:14px;padding:12px 18px;font-size:1.12rem;box-shadow:var(--shadow);margin-bottom:16px}
+.stage-prompt>.icon{color:var(--teal)}
+.stage-ph{position:relative;display:inline-grid}
+.stage-ph>span{grid-area:1/1;transition:opacity .4s var(--ease-out-quart),transform .4s var(--ease-out-quart)}
+.stage-ph .sp-s{opacity:0;transform:translateY(8px)}
+#s-stage.show-s .stage-ph .sp-p{opacity:0;transform:translateY(-8px)}
+#s-stage.show-s .stage-ph .sp-s{opacity:1;transform:none}
+.stage-cols{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.stage-col{background:#fff;border:1.5px solid var(--line);border-radius:18px;padding:16px 18px;box-shadow:var(--shadow);transition:border-color .4s,box-shadow .4s,opacity .4s}
+.stage-tag{display:inline-flex;align-items:center;gap:8px;padding:3px 12px;border-radius:999px;font-weight:500;font-size:.9rem;margin-bottom:8px}
+.col-p .stage-tag{background:rgba(114,88,164,.12);color:#5a4585}
+.col-s .stage-tag{background:rgba(13,169,166,.12);color:#0a7f7d}
+.stage-out{white-space:pre-wrap;font-size:.95rem;line-height:1.7}
+#s-stage .head{margin-bottom:10px}
+#s-stage .banner{margin-top:12px;padding:11px 20px;font-size:1rem}
+#s-stage .stage-col{padding:12px 16px}
+#s-stage:not(.show-s) .col-p{border-color:#7258a4;box-shadow:0 18px 40px -22px rgba(114,88,164,.5)}
+#s-stage.show-s .col-s{border-color:#0da9a6;box-shadow:0 18px 40px -22px rgba(13,169,166,.5)}
+#s-stage:not(.show-s) .col-s,#s-stage.show-s .col-p{opacity:.72}
+.stage-table{display:grid;grid-template-columns:150px 1fr 1fr;margin-top:14px;border:1px solid var(--line);border-radius:14px;overflow:hidden;background:#fff}
+.stage-table>div{padding:5px 14px;border-top:1px solid var(--line);font-size:.95rem}
+.stage-table>div:nth-child(-n+3){border-top:0}
+.stage-table .k{font-weight:500;background:#F7FAFA}
+.stage-table .p{color:#5a4585}.stage-table .s{color:#0a7f7d}
 
 /* ========== التبويبات والمحادثة ========== */
 .tabs{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px}
@@ -427,6 +455,17 @@ body:not(.presenter) .post .hide{display:none}
 .roster-list .ct{min-width:34px;text-align:center;padding:2px 8px;border-radius:999px;background:var(--navy);color:#fff;font-variant-numeric:tabular-nums}
 .roster-list .ct.pop{animation:wordPop .5s var(--ease-out-quart)}
 .roster-empty{color:var(--muted);font-size:.9rem;padding:14px}
+
+
+/* ألوان المدارس */
+.roster-schools{display:grid;gap:6px;margin-top:10px}
+.rs{display:grid;grid-template-columns:10px 1fr auto;align-items:center;column-gap:8px;padding:6px 10px;border-radius:10px;background:color-mix(in srgb,var(--sc) 9%,#fff)}
+.rs i{width:10px;height:10px;border-radius:50%;background:var(--sc)}
+.rs span{font-size:.88rem;color:var(--sc);font-weight:500}
+.rs b{font-size:1.1rem;color:var(--sc);font-variant-numeric:tabular-nums}
+.rs small{grid-column:2/4;color:var(--muted);font-size:.78rem;margin-top:-4px}
+.roster-list li{border-inline-start:3px solid var(--sc,transparent)}
+.post.has-school{border-top:3px solid var(--sc)}
 
 /* ========== الخاتمة ========== */
 .thanks{margin-top:22px;font-size:1.6rem;font-weight:500;color:var(--navy)}
@@ -657,6 +696,23 @@ body[data-slide="s-join"] #net,body[data-slide="s-close"] #net{opacity:.6}
     </div>
   </section>
 
+  <!-- المرحلة المستهدفة في الأمر -->
+  <section class="slide" id="s-stage" data-notes="{{stage.notes|text}}">
+    <div class="slide-inner">
+      <div class="head">
+        <span class="kicker reveal"><svg class="icon"><use href="#i-target"/></svg> {{stage.kicker}}</span>
+        <h2 class="split">{{stage.title}}</h2>
+      </div>
+      <div class="stage-prompt reveal"><svg class="icon"><use href="#i-msg"/></svg><span>{{stage.prompt_before}} <span class="ph stage-ph"><span class="sp-p">[{{stage.primary_label}}]</span><span class="sp-s">[{{stage.secondary_label}}]</span></span> {{stage.prompt_after}}</span></div>
+      <div class="stage-cols">
+        <div class="stage-col col-p reveal"><div class="stage-tag"><svg class="icon"><use href="#i-school"/></svg> {{stage.primary_label}}</div><div class="stage-out">{{stage.primary_output}}</div></div>
+        <div class="stage-col col-s reveal"><div class="stage-tag"><svg class="icon"><use href="#i-grad"/></svg> {{stage.secondary_label}}</div><div class="stage-out">{{stage.secondary_output}}</div></div>
+      </div>
+      <div class="stage-table reveal">{{@compare stage.compare}}</div>
+      <div class="banner reveal"><svg class="icon"><use href="#i-bulb"/></svg> {{stage.banner}}</div>
+    </div>
+  </section>
+
   <!-- 9: مثال التخطيط -->
   <section class="slide" id="s-plan" data-notes="{{plan.notes|text}}">
     <div class="slide-inner">
@@ -830,6 +886,7 @@ body[data-slide="s-join"] #net,body[data-slide="s-close"] #net{opacity:.6}
       <h3><svg class="icon"><use href="#i-trophy"/></svg> {{settings.roster_title}}</h3>
       <p>{{settings.roster_hint}}</p>
       <div class="roster-sum"><b id="rosterSum">0</b> {{settings.roster_total}}</div>
+      <div class="roster-schools" id="rosterSchools"></div>
     </div>
     <ol class="roster-list" id="rosterList"></ol>
   </div>
@@ -1098,6 +1155,9 @@ function textWithLinks(text){
   });
   return frag;
 }
+const SCHOOLS = Object.fromEntries((D.schools || []).map(x => [x.key, x]));
+let schoolOf = () => null;   // تُعرّف داخل Live
+const colorOf = device => SCHOOLS[schoolOf(device)]?.color || '';
 const initial = name => (name || '').replace(/^(أ\.|أ|د\.)\s*/, '').trim().charAt(0) || '•';
 
 /* ========== عرض المشاركة كاملة ========== */
@@ -1108,6 +1168,7 @@ function openModal(p){
   who.innerHTML = `<span class="av"></span><b></b>`;
   who.querySelector('.av').textContent = initial(p.author);
   who.querySelector('b').textContent = p.author || 'مشاركة';
+  const wc = colorOf(p.device); if (wc) { who.querySelector('b').style.color = wc; who.querySelector('.av').style.background = wc; }
   b.append(who);
   if (p.body) { const full = document.createElement('div'); full.className = 'full'; full.append(textWithLinks(p.body)); b.append(full); }
   b.scrollTop = 0;
@@ -1156,10 +1217,14 @@ const Live = (() => {
   function scheduleRoster(dev){ if (dev) rosterBump = dev; clearTimeout(rosterT); rosterT = setTimeout(renderRoster, ready ? 60 : 0); }
   function renderRoster(){
     const list = $('#rosterList');
-    const rows = [...people.values()].map(p => ({ d: p.device, name: p.name, n: contrib.get(p.device) || 0 }))
+    const rows = [...people.values()].map(p => ({ d: p.device, name: p.name, sc: p.school, n: contrib.get(p.device) || 0 }))
       .sort((a, b) => b.n - a.n || a.name.localeCompare(b.name, 'ar'));
     animateNum($('#rosterCount'), rows.length);
     animateNum($('#rosterSum'), [...contrib.values()].reduce((a, b) => a + b, 0));
+    $('#rosterSchools').innerHTML = (D.schools || []).map(sc => {
+      const mine = rows.filter(r => r.sc === sc.key);
+      return `<div class="rs" style="--sc:${sc.color}"><i></i><span>${escHtml(sc.name)}</span><b>${mine.reduce((a, r) => a + r.n, 0)}</b><small>${mine.length} متدربة</small></div>`;
+    }).join('');
     if (!rows.length) { list.innerHTML = `<li class="roster-empty">${escHtml(D.t.rosterEmpty)}</li>`; return; }
     const before = new Map([...list.children].filter(li => li.dataset.d).map(li => [li.dataset.d, li.getBoundingClientRect().top]));
     const els = new Map([...list.children].filter(li => li.dataset.d).map(li => [li.dataset.d, li]));
@@ -1170,6 +1235,8 @@ const Live = (() => {
       if (!li) { li = document.createElement('li'); li.dataset.d = r.d; li.innerHTML = '<span class="bar"></span><span class="rk"></span><span class="nm"><i></i><span></span></span><span class="ct"></span>'; }
       li.querySelector('.rk').textContent = i + 1;
       li.querySelector('.nm span').textContent = r.name;
+      li.querySelector('.nm span').style.color = SCHOOLS[r.sc]?.color || '';
+      li.style.setProperty('--sc', SCHOOLS[r.sc]?.color || 'transparent');
       li.querySelector('.nm i').classList.toggle('on', online.has(r.d));
       li.querySelector('.bar').style.transform = `scaleX(${r.n / max})`;
       const ct = li.querySelector('.ct'); ct.textContent = r.n;
@@ -1185,7 +1252,8 @@ const Live = (() => {
       if (dy) li.animate([{ transform: `translateY(${dy}px)` }, { transform: 'none' }], { duration: 550, easing: 'cubic-bezier(.645,.045,.355,1)' });
     });
   }
-  function setPerson(device, name){ if (name) people.set(device, { device, name }); }
+  function setPerson(device, name, school){ if (!name) return; const old = people.get(device); people.set(device, { device, name, school: school || old?.school || null }); }
+  schoolOf = device => people.get(device)?.school || null;
 
   /* --- سحابة الكلمات --- */
   const norm = w => w.replace(/[ً-ْـ]/g, '').replace(/[إأآ]/g, 'ا').replace(/ى/g, 'ي')
@@ -1238,12 +1306,20 @@ const Live = (() => {
     });
     el.querySelector('.av').textContent = initial(p.author);
     el.querySelector('.nm').textContent = p.author || 'مشاركة';
+    el.dataset.device = p.device; paintPost(el, p.device);
     el.querySelector('.hide').onclick = e => { e.stopPropagation(); hidePost(p, el); };
     el.onclick = () => openModal(p);
     wall.prepend(el);
     if (para.isConnected) requestAnimationFrame(() => el.classList.toggle('long', para.scrollHeight > para.clientHeight + 4));
     wallCount++; animateNum($('#wallCount'), wallCount);
   }
+  function paintPost(el, device){
+    const c = colorOf(device); if (!c) return;
+    el.querySelector('.nm').style.color = c;
+    const av = el.querySelector('.av'); av.style.background = c; av.style.color = '#fff';
+    el.style.setProperty('--sc', c); el.classList.add('has-school');
+  }
+  function recolor(device){ document.querySelectorAll(`.post[data-device="${CSS.escape(device)}"]`).forEach(el => paintPost(el, device)); }
   function emptyWall(){ if (!wallCount) $('#wall').innerHTML = `<div class="wall-empty">${escHtml(D.t.wallEmpty)}</div>`; }
   async function hidePost(p, el){
     if (!sb || !key) return;
@@ -1260,16 +1336,16 @@ const Live = (() => {
     if (p.author && !people.has(p.device)) setPerson(p.device, p.author);
     bump(p.device, 1); scheduleRoster(fresh ? p.device : null);
     if (p.topic === 'word') addWord(p.body, fresh); else addWallPost(p, fresh);
-    if (fresh && ready) Motion.notify(p.author || 'متدربة', p.topic === 'word' ? '"' + (p.body || '').slice(0, 30) + '"' : (p.image_path ? 'رفعت صورة' : p.topic === 'create' ? 'شاركت إبداعًا' : 'أرسلت مشاركة'), p.topic === 'word' ? 'i-cloud' : p.image_path ? 'i-image' : 'i-msg');
+    if (fresh && ready) Motion.notify(p.author || 'متدربة', p.topic === 'word' ? '"' + (p.body || '').slice(0, 30) + '"' : (p.image_path ? 'رفعت صورة' : p.topic === 'create' ? 'شاركت إبداعًا' : 'أرسلت مشاركة'), p.topic === 'word' ? 'i-cloud' : p.image_path ? 'i-image' : 'i-msg', colorOf(p.device));
   }
 
   async function loadAll(){
     const [pe, vs, ps] = await Promise.all([
-      sb.from('aiws_people').select('device,name').eq('room', D.room),
+      sb.from('aiws_people').select('device,name,school').eq('room', D.room),
       sb.from('aiws_votes').select('poll_key,choice,device,author').eq('room', D.room),
       sb.from('aiws_posts').select('id,device,author,body,topic,image_path,created_at').eq('room', D.room).order('created_at', { ascending: true }).limit(600),
     ]);
-    (pe.data || []).forEach(p => setPerson(p.device, p.name));
+    (pe.data || []).forEach(p => setPerson(p.device, p.name, p.school));
     (vs.data || []).forEach(v => {
       if (votes[v.poll_key] && votes[v.poll_key][v.choice] !== undefined) votes[v.poll_key][v.choice]++;
       bump(v.device, 1); if (v.author && !people.has(v.device)) setPerson(v.device, v.author);
@@ -1295,8 +1371,8 @@ const Live = (() => {
       .on('postgres_changes', { event: '*', schema: 'public', table: 'aiws_people', filter: 'room=eq.' + D.room }, ({ eventType, new: p }) => {
         if (!p || !p.device) return;
         const isNew = !people.has(p.device);
-        setPerson(p.device, p.name); scheduleRoster();
-        if (isNew && eventType === 'INSERT' && ready) Motion.notify(p.name, 'انضمت إلى ورشة العمل', 'i-user');
+        setPerson(p.device, p.name, p.school); scheduleRoster(); recolor(p.device);
+        if (isNew && eventType === 'INSERT' && ready) Motion.notify(p.name, 'انضمت إلى ورشة العمل' + (SCHOOLS[p.school] ? ' · ' + SCHOOLS[p.school].name : ''), 'i-user', colorOf(p.device));
       })
       .subscribe(st => $('#liveDot').classList.toggle('on', st === 'SUBSCRIBED'));
     const presence = sb.channel('aiws-room-' + D.room);
@@ -1408,11 +1484,12 @@ const Motion = (() => {
 
   // تنبيهات حية أسفل الشاشة
   const stack = document.createElement('div'); stack.className = 'alerts'; document.body.append(stack);
-  function notify(name, what, icon){
+  function notify(name, what, icon, color){
     const el = document.createElement('div'); el.className = 'alert';
     el.innerHTML = `<span class="av"></span><div><b></b><small></small></div>${ico(icon || 'i-spark')}`;
     el.querySelector('.av').textContent = initial(name);
     el.querySelector('b').textContent = name;
+    if (color) { el.querySelector('b').style.color = color; el.querySelector('.av').style.background = color; }
     el.querySelector('small').textContent = what;
     stack.prepend(el);
     while (stack.children.length > 3) stack.lastChild.remove();
@@ -1422,7 +1499,14 @@ const Motion = (() => {
 })();
 
 /* ========== أحداث دخول الشرائح ========== */
+let stageIv = null;
+function stageCycle(){
+  clearInterval(stageIv);
+  const s = $('#s-stage'); s.classList.remove('show-s');
+  stageIv = setInterval(() => { if (!s.classList.contains('active')) { clearInterval(stageIv); return; } s.classList.toggle('show-s'); }, 3200);
+}
 const hooks = {
+  's-stage': stageCycle,
   's-plan': () => setTimeout(runPlan, 500),
   's-quiz': renderQuiz,
   's-close': () => setTimeout(() => confetti(), 800),

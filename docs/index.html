@@ -163,8 +163,9 @@ h3{font-size:1.16rem;margin-bottom:4px}
 .school-cards{display:grid;grid-template-columns:1fr 1fr;gap:40px;width:80%;margin:0 auto}
 .school-card{background:#fff;border:1px solid var(--line);border-radius:22px;padding:24px 22px;box-shadow:0 24px 50px -26px rgba(21,68,90,.4);opacity:0}
 .slide.active .school-card{animation:rise .9s var(--ease-out-expo) both;animation-delay:calc(var(--n) * 180ms + 2.2s)}
-.school-card .ic{margin:0 auto 12px;width:58px;height:58px}
-.school-card h3{font-size:1.6rem;color:var(--green);margin-bottom:10px}
+.school-card .ic{margin:0 auto 12px;width:58px;height:58px;color:var(--sc);background:color-mix(in srgb,var(--sc) 12%,transparent)}
+.school-card h3{font-size:1.6rem;color:var(--sc);margin-bottom:10px}
+.school-card{border-top:4px solid var(--sc)}
 .school-card small{display:block;color:var(--muted);font-size:.95rem}
 .school-card b{display:block;font-size:1.25rem;margin-top:2px}
 
@@ -250,6 +251,33 @@ h3{font-size:1.16rem;margin-bottom:4px}
 .seg.hl{box-shadow:0 0 0 2px currentColor}
 .s-role{background:rgba(7,168,105,.12);color:#067a4d} .s-task{background:rgba(61,126,185,.12);color:#2c5f8f} .s-ctx{background:rgba(193,180,137,.25);color:#6b5d30}
 .s-fmt{background:rgba(114,88,164,.12);color:#5a4585} .s-lim{background:rgba(13,169,166,.12);color:#0a7f7d}
+
+
+/* ========== المرحلة المستهدفة ========== */
+.stage-prompt{display:flex;align-items:center;gap:12px;background:#fff;border:1px solid var(--line);border-radius:14px;padding:12px 18px;font-size:1.12rem;box-shadow:var(--shadow);margin-bottom:16px}
+.stage-prompt>.icon{color:var(--teal)}
+.stage-ph{position:relative;display:inline-grid}
+.stage-ph>span{grid-area:1/1;transition:opacity .4s var(--ease-out-quart),transform .4s var(--ease-out-quart)}
+.stage-ph .sp-s{opacity:0;transform:translateY(8px)}
+#s-stage.show-s .stage-ph .sp-p{opacity:0;transform:translateY(-8px)}
+#s-stage.show-s .stage-ph .sp-s{opacity:1;transform:none}
+.stage-cols{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.stage-col{background:#fff;border:1.5px solid var(--line);border-radius:18px;padding:16px 18px;box-shadow:var(--shadow);transition:border-color .4s,box-shadow .4s,opacity .4s}
+.stage-tag{display:inline-flex;align-items:center;gap:8px;padding:3px 12px;border-radius:999px;font-weight:500;font-size:.9rem;margin-bottom:8px}
+.col-p .stage-tag{background:rgba(114,88,164,.12);color:#5a4585}
+.col-s .stage-tag{background:rgba(13,169,166,.12);color:#0a7f7d}
+.stage-out{white-space:pre-wrap;font-size:.95rem;line-height:1.7}
+#s-stage .head{margin-bottom:10px}
+#s-stage .banner{margin-top:12px;padding:11px 20px;font-size:1rem}
+#s-stage .stage-col{padding:12px 16px}
+#s-stage:not(.show-s) .col-p{border-color:#7258a4;box-shadow:0 18px 40px -22px rgba(114,88,164,.5)}
+#s-stage.show-s .col-s{border-color:#0da9a6;box-shadow:0 18px 40px -22px rgba(13,169,166,.5)}
+#s-stage:not(.show-s) .col-s,#s-stage.show-s .col-p{opacity:.72}
+.stage-table{display:grid;grid-template-columns:150px 1fr 1fr;margin-top:14px;border:1px solid var(--line);border-radius:14px;overflow:hidden;background:#fff}
+.stage-table>div{padding:5px 14px;border-top:1px solid var(--line);font-size:.95rem}
+.stage-table>div:nth-child(-n+3){border-top:0}
+.stage-table .k{font-weight:500;background:#F7FAFA}
+.stage-table .p{color:#5a4585}.stage-table .s{color:#0a7f7d}
 
 /* ========== التبويبات والمحادثة ========== */
 .tabs{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px}
@@ -428,6 +456,17 @@ body:not(.presenter) .post .hide{display:none}
 .roster-list .ct.pop{animation:wordPop .5s var(--ease-out-quart)}
 .roster-empty{color:var(--muted);font-size:.9rem;padding:14px}
 
+
+/* ألوان المدارس */
+.roster-schools{display:grid;gap:6px;margin-top:10px}
+.rs{display:grid;grid-template-columns:10px 1fr auto;align-items:center;column-gap:8px;padding:6px 10px;border-radius:10px;background:color-mix(in srgb,var(--sc) 9%,#fff)}
+.rs i{width:10px;height:10px;border-radius:50%;background:var(--sc)}
+.rs span{font-size:.88rem;color:var(--sc);font-weight:500}
+.rs b{font-size:1.1rem;color:var(--sc);font-variant-numeric:tabular-nums}
+.rs small{grid-column:2/4;color:var(--muted);font-size:.78rem;margin-top:-4px}
+.roster-list li{border-inline-start:3px solid var(--sc,transparent)}
+.post.has-school{border-top:3px solid var(--sc)}
+
 /* ========== الخاتمة ========== */
 .thanks{margin-top:22px;font-size:1.6rem;font-weight:500;color:var(--navy)}
 .closing{display:grid;grid-template-columns:1.5fr 1fr;gap:40px;align-items:center}
@@ -535,6 +574,7 @@ body[data-slide="s-join"] #net,body[data-slide="s-close"] #net{opacity:.6}
     <symbol id="i-alert" viewBox="0 0 24 24"><path d="M12 4l9 16H3z"/><path d="M12 10v4M12 17h.01"/></symbol>
     <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M17 7 7 17M16 17H7V8"/></symbol>
     <symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-8 8-8s8 3.6 8 8"/></symbol>
+    <symbol id="i-grad" viewBox="0 0 24 24"><path d="M2 9l10-5 10 5-10 5z"/><path d="M6 11v5c0 1.5 2.7 3 6 3s6-1.5 6-3v-5M22 9v5"/></symbol>
     <symbol id="i-award" viewBox="0 0 24 24"><circle cx="12" cy="9" r="6"/><path d="M8.5 14 7 22l5-3 5 3-1.5-8"/></symbol>
     <symbol id="i-qr" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><path d="M14 14h3v3h-3zM20 14v.01M14 20h.01M17 20h4v-3"/></symbol>
     <symbol id="i-school" viewBox="0 0 24 24"><path d="M3 21h18M5 21V10l7-5 7 5v11"/><path d="M10 21v-5h4v5"/></symbol>
@@ -594,8 +634,8 @@ body[data-slide="s-join"] #net,body[data-slide="s-close"] #net{opacity:.6}
       <p class="partners-lead split">هذا اللقاء يُقدَّم بناءً على الشراكة المجتمعية لشركة يافع المستقبل للبحث والتطوير مع:</p>
       <div class="hub"><img src="assets/yafea-logo.png" alt="شركة يافع المستقبل للبحث والتطوير"></div>
       <div class="tree" aria-hidden="true"><i class="t-stem"></i><i class="t-bar"></i><i class="t-drop d1"></i><i class="t-drop d2"></i></div>
-      <div class="school-cards"><div class="school-card" style="--n:0"><span class="ic c-green"><svg class="icon "><use href="#i-school"/></svg></span><h3>الابتدائية السادسة عشر</h3><small>بقيادة مديرة المدرسة</small><b>أ. عنود بطيح عون العنزي</b></div>
-<div class="school-card" style="--n:1"><span class="ic c-green"><svg class="icon "><use href="#i-school"/></svg></span><h3>الثانوية السابعة</h3><small>بقيادة مديرة المدرسة</small><b>أ. ود مجاهد سلطان العنزي</b></div></div>
+      <div class="school-cards"><div class="school-card" style="--n:0;--sc:#7258a4"><span class="ic"><svg class="icon "><use href="#i-school"/></svg></span><h3>الابتدائية السادسة عشر</h3><small>بقيادة مديرة المدرسة</small><b>أ. عنود بطيح عون العنزي</b></div>
+<div class="school-card" style="--n:1;--sc:#0a8f8c"><span class="ic"><svg class="icon "><use href="#i-school"/></svg></span><h3>الثانوية السابعة</h3><small>بقيادة مديرة المدرسة</small><b>أ. ود مجاهد سلطان العنزي</b></div></div>
     </div>
   </section>
 
@@ -728,6 +768,23 @@ body[data-slide="s-join"] #net,body[data-slide="s-close"] #net{opacity:.6}
     </div>
   </section>
 
+  <!-- المرحلة المستهدفة في الأمر -->
+  <section class="slide" id="s-stage" data-notes="الأمر نفسه تغيّر فيه الصف فقط. اقرأ سطرًا من كل عمود، ثم مرّ على جدول الفروق.">
+    <div class="slide-inner">
+      <div class="head">
+        <span class="kicker reveal"><svg class="icon"><use href="#i-target"/></svg> المرحلة المستهدفة</span>
+        <h2 class="split">الأمر نفسه، ومرحلتان مختلفتان</h2>
+      </div>
+      <div class="stage-prompt reveal"><svg class="icon"><use href="#i-msg"/></svg><span>اشرح حالات المادة لطالبات <span class="ph stage-ph"><span class="sp-p">[رابع ابتدائي]</span><span class="sp-s">[أول ثانوي]</span></span> في فقرة قصيرة، مع نشاط أو سؤال في النهاية.</span></div>
+      <div class="stage-cols">
+        <div class="stage-col col-p reveal"><div class="stage-tag"><svg class="icon"><use href="#i-school"/></svg> رابع ابتدائي</div><div class="stage-out">المادة حولنا لها ثلاث حالات:<br>• صلبة: لها شكل ثابت، مثل مكعب الثلج والقلم.<br>• سائلة: تأخذ شكل الإناء، مثل الماء والحليب.<br>• غازية: تنتشر في المكان، مثل بخار الماء.<br><br>نشاط: مكعب ثلج في كأس، ومراقبته بعد 10 دقائق. ماذا حدث له؟</div></div>
+        <div class="stage-col col-s reveal"><div class="stage-tag"><svg class="icon"><use href="#i-grad"/></svg> أول ثانوي</div><div class="stage-out">تختلف حالات المادة في ترتيب الجسيمات وقوى التجاذب بينها وطاقتها الحركية:<br>• الصلبة: جسيمات متراصة تهتز في مواضعها، وقوى التجاذب قوية.<br>• السائلة: جسيمات متقاربة تنزلق بعضها فوق بعض، فتأخذ شكل الإناء.<br>• الغازية: جسيمات متباعدة تتحرك عشوائيًا، وقوى التجاذب ضعيفة.<br><br>سؤال تحليلي: فسّر ثبات درجة الحرارة أثناء انصهار الجليد رغم استمرار التسخين.</div></div>
+      </div>
+      <div class="stage-table reveal"><div class="k">اللغة</div><div class="p">جمل قصيرة وكلمات مألوفة</div><div class="s">مصطلحات علمية دقيقة</div><div class="k">الأمثلة</div><div class="p">أشياء من البيت والفصل</div><div class="s">نماذج وتفسير على مستوى الجسيمات</div><div class="k">النشاط</div><div class="p">حسي ومصوّر</div><div class="s">تحليلي وتفسيري</div><div class="k">التقويم</div><div class="p">تذكّر وتعرّف</div><div class="s">تفسير وتطبيق</div></div>
+      <div class="banner reveal"><svg class="icon"><use href="#i-bulb"/></svg> بدون المرحلة تكتب الأداة لقارئ عام، فيطول تعديل الإجابة. الصف جزء ثابت من كل أمر.</div>
+    </div>
+  </section>
+
   <!-- 9: مثال التخطيط -->
   <section class="slide" id="s-plan" data-notes="اختر المادة الأقرب للحضور. نبّه إلى أن الناتج مسودة تراجعها المعلمة وتعدّلها.">
     <div class="slide-inner">
@@ -737,7 +794,9 @@ body[data-slide="s-join"] #net,body[data-slide="s-close"] #net{opacity:.6}
       </div>
       <div class="row-between reveal">
         <div class="tabs" id="planTabs"><button class="tab on" data-sub="chem"><svg class="icon "><use href="#i-flask"/></svg> كيمياء، ثاني ثانوي</button>
+<button class="tab" data-sub="sci"><svg class="icon "><use href="#i-bulb"/></svg> علوم، رابع ابتدائي</button>
 <button class="tab" data-sub="math"><svg class="icon "><use href="#i-sigma"/></svg> رياضيات، أول ثانوي</button>
+<button class="tab" data-sub="lang"><svg class="icon "><use href="#i-book"/></svg> لغتي، ثالث ابتدائي</button>
 <button class="tab" data-sub="ar"><svg class="icon "><use href="#i-feather"/></svg> لغة عربية، ثالث ثانوي</button></div>
         <button class="btn ghost small" id="planReplay" aria-label="إعادة المثال"><svg class="icon"><use href="#i-refresh"/></svg></button>
       </div>
@@ -756,7 +815,9 @@ body[data-slide="s-join"] #net,body[data-slide="s-close"] #net{opacity:.6}
         <h2 class="split">أسئلة متدرجة ببدائل تكشف الخطأ الشائع</h2>
       </div>
       <div class="tabs reveal" id="quizTabs"><button class="tab on" data-sub="chem"><svg class="icon "><use href="#i-flask"/></svg> كيمياء: المول</button>
+<button class="tab" data-sub="sci"><svg class="icon "><use href="#i-bulb"/></svg> علوم: حالات المادة (ابتدائي)</button>
 <button class="tab" data-sub="math"><svg class="icon "><use href="#i-sigma"/></svg> رياضيات: المعادلات التربيعية</button>
+<button class="tab" data-sub="lang"><svg class="icon "><use href="#i-book"/></svg> لغتي: التاء المربوطة (ابتدائي)</button>
 <button class="tab" data-sub="ar"><svg class="icon "><use href="#i-feather"/></svg> لغة عربية: الاستفهام البلاغي</button></div>
       <div class="qgrid reveal" id="quizGrid"></div>
     </div>
@@ -834,7 +895,7 @@ body[data-slide="s-join"] #net,body[data-slide="s-close"] #net{opacity:.6}
         <p class="lead reveal">الأجزاء المظللة تتغير حسب المادة والصف، والأوامر نفسها في صفحة الجوال بزر نسخ.</p>
       </div>
       <div class="prompts"><div class="prompt-box reveal"><div class="prompt-head"><span><svg class="icon "><use href="#i-clipboard"/></svg> تخطيط درس</span><button class="btn small copy-btn"><svg class="icon "><use href="#i-copy"/></svg><span>نسخ</span></button></div>
-<div class="prompt-text">أنت معلم <span class="ph">[اسم المادة]</span> خبير في المرحلة الثانوية. أعدّ خطة درس لموضوع <span class="ph">[اسم الموضوع]</span> لطالبات <span class="ph">[الصف]</span>، مدة الحصة <span class="ph">[45]</span> دقيقة. تضمّن: 3 أهداف قابلة للقياس، وتهيئة من واقع الطالبة، وخطوات الشرح، ونشاطًا تعاونيًا، وتقويمًا ختاميًا من 3 أسئلة، وواجبًا قصيرًا. اعرض الخطة في جدول مع زمن كل مرحلة.</div></div>
+<div class="prompt-text">أنت معلم <span class="ph">[اسم المادة]</span> خبير في <span class="ph">[المرحلة: الابتدائية أو الثانوية]</span>. أعدّ خطة درس لموضوع <span class="ph">[اسم الموضوع]</span> لطالبات <span class="ph">[الصف]</span>، مدة الحصة <span class="ph">[45]</span> دقيقة. تضمّن: 3 أهداف قابلة للقياس، وتهيئة من واقع الطالبة، وخطوات الشرح، ونشاطًا تعاونيًا، وتقويمًا ختاميًا من 3 أسئلة، وواجبًا قصيرًا. اعرض الخطة في جدول مع زمن كل مرحلة.</div></div>
 <div class="prompt-box reveal"><div class="prompt-head"><span><svg class="icon "><use href="#i-chart"/></svg> اختبار قصير</span><button class="btn small copy-btn"><svg class="icon "><use href="#i-copy"/></svg><span>نسخ</span></button></div>
 <div class="prompt-text">أعدّ اختبارًا قصيرًا في موضوع <span class="ph">[اسم الموضوع]</span> لمادة <span class="ph">[اسم المادة]</span>، <span class="ph">[الصف]</span>، من <span class="ph">[5]</span> أسئلة اختيار من متعدد وسؤالين مقاليين قصيرين، بمستويات متدرجة (تذكّر، فهم، تطبيق، تفكير عليا). اجعل البدائل الخاطئة من أخطاء الطالبات الشائعة، وأضف مفتاح الإجابة مع تعليل مختصر لكل إجابة.</div></div>
 <div class="prompt-box reveal"><div class="prompt-head"><span><svg class="icon "><use href="#i-msg"/></svg> تغذية راجعة</span><button class="btn small copy-btn"><svg class="icon "><use href="#i-copy"/></svg><span>نسخ</span></button></div>
@@ -856,7 +917,7 @@ body[data-slide="s-join"] #net,body[data-slide="s-close"] #net{opacity:.6}
         <div class="timer small reveal" data-minutes="7"></div>
       </div>
       <div class="prompts"><div class="prompt-box reveal"><div class="prompt-head"><span><svg class="icon "><use href="#i-image"/></svg> صورة توضيحية لدرسك</span><button class="btn small copy-btn"><svg class="icon "><use href="#i-copy"/></svg><span>نسخ</span></button></div>
-<div class="prompt-text">ارسم صورة توضيحية ملونة بأسلوب رسوم تعليمية مبسطة لطالبات المرحلة الثانوية، تشرح مفهوم <span class="ph">[اسم المفهوم]</span> في مادة <span class="ph">[اسم المادة]</span>. أضف عناصر بصرية تساعد على الفهم، واجعل الخلفية بسيطة، ولا تضع نصوصًا طويلة داخل الصورة.</div></div>
+<div class="prompt-text">ارسم صورة توضيحية ملونة بأسلوب رسوم تعليمية مبسطة لطالبات <span class="ph">[الصف]</span>، تشرح مفهوم <span class="ph">[اسم المفهوم]</span> في مادة <span class="ph">[اسم المادة]</span>. أضف عناصر بصرية تساعد على الفهم، واجعل الخلفية بسيطة، ولا تضع نصوصًا طويلة داخل الصورة.</div></div>
 <div class="prompt-box reveal"><div class="prompt-head"><span><svg class="icon "><use href="#i-layout"/></svg> صفحة تفاعلية لطالباتك</span><button class="btn small copy-btn"><svg class="icon "><use href="#i-copy"/></svg><span>نسخ</span></button></div>
 <div class="prompt-text">أنشئ صفحة ويب تفاعلية باللغة العربية (من اليمين إلى اليسار) لمراجعة درس <span class="ph">[اسم الدرس]</span> في مادة <span class="ph">[اسم المادة]</span> لطالبات <span class="ph">[الصف]</span>. تحتوي الصفحة على <span class="ph">[8]</span> بطاقات تنقلب عند الضغط لتظهر الإجابة، واختبار قصير من <span class="ph">[5]</span> أسئلة يعرض الدرجة في النهاية. اجعل التصميم بألوان هادئة ومناسبًا للجوال.</div></div></div>
       <ol class="steps-list compact"><li class="reveal">صورة: لصق الأمر في أداة تدعم إنشاء الصور، ثم حفظ الصورة ورفعها من الجوال.</li>
@@ -923,6 +984,7 @@ body[data-slide="s-join"] #net,body[data-slide="s-close"] #net{opacity:.6}
       <h3><svg class="icon"><use href="#i-trophy"/></svg> المتدربات</h3>
       <p>عدد المشاركات (تصويت، كلمات، أعمال)</p>
       <div class="roster-sum"><b id="rosterSum">0</b> مشاركة</div>
+      <div class="roster-schools" id="rosterSchools"></div>
     </div>
     <ol class="roster-list" id="rosterList"></ol>
   </div>
@@ -952,7 +1014,7 @@ body[data-slide="s-join"] #net,body[data-slide="s-close"] #net{opacity:.6}
 <div class="toast" id="toast"></div>
 
 <script>
-const D = {"url":"https://dqedhfwaquqaddbtfvtx.supabase.co","key":"sb_publishable_zROcySsWThanD_me0Dq8dw_tGAHzGKk","room":"hs7-ai","joinUrl":"https://aymanalburaidi.github.io/AiWorkShop/join/","bucket":"aiws-uploads","polls":{"p1":{"question":"ما المهمة التي تأخذ أكثر وقتك كل أسبوع؟","options":["تحضير الدروس وتخطيطها","إعداد الأسئلة والاختبارات","التصحيح وكتابة التغذية الراجعة","تكييف المحتوى لمستويات الطالبات"]},"p2":{"question":"ما أول استخدام للتجربة هذا الأسبوع؟","options":["تخطيط درس","إعداد اختبار قصير","كتابة تغذية راجعة","تبسيط نص لطالباتي"]}},"plans":{"chem":{"prompt":"أنت معلم كيمياء خبير في المرحلة الثانوية. أعدّ خطة درس \"المول\" لطالبات ثاني ثانوي، مدة الحصة 45 دقيقة، تتضمّن أهدافًا قابلة للقياس، وتهيئة من واقع الطالبة، ونشاطًا تعاونيًا، وتقويمًا ختاميًا.","answer":"خطة درس: المول، ثاني ثانوي (45 دقيقة)\n\nالأهداف: في نهاية الدرس تستطيع الطالبة أن:\n• تعرّف المول وعدد أفوجادرو.\n• تحوّل بين عدد المولات وعدد الجسيمات.\n• تحسب الكتلة المولية لمركّب بسيط.\n\n١. التهيئة (5 د): كم حبة أرز في كيس وزنه كيلوجرام؟ ولماذا يبيعه التاجر بالوزن لا بالعدد؟\n٢. الشرح (15 د): المول وحدة عدّ مثل \"الدرزن\"، والمول الواحد = ⁦6.02×10²³⁩ جسيم، مع مثالين محلولين.\n٣. نشاط تعاوني (15 د): بطاقات تحويل في مجموعات رباعية، وتعرض كل مجموعة حلًّا واحدًا.\n٤. التقويم الختامي (7 د): بطاقة خروج من ثلاثة أسئلة قصيرة.\n٥. الواجب (3 د): حساب الكتلة المولية لثلاث مواد من مطبخ البيت (الماء، الملح، السكر)."},"math":{"prompt":"أنت معلم رياضيات خبير في المرحلة الثانوية. أعدّ خطة درس \"حل المعادلات التربيعية بالتحليل\" لطالبات أول ثانوي، مدة الحصة 45 دقيقة، تتضمّن أهدافًا قابلة للقياس، وتهيئة من واقع الطالبة، ونشاطًا تعاونيًا، وتقويمًا ختاميًا.","answer":"خطة درس: حل المعادلات التربيعية بالتحليل، أول ثانوي (45 دقيقة)\n\nالأهداف: في نهاية الدرس تستطيع الطالبة أن:\n• تحلّل ثلاثية الحدود على الصورة ⁦x² + bx + c⁩.\n• تحل المعادلة التربيعية باستعمال خاصية الضرب الصفري.\n• تتحقق من صحة الحل بالتعويض.\n\n١. التهيئة (5 د): حديقة مستطيلة مساحتها 24 م²، وطولها يزيد على عرضها بمقدار 2 م. فما بُعداها؟\n٢. الشرح (15 د): خاصية الضرب الصفري، ومثالان: ⁦x² − 5x + 6 = 0⁩ و ⁦x² − 9 = 0⁩.\n٣. نشاط تعاوني (15 د): \"سباق التحليل\": بطاقات معادلات تحلّها المجموعات وتتحقق منها بالتعويض.\n٤. التقويم الختامي (7 د): ثلاث معادلات متدرجة الصعوبة.\n٥. الواجب (3 د): صياغة مسألة حياتية تقود إلى معادلة تربيعية، ثم حلّها."},"ar":{"prompt":"أنت معلم لغة عربية خبير في المرحلة الثانوية. أعدّ خطة درس \"الاستفهام وأغراضه البلاغية\" لطالبات ثالث ثانوي، مدة الحصة 45 دقيقة، تتضمّن أهدافًا قابلة للقياس، وتهيئة من واقع الطالبة، ونشاطًا تعاونيًا، وتقويمًا ختاميًا.","answer":"خطة درس: الاستفهام وأغراضه البلاغية، ثالث ثانوي (45 دقيقة)\n\nالأهداف: في نهاية الدرس تستطيع الطالبة أن:\n• تميّز الاستفهام الحقيقي من الاستفهام البلاغي.\n• تحدّد الغرض البلاغي للاستفهام في سياقه.\n• توظّف الاستفهام البلاغي في كتابتها.\n\n١. التهيئة (5 د): عبارة حوارية: \"أتنام والاختبار غدًا؟\" هل ينتظر السائل جوابًا؟\n٢. الشرح (15 د): أدوات الاستفهام، ثم أغراضه البلاغية (النفي، التعجب، التوبيخ، التمنّي) بشواهد من النصوص المقررة.\n٣. نشاط تعاوني (15 د): تستخرج كل مجموعة شواهد من نص، وتحدّد أغراضها البلاغية.\n٤. التقويم الختامي (7 د): ثلاث جمل لتحديد الغرض البلاغي.\n٥. الواجب (3 د): كتابة فقرة قصيرة توظّف غرضين بلاغيين للاستفهام."}},"quiz":{"chem":[{"lv":"تطبيق","q":"الكتلة المولية لثاني أكسيد الكربون \u003cspan class=\"ltr\">CO₂\u003c/span> (علمًا أن \u003cspan class=\"ltr\">C = 12 , O = 16\u003c/span>) تساوي:","o":["\u003cspan class=\"ltr\">28 g/mol\u003c/span>","\u003cspan class=\"ltr\">44 g/mol\u003c/span>","\u003cspan class=\"ltr\">32 g/mol\u003c/span>","\u003cspan class=\"ltr\">60 g/mol\u003c/span>"],"a":1,"n":"البديل 28 يكشف حساب ذرة أكسجين واحدة بدل ذرتين."},{"lv":"تطبيق","q":"كم مولًا في \u003cspan class=\"ltr\">88 g\u003c/span> من \u003cspan class=\"ltr\">CO₂\u003c/span>؟","o":["\u003cspan class=\"ltr\">0.5 mol\u003c/span>","\u003cspan class=\"ltr\">1 mol\u003c/span>","\u003cspan class=\"ltr\">2 mol\u003c/span>","\u003cspan class=\"ltr\">4 mol\u003c/span>"],"a":2,"n":"\u003cspan class=\"ltr\">88 ÷ 44 = 2 mol\u003c/span>. البديل 0.5 يكشف القسمة بالعكس."},{"lv":"تفكير عليا","q":"لماذا يستخدم الكيميائيون المول بدلًا من عدّ الذرات مباشرة؟","o":null,"a":-1,"n":"إجابة نموذجية: الذرات بالغة الصغر وأعدادها هائلة، والمول يربط العدد بكتلة نقيسها بالميزان."}],"math":[{"lv":"تطبيق","q":"حلّا المعادلة \u003cspan class=\"ltr\">x² − 5x + 6 = 0\u003c/span> هما:","o":["2 و 3","\u003cspan class=\"ltr\">−2\u003c/span> و \u003cspan class=\"ltr\">−3\u003c/span>","1 و 6","\u003cspan class=\"ltr\">−1\u003c/span> و 6"],"a":0,"n":"البديل (\u003cspan class=\"ltr\">−2\u003c/span> و \u003cspan class=\"ltr\">−3\u003c/span>) يكشف خطأ الإشارة عند تطبيق خاصية الضرب الصفري."},{"lv":"فهم","q":"تحليل المقدار \u003cspan class=\"ltr\">x² − 9\u003c/span> هو:","o":["\u003cspan class=\"ltr\">(x − 3)²\u003c/span>","\u003cspan class=\"ltr\">(x − 3)(x + 3)\u003c/span>","\u003cspan class=\"ltr\">(x − 9)(x + 1)\u003c/span>","\u003cspan class=\"ltr\">x(x − 9)\u003c/span>"],"a":1,"n":"فرق بين مربعين. البديل \u003cspan class=\"ltr\">(x − 3)²\u003c/span> يكشف الخلط بين الصيغتين."},{"lv":"تفكير عليا","q":"اكتب معادلة تربيعية جذراها 4 و \u003cspan class=\"ltr\">−1\u003c/span>.","o":null,"a":-1,"n":"إجابة نموذجية: \u003cspan class=\"ltr\">(x − 4)(x + 1) = 0\u003c/span> أي \u003cspan class=\"ltr\">x² − 3x − 4 = 0\u003c/span>"}],"ar":[{"lv":"فهم","q":"الغرض البلاغي من الاستفهام في قوله تعالى: ﴿هَلْ جَزَاءُ الْإِحْسَانِ إِلَّا الْإِحْسَانُ﴾ هو:","o":["النفي","التمنّي","التعجب","التشويق"],"a":0,"n":"&quot;هل&quot; هنا بمعنى &quot;ما&quot;: ما جزاء الإحسان إلا الإحسان."},{"lv":"تطبيق","q":"في قولنا: &quot;أتُهمل واجبك وأنت قادر عليه؟&quot; الغرض من الاستفهام:","o":["استفهام حقيقي","التوبيخ","التمنّي","التسوية"],"a":1,"n":"المتكلم لا ينتظر جوابًا؛ هو يلوم على تقصير وقع."},{"lv":"تفكير عليا","q":"اكتب جملة استفهامية غرضها البلاغي التمنّي.","o":null,"a":-1,"n":"مثال: &quot;هل إلى عودة أيام الطفولة من سبيل؟&quot;"}]},"t":{"show":"إظهار الإجابة","hide":"إخفاء الإجابة","essay":"سؤال مقالي قصير","start":"بدء","pause":"إيقاف","minute":"دقيقة","copy":"نسخ","copied":"تم","simplify":"النص المبسّط","original":"النص الأصلي","wallEmpty":"لم تصل مشاركات بعد. أول مشاركة من الجوال تظهر هنا مباشرة.","countLabel":"مشاركة","readMore":"قراءة كاملة","openLink":"افتح الرابط","wordEmpty":"الكلمات تظهر هنا فور إرسالها.","rosterEmpty":"تظهر أسماء المتدربات هنا بعد انضمامهن من الجوال.","rosterTotal":"مشاركة"}};
+const D = {"url":"https://dqedhfwaquqaddbtfvtx.supabase.co","key":"sb_publishable_zROcySsWThanD_me0Dq8dw_tGAHzGKk","room":"hs7-ai","joinUrl":"https://aymanalburaidi.github.io/AiWorkShop/join/","bucket":"aiws-uploads","polls":{"p1":{"question":"ما المهمة التي تأخذ أكثر وقتك كل أسبوع؟","options":["تحضير الدروس وتخطيطها","إعداد الأسئلة والاختبارات","التصحيح وكتابة التغذية الراجعة","تكييف المحتوى لمستويات الطالبات"]},"p2":{"question":"ما أول استخدام للتجربة هذا الأسبوع؟","options":["تخطيط درس","إعداد اختبار قصير","كتابة تغذية راجعة","تبسيط نص لطالباتي"]}},"schools":[{"key":"p16","name":"الابتدائية السادسة عشر","color":"#7258a4"},{"key":"s7","name":"الثانوية السابعة","color":"#0a8f8c"}],"plans":{"chem":{"prompt":"أنت معلم كيمياء خبير في المرحلة الثانوية. أعدّ خطة درس \"المول\" لطالبات ثاني ثانوي، مدة الحصة 45 دقيقة، تتضمّن أهدافًا قابلة للقياس، وتهيئة من واقع الطالبة، ونشاطًا تعاونيًا، وتقويمًا ختاميًا.","answer":"خطة درس: المول، ثاني ثانوي (45 دقيقة)\n\nالأهداف: في نهاية الدرس تستطيع الطالبة أن:\n• تعرّف المول وعدد أفوجادرو.\n• تحوّل بين عدد المولات وعدد الجسيمات.\n• تحسب الكتلة المولية لمركّب بسيط.\n\n١. التهيئة (5 د): كم حبة أرز في كيس وزنه كيلوجرام؟ ولماذا يبيعه التاجر بالوزن لا بالعدد؟\n٢. الشرح (15 د): المول وحدة عدّ مثل \"الدرزن\"، والمول الواحد = ⁦6.02×10²³⁩ جسيم، مع مثالين محلولين.\n٣. نشاط تعاوني (15 د): بطاقات تحويل في مجموعات رباعية، وتعرض كل مجموعة حلًّا واحدًا.\n٤. التقويم الختامي (7 د): بطاقة خروج من ثلاثة أسئلة قصيرة.\n٥. الواجب (3 د): حساب الكتلة المولية لثلاث مواد من مطبخ البيت (الماء، الملح، السكر)."},"sci":{"prompt":"أنت معلم علوم خبير في المرحلة الابتدائية. أعدّ خطة درس \"حالات المادة\" لطالبات الصف الرابع الابتدائي، مدة الحصة 45 دقيقة، بلغة بسيطة وأنشطة حسية، تتضمّن أهدافًا قابلة للقياس، وتهيئة من واقع الطالبة، ونشاطًا تعاونيًا، وتقويمًا ختاميًا.","answer":"خطة درس: حالات المادة، رابع ابتدائي (45 دقيقة)\n\nالأهداف: في نهاية الدرس تستطيع الطالبة أن:\n• تسمّي حالات المادة الثلاث: صلبة وسائلة وغازية.\n• تذكر مثالين لكل حالة من البيت أو الفصل.\n• تصف ما يحدث للماء عند التسخين والتبريد.\n\n١. التهيئة (5 د): مكعب ثلج في كأس أمام الطالبات: ماذا سيحدث له بعد قليل؟\n٢. الشرح (12 د): صور وأشياء حقيقية (حجر، ماء، بالون)، ولكل حالة كلمة مفتاحية: شكل ثابت، يأخذ شكل الإناء، ينتشر.\n٣. نشاط تعاوني (15 د): \"سلال المادة\": بطاقات مصورة لأشياء من البيت تفرزها المجموعات في ثلاث سلال.\n٤. التقويم الختامي (8 د): ثلاثة أسئلة مصورة قصيرة.\n٥. الواجب (5 د): رسم ثلاثة أشياء من المطبخ وتصنيفها حسب حالتها."},"math":{"prompt":"أنت معلم رياضيات خبير في المرحلة الثانوية. أعدّ خطة درس \"حل المعادلات التربيعية بالتحليل\" لطالبات أول ثانوي، مدة الحصة 45 دقيقة، تتضمّن أهدافًا قابلة للقياس، وتهيئة من واقع الطالبة، ونشاطًا تعاونيًا، وتقويمًا ختاميًا.","answer":"خطة درس: حل المعادلات التربيعية بالتحليل، أول ثانوي (45 دقيقة)\n\nالأهداف: في نهاية الدرس تستطيع الطالبة أن:\n• تحلّل ثلاثية الحدود على الصورة ⁦x² + bx + c⁩.\n• تحل المعادلة التربيعية باستعمال خاصية الضرب الصفري.\n• تتحقق من صحة الحل بالتعويض.\n\n١. التهيئة (5 د): حديقة مستطيلة مساحتها 24 م²، وطولها يزيد على عرضها بمقدار 2 م. فما بُعداها؟\n٢. الشرح (15 د): خاصية الضرب الصفري، ومثالان: ⁦x² − 5x + 6 = 0⁩ و ⁦x² − 9 = 0⁩.\n٣. نشاط تعاوني (15 د): \"سباق التحليل\": بطاقات معادلات تحلّها المجموعات وتتحقق منها بالتعويض.\n٤. التقويم الختامي (7 د): ثلاث معادلات متدرجة الصعوبة.\n٥. الواجب (3 د): صياغة مسألة حياتية تقود إلى معادلة تربيعية، ثم حلّها."},"lang":{"prompt":"أنت معلم لغتي خبير في المرحلة الابتدائية. أعدّ خطة درس \"التاء المربوطة والتاء المفتوحة\" لطالبات الصف الثالث الابتدائي، مدة الحصة 45 دقيقة، بلغة بسيطة وأنشطة حركية، تتضمّن أهدافًا قابلة للقياس، وتهيئة من واقع الطالبة، ونشاطًا تعاونيًا، وتقويمًا ختاميًا.","answer":"خطة درس: التاء المربوطة والتاء المفتوحة، ثالث ابتدائي (45 دقيقة)\n\nالأهداف: في نهاية الدرس تستطيع الطالبة أن:\n• تميّز التاء المربوطة (ـة) من التاء المفتوحة (ـت).\n• تقرأ كلمات تنتهي بالتاءين قراءة صحيحة عند الوقف.\n• تكتب كلمات بالتاء المناسبة.\n\n١. التهيئة (5 د): بطاقتان \"شجرة\" و\"بيت\": كيف ننطق آخر كل كلمة عند الوقف؟\n٢. الشرح (12 د): التاء المربوطة تُنطق هاءً عند الوقف (شجرهْ)، والمفتوحة تبقى تاءً (بيتْ).\n٣. نشاط تعاوني (15 د): \"صيد الكلمات\": كل مجموعة تبحث في قصة قصيرة عن كلمات بالتاءين وتلصقها في لوحتين.\n٤. التقويم الختامي (8 د): إكمال خمس كلمات بالتاء المناسبة.\n٥. الواجب (5 د): كتابة ثلاث كلمات من البيت لكل نوع."},"ar":{"prompt":"أنت معلم لغة عربية خبير في المرحلة الثانوية. أعدّ خطة درس \"الاستفهام وأغراضه البلاغية\" لطالبات ثالث ثانوي، مدة الحصة 45 دقيقة، تتضمّن أهدافًا قابلة للقياس، وتهيئة من واقع الطالبة، ونشاطًا تعاونيًا، وتقويمًا ختاميًا.","answer":"خطة درس: الاستفهام وأغراضه البلاغية، ثالث ثانوي (45 دقيقة)\n\nالأهداف: في نهاية الدرس تستطيع الطالبة أن:\n• تميّز الاستفهام الحقيقي من الاستفهام البلاغي.\n• تحدّد الغرض البلاغي للاستفهام في سياقه.\n• توظّف الاستفهام البلاغي في كتابتها.\n\n١. التهيئة (5 د): عبارة حوارية: \"أتنام والاختبار غدًا؟\" هل ينتظر السائل جوابًا؟\n٢. الشرح (15 د): أدوات الاستفهام، ثم أغراضه البلاغية (النفي، التعجب، التوبيخ، التمنّي) بشواهد من النصوص المقررة.\n٣. نشاط تعاوني (15 د): تستخرج كل مجموعة شواهد من نص، وتحدّد أغراضها البلاغية.\n٤. التقويم الختامي (7 د): ثلاث جمل لتحديد الغرض البلاغي.\n٥. الواجب (3 د): كتابة فقرة قصيرة توظّف غرضين بلاغيين للاستفهام."}},"quiz":{"chem":[{"lv":"تطبيق","q":"الكتلة المولية لثاني أكسيد الكربون \u003cspan class=\"ltr\">CO₂\u003c/span> (علمًا أن \u003cspan class=\"ltr\">C = 12 , O = 16\u003c/span>) تساوي:","o":["\u003cspan class=\"ltr\">28 g/mol\u003c/span>","\u003cspan class=\"ltr\">44 g/mol\u003c/span>","\u003cspan class=\"ltr\">32 g/mol\u003c/span>","\u003cspan class=\"ltr\">60 g/mol\u003c/span>"],"a":1,"n":"البديل 28 يكشف حساب ذرة أكسجين واحدة بدل ذرتين."},{"lv":"تطبيق","q":"كم مولًا في \u003cspan class=\"ltr\">88 g\u003c/span> من \u003cspan class=\"ltr\">CO₂\u003c/span>؟","o":["\u003cspan class=\"ltr\">0.5 mol\u003c/span>","\u003cspan class=\"ltr\">1 mol\u003c/span>","\u003cspan class=\"ltr\">2 mol\u003c/span>","\u003cspan class=\"ltr\">4 mol\u003c/span>"],"a":2,"n":"\u003cspan class=\"ltr\">88 ÷ 44 = 2 mol\u003c/span>. البديل 0.5 يكشف القسمة بالعكس."},{"lv":"تفكير عليا","q":"لماذا يستخدم الكيميائيون المول بدلًا من عدّ الذرات مباشرة؟","o":null,"a":-1,"n":"إجابة نموذجية: الذرات بالغة الصغر وأعدادها هائلة، والمول يربط العدد بكتلة نقيسها بالميزان."}],"sci":[{"lv":"تذكّر","q":"أيّ مما يلي مادة سائلة؟","o":["الرمل","الحليب","الملح","الخشب"],"a":1,"n":"الرمل ينساب مثل السائل لكنه حبيبات صلبة، لذلك يكشف البديل خطأً شائعًا."},{"lv":"فهم","q":"ماذا يحدث لمكعب الثلج إذا تُرك في الشمس؟","o":["يتبخر مباشرة","ينصهر ويصبح ماءً","يزداد حجمه","يبقى كما هو"],"a":1,"n":"البديل (يتبخر مباشرة) يكشف الخلط بين الانصهار والتبخر."},{"lv":"تفكير عليا","q":"لماذا نضع الماء في الثلاجة ليصبح ثلجًا، ولا نضعه في الفرن؟","o":null,"a":-1,"n":"إجابة نموذجية: التبريد يحوّل الماء السائل إلى صلب، والتسخين يحوّله إلى بخار."}],"math":[{"lv":"تطبيق","q":"حلّا المعادلة \u003cspan class=\"ltr\">x² − 5x + 6 = 0\u003c/span> هما:","o":["2 و 3","\u003cspan class=\"ltr\">−2\u003c/span> و \u003cspan class=\"ltr\">−3\u003c/span>","1 و 6","\u003cspan class=\"ltr\">−1\u003c/span> و 6"],"a":0,"n":"البديل (\u003cspan class=\"ltr\">−2\u003c/span> و \u003cspan class=\"ltr\">−3\u003c/span>) يكشف خطأ الإشارة عند تطبيق خاصية الضرب الصفري."},{"lv":"فهم","q":"تحليل المقدار \u003cspan class=\"ltr\">x² − 9\u003c/span> هو:","o":["\u003cspan class=\"ltr\">(x − 3)²\u003c/span>","\u003cspan class=\"ltr\">(x − 3)(x + 3)\u003c/span>","\u003cspan class=\"ltr\">(x − 9)(x + 1)\u003c/span>","\u003cspan class=\"ltr\">x(x − 9)\u003c/span>"],"a":1,"n":"فرق بين مربعين. البديل \u003cspan class=\"ltr\">(x − 3)²\u003c/span> يكشف الخلط بين الصيغتين."},{"lv":"تفكير عليا","q":"اكتب معادلة تربيعية جذراها 4 و \u003cspan class=\"ltr\">−1\u003c/span>.","o":null,"a":-1,"n":"إجابة نموذجية: \u003cspan class=\"ltr\">(x − 4)(x + 1) = 0\u003c/span> أي \u003cspan class=\"ltr\">x² − 3x − 4 = 0\u003c/span>"}],"lang":[{"lv":"تذكّر","q":"الكلمة المكتوبة بالتاء المربوطة هي:","o":["بنت","شجرة","بيت","صوت"],"a":1,"n":"التاء المربوطة تُنطق هاءً عند الوقف: شجرهْ."},{"lv":"تطبيق","q":"أكمل الكلمة: الطالبـ.. تحب القراءة.","o":["ـت","ـة","ـه","ـات"],"a":1,"n":"البديل (ـه) يكشف الخلط بين الهاء والتاء المربوطة، لأن كلتيهما تُنطق هاءً عند الوقف."},{"lv":"تفكير عليا","q":"اكتب ثلاث كلمات تنتهي بتاء مفتوحة.","o":null,"a":-1,"n":"مثال: بيت، صوت، زيت."}],"ar":[{"lv":"فهم","q":"الغرض البلاغي من الاستفهام في قوله تعالى: ﴿هَلْ جَزَاءُ الْإِحْسَانِ إِلَّا الْإِحْسَانُ﴾ هو:","o":["النفي","التمنّي","التعجب","التشويق"],"a":0,"n":"&quot;هل&quot; هنا بمعنى &quot;ما&quot;: ما جزاء الإحسان إلا الإحسان."},{"lv":"تطبيق","q":"في قولنا: &quot;أتُهمل واجبك وأنت قادر عليه؟&quot; الغرض من الاستفهام:","o":["استفهام حقيقي","التوبيخ","التمنّي","التسوية"],"a":1,"n":"المتكلم لا ينتظر جوابًا؛ هو يلوم على تقصير وقع."},{"lv":"تفكير عليا","q":"اكتب جملة استفهامية غرضها البلاغي التمنّي.","o":null,"a":-1,"n":"مثال: &quot;هل إلى عودة أيام الطفولة من سبيل؟&quot;"}]},"t":{"show":"إظهار الإجابة","hide":"إخفاء الإجابة","essay":"سؤال مقالي قصير","start":"بدء","pause":"إيقاف","minute":"دقيقة","copy":"نسخ","copied":"تم","simplify":"النص المبسّط","original":"النص الأصلي","wallEmpty":"لم تصل مشاركات بعد. أول مشاركة من الجوال تظهر هنا مباشرة.","countLabel":"مشاركة","readMore":"قراءة كاملة","openLink":"افتح الرابط","wordEmpty":"الكلمات تظهر هنا فور إرسالها.","rosterEmpty":"تظهر أسماء المتدربات هنا بعد انضمامهن من الجوال.","rosterTotal":"مشاركة"}};
 const $ = s => document.querySelector(s);
 const $$ = s => [...document.querySelectorAll(s)];
 const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -1191,6 +1253,9 @@ function textWithLinks(text){
   });
   return frag;
 }
+const SCHOOLS = Object.fromEntries((D.schools || []).map(x => [x.key, x]));
+let schoolOf = () => null;   // تُعرّف داخل Live
+const colorOf = device => SCHOOLS[schoolOf(device)]?.color || '';
 const initial = name => (name || '').replace(/^(أ\.|أ|د\.)\s*/, '').trim().charAt(0) || '•';
 
 /* ========== عرض المشاركة كاملة ========== */
@@ -1201,6 +1266,7 @@ function openModal(p){
   who.innerHTML = `<span class="av"></span><b></b>`;
   who.querySelector('.av').textContent = initial(p.author);
   who.querySelector('b').textContent = p.author || 'مشاركة';
+  const wc = colorOf(p.device); if (wc) { who.querySelector('b').style.color = wc; who.querySelector('.av').style.background = wc; }
   b.append(who);
   if (p.body) { const full = document.createElement('div'); full.className = 'full'; full.append(textWithLinks(p.body)); b.append(full); }
   b.scrollTop = 0;
@@ -1249,10 +1315,14 @@ const Live = (() => {
   function scheduleRoster(dev){ if (dev) rosterBump = dev; clearTimeout(rosterT); rosterT = setTimeout(renderRoster, ready ? 60 : 0); }
   function renderRoster(){
     const list = $('#rosterList');
-    const rows = [...people.values()].map(p => ({ d: p.device, name: p.name, n: contrib.get(p.device) || 0 }))
+    const rows = [...people.values()].map(p => ({ d: p.device, name: p.name, sc: p.school, n: contrib.get(p.device) || 0 }))
       .sort((a, b) => b.n - a.n || a.name.localeCompare(b.name, 'ar'));
     animateNum($('#rosterCount'), rows.length);
     animateNum($('#rosterSum'), [...contrib.values()].reduce((a, b) => a + b, 0));
+    $('#rosterSchools').innerHTML = (D.schools || []).map(sc => {
+      const mine = rows.filter(r => r.sc === sc.key);
+      return `<div class="rs" style="--sc:${sc.color}"><i></i><span>${escHtml(sc.name)}</span><b>${mine.reduce((a, r) => a + r.n, 0)}</b><small>${mine.length} متدربة</small></div>`;
+    }).join('');
     if (!rows.length) { list.innerHTML = `<li class="roster-empty">${escHtml(D.t.rosterEmpty)}</li>`; return; }
     const before = new Map([...list.children].filter(li => li.dataset.d).map(li => [li.dataset.d, li.getBoundingClientRect().top]));
     const els = new Map([...list.children].filter(li => li.dataset.d).map(li => [li.dataset.d, li]));
@@ -1263,6 +1333,8 @@ const Live = (() => {
       if (!li) { li = document.createElement('li'); li.dataset.d = r.d; li.innerHTML = '<span class="bar"></span><span class="rk"></span><span class="nm"><i></i><span></span></span><span class="ct"></span>'; }
       li.querySelector('.rk').textContent = i + 1;
       li.querySelector('.nm span').textContent = r.name;
+      li.querySelector('.nm span').style.color = SCHOOLS[r.sc]?.color || '';
+      li.style.setProperty('--sc', SCHOOLS[r.sc]?.color || 'transparent');
       li.querySelector('.nm i').classList.toggle('on', online.has(r.d));
       li.querySelector('.bar').style.transform = `scaleX(${r.n / max})`;
       const ct = li.querySelector('.ct'); ct.textContent = r.n;
@@ -1278,7 +1350,8 @@ const Live = (() => {
       if (dy) li.animate([{ transform: `translateY(${dy}px)` }, { transform: 'none' }], { duration: 550, easing: 'cubic-bezier(.645,.045,.355,1)' });
     });
   }
-  function setPerson(device, name){ if (name) people.set(device, { device, name }); }
+  function setPerson(device, name, school){ if (!name) return; const old = people.get(device); people.set(device, { device, name, school: school || old?.school || null }); }
+  schoolOf = device => people.get(device)?.school || null;
 
   /* --- سحابة الكلمات --- */
   const norm = w => w.replace(/[ً-ْـ]/g, '').replace(/[إأآ]/g, 'ا').replace(/ى/g, 'ي')
@@ -1331,12 +1404,20 @@ const Live = (() => {
     });
     el.querySelector('.av').textContent = initial(p.author);
     el.querySelector('.nm').textContent = p.author || 'مشاركة';
+    el.dataset.device = p.device; paintPost(el, p.device);
     el.querySelector('.hide').onclick = e => { e.stopPropagation(); hidePost(p, el); };
     el.onclick = () => openModal(p);
     wall.prepend(el);
     if (para.isConnected) requestAnimationFrame(() => el.classList.toggle('long', para.scrollHeight > para.clientHeight + 4));
     wallCount++; animateNum($('#wallCount'), wallCount);
   }
+  function paintPost(el, device){
+    const c = colorOf(device); if (!c) return;
+    el.querySelector('.nm').style.color = c;
+    const av = el.querySelector('.av'); av.style.background = c; av.style.color = '#fff';
+    el.style.setProperty('--sc', c); el.classList.add('has-school');
+  }
+  function recolor(device){ document.querySelectorAll(`.post[data-device="${CSS.escape(device)}"]`).forEach(el => paintPost(el, device)); }
   function emptyWall(){ if (!wallCount) $('#wall').innerHTML = `<div class="wall-empty">${escHtml(D.t.wallEmpty)}</div>`; }
   async function hidePost(p, el){
     if (!sb || !key) return;
@@ -1353,16 +1434,16 @@ const Live = (() => {
     if (p.author && !people.has(p.device)) setPerson(p.device, p.author);
     bump(p.device, 1); scheduleRoster(fresh ? p.device : null);
     if (p.topic === 'word') addWord(p.body, fresh); else addWallPost(p, fresh);
-    if (fresh && ready) Motion.notify(p.author || 'متدربة', p.topic === 'word' ? '"' + (p.body || '').slice(0, 30) + '"' : (p.image_path ? 'رفعت صورة' : p.topic === 'create' ? 'شاركت إبداعًا' : 'أرسلت مشاركة'), p.topic === 'word' ? 'i-cloud' : p.image_path ? 'i-image' : 'i-msg');
+    if (fresh && ready) Motion.notify(p.author || 'متدربة', p.topic === 'word' ? '"' + (p.body || '').slice(0, 30) + '"' : (p.image_path ? 'رفعت صورة' : p.topic === 'create' ? 'شاركت إبداعًا' : 'أرسلت مشاركة'), p.topic === 'word' ? 'i-cloud' : p.image_path ? 'i-image' : 'i-msg', colorOf(p.device));
   }
 
   async function loadAll(){
     const [pe, vs, ps] = await Promise.all([
-      sb.from('aiws_people').select('device,name').eq('room', D.room),
+      sb.from('aiws_people').select('device,name,school').eq('room', D.room),
       sb.from('aiws_votes').select('poll_key,choice,device,author').eq('room', D.room),
       sb.from('aiws_posts').select('id,device,author,body,topic,image_path,created_at').eq('room', D.room).order('created_at', { ascending: true }).limit(600),
     ]);
-    (pe.data || []).forEach(p => setPerson(p.device, p.name));
+    (pe.data || []).forEach(p => setPerson(p.device, p.name, p.school));
     (vs.data || []).forEach(v => {
       if (votes[v.poll_key] && votes[v.poll_key][v.choice] !== undefined) votes[v.poll_key][v.choice]++;
       bump(v.device, 1); if (v.author && !people.has(v.device)) setPerson(v.device, v.author);
@@ -1388,8 +1469,8 @@ const Live = (() => {
       .on('postgres_changes', { event: '*', schema: 'public', table: 'aiws_people', filter: 'room=eq.' + D.room }, ({ eventType, new: p }) => {
         if (!p || !p.device) return;
         const isNew = !people.has(p.device);
-        setPerson(p.device, p.name); scheduleRoster();
-        if (isNew && eventType === 'INSERT' && ready) Motion.notify(p.name, 'انضمت إلى ورشة العمل', 'i-user');
+        setPerson(p.device, p.name, p.school); scheduleRoster(); recolor(p.device);
+        if (isNew && eventType === 'INSERT' && ready) Motion.notify(p.name, 'انضمت إلى ورشة العمل' + (SCHOOLS[p.school] ? ' · ' + SCHOOLS[p.school].name : ''), 'i-user', colorOf(p.device));
       })
       .subscribe(st => $('#liveDot').classList.toggle('on', st === 'SUBSCRIBED'));
     const presence = sb.channel('aiws-room-' + D.room);
@@ -1501,11 +1582,12 @@ const Motion = (() => {
 
   // تنبيهات حية أسفل الشاشة
   const stack = document.createElement('div'); stack.className = 'alerts'; document.body.append(stack);
-  function notify(name, what, icon){
+  function notify(name, what, icon, color){
     const el = document.createElement('div'); el.className = 'alert';
     el.innerHTML = `<span class="av"></span><div><b></b><small></small></div>${ico(icon || 'i-spark')}`;
     el.querySelector('.av').textContent = initial(name);
     el.querySelector('b').textContent = name;
+    if (color) { el.querySelector('b').style.color = color; el.querySelector('.av').style.background = color; }
     el.querySelector('small').textContent = what;
     stack.prepend(el);
     while (stack.children.length > 3) stack.lastChild.remove();
@@ -1515,7 +1597,14 @@ const Motion = (() => {
 })();
 
 /* ========== أحداث دخول الشرائح ========== */
+let stageIv = null;
+function stageCycle(){
+  clearInterval(stageIv);
+  const s = $('#s-stage'); s.classList.remove('show-s');
+  stageIv = setInterval(() => { if (!s.classList.contains('active')) { clearInterval(stageIv); return; } s.classList.toggle('show-s'); }, 3200);
+}
 const hooks = {
+  's-stage': stageCycle,
   's-plan': () => setTimeout(runPlan, 500),
   's-quiz': renderQuiz,
   's-close': () => setTimeout(() => confetti(), 800),
