@@ -360,17 +360,26 @@ function renderWord(slot){
 
 /* ---------- الاتصال ---------- */
 function setStatus(on){ $('#status').classList.toggle('on', on); $('#statusTxt').textContent = on ? D.t.online : D.t.offline; }
+// إذا صفّر المقدّم الغرفة: نمسح علامات التصويت والمشاركات المحفوظة، ونعيد تسجيل الاسم
+function applyState(s){
+  const known = store.get('epoch', null);
+  if (s.epoch && known !== s.epoch) {
+    if (known !== null) { store.set('voted', {}); store.set('sent', []); renderSent(); $('#liveSlot').dataset.sig = ''; register(); }
+    store.set('epoch', s.epoch);
+  }
+  state = s; renderState();
+}
 async function fetchState(){
   if (!sb) return;
-  const { data, error } = await sb.from('aiws_state').select('mode,poll_key').eq('room', D.room).maybeSingle();
-  if (!error && data) { state = data; renderState(); }
+  const { data, error } = await sb.from('aiws_state').select('mode,poll_key,epoch').eq('room', D.room).maybeSingle();
+  if (!error && data) applyState(data);
 }
 function connect(){
   if (!window.supabase) { setTimeout(connect, 400); return; }
   sb = window.supabase.createClient(D.url, D.key, { auth: { persistSession: false } });
   fetchState(); register();
   sb.channel('aiws-phone-' + device.slice(0, 8))
-    .on('postgres_changes', { event: '*', schema: 'public', table: 'aiws_state', filter: 'room=eq.' + D.room }, ({ new: s }) => { if (s && s.mode) { state = s; renderState(); } })
+    .on('postgres_changes', { event: '*', schema: 'public', table: 'aiws_state', filter: 'room=eq.' + D.room }, ({ new: s }) => { if (s && s.mode) applyState(s); })
     .subscribe(st => setStatus(st === 'SUBSCRIBED'));
   presence = sb.channel('aiws-room-' + D.room, { config: { presence: { key: device } } });
   presence.subscribe(st => { if (st === 'SUBSCRIBED') presence.track({ role: 'phone', name }); });
