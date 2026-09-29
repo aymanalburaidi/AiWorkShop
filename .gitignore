@@ -1,0 +1,6 @@
+node_modules/
+secrets/
+.playwright-mcp/
+*.log
+ai-teacher-workshop.html
+resources/

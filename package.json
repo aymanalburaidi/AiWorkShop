@@ -1,0 +1,12 @@
+{
+  "name": "aiworkshop",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "deploy": "node scripts/build.mjs && node scripts/deploy.mjs"
+  },
+  "devDependencies": {
+    "qrcode": "1.5.4"
+  }
+}

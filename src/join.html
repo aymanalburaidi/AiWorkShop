@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#15445a">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="ورشة العمل">
+<meta name="format-detection" content="telephone=no">
+<title>{{join-page.page_title|text}}</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#15445a; --green:#07a869; --blue:#3d7eb9; --teal:#0da9a6; --sand:#c1b489; --violet:#7258a4;
+  --bg:#F5F8F8; --ink:#15445a; --muted:#5B7380; --line:#DDE7E8;
+  --grad:linear-gradient(115deg,#07a869 0%,#0da9a6 50%,#3d7eb9 100%);
+  --shadow:0 10px 26px -16px rgba(21,68,90,.3);
+  --ease:cubic-bezier(.165,.84,.44,1);
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+body{font-family:'Tajawal',system-ui,-apple-system,sans-serif;font-weight:400;font-size:17px;line-height:1.7;background:var(--bg);color:var(--ink);min-height:100dvh;
+  padding:calc(env(safe-area-inset-top) + 12px) calc(env(safe-area-inset-right) + 16px) calc(env(safe-area-inset-bottom) + 28px) calc(env(safe-area-inset-left) + 16px)}
+h1,h2,h3,b,button{font-weight:500}
+button{font-family:inherit;touch-action:manipulation;cursor:pointer}
+.icon{width:1.2em;height:1.2em;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;flex:none;vertical-align:-.2em}
+.wrap{max-width:560px;margin:0 auto;display:grid;gap:14px}
+header{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:4px 2px 6px}
+header img.moe{height:40px} header img.yafea{height:28px}
+.hero{background:var(--navy);color:#fff;border-radius:22px;padding:18px 18px 20px;position:relative;overflow:hidden}
+.hero::after{content:"";position:absolute;inset:auto -40px -60px auto;width:170px;height:170px;border-radius:50%;background:var(--grad);opacity:.45;filter:blur(8px)}
+.hero small{opacity:.8}
+.hero h1{font-size:1.35rem;line-height:1.5;position:relative;z-index:1}
+.status{display:flex;align-items:center;gap:8px;font-size:.88rem;margin-top:10px;position:relative;z-index:1;opacity:.9}
+.status .dot{width:9px;height:9px;border-radius:50%;background:#9fb3bb}
+.status.on .dot{background:#34d399;box-shadow:0 0 0 4px rgba(52,211,153,.25)}
+.card{background:#fff;border:1px solid var(--line);border-radius:20px;padding:18px;box-shadow:var(--shadow);animation:in .45s var(--ease) both}
+@keyframes in{from{opacity:0;transform:translateY(12px) scale(.98)}}
+.card h2{font-size:1.15rem;display:flex;align-items:center;gap:8px;margin-bottom:6px}
+.card h2 .icon{color:var(--teal)}
+.hint{color:var(--muted);font-size:.95rem;margin-bottom:12px}
+label{display:block;font-size:.92rem;color:var(--muted);margin-bottom:6px}
+input,textarea{width:100%;font-family:inherit;font-size:17px;color:var(--ink);border:1.5px solid var(--line);border-radius:14px;padding:12px 14px;background:#FAFCFC;outline:none;transition:border-color .15s,box-shadow .15s;-webkit-appearance:none;appearance:none}
+input:focus,textarea:focus{border-color:var(--teal);box-shadow:0 0 0 4px rgba(13,169,166,.14)}
+textarea{min-height:130px;resize:vertical;line-height:1.7}
+.row{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:10px}
+.count{font-size:.82rem;color:var(--muted);direction:ltr}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:50px;padding:0 22px;border-radius:14px;border:0;background:var(--navy);color:#fff;font-size:1.05rem;transition:transform .12s var(--ease),opacity .15s}
+.btn:active{transform:scale(.97)}
+.btn:disabled{opacity:.45}
+.btn.full{width:100%}
+.opts{display:grid;gap:10px}
+.opt{position:relative;overflow:hidden;display:flex;align-items:center;gap:12px;text-align:right;width:100%;min-height:56px;padding:12px 14px;border-radius:14px;border:1.5px solid var(--line);background:#fff;color:var(--ink);font-size:1.05rem;transition:border-color .15s,background .15s,transform .12s var(--ease)}
+.opt:active{transform:scale(.98)}
+.opt .n{width:32px;height:32px;border-radius:10px;display:grid;place-items:center;background:rgba(21,68,90,.07);flex:none}
+.opt.picked{border-color:var(--green);background:rgba(7,168,105,.08)}
+.opt.picked .n{background:var(--green);color:#fff}
+.opts.done .opt:not(.picked){opacity:.5}
+.done-msg{display:flex;gap:8px;align-items:center;margin-top:12px;color:#067a4d;font-size:.95rem}
+[hidden]{display:none!important}
+.poll-card{border:2px solid var(--teal)}
+.pulse{display:inline-flex;align-items:center;gap:6px;font-size:.8rem;color:#fff;background:var(--teal);padding:2px 10px;border-radius:999px;margin-bottom:8px}
+.pulse::before{content:"";width:6px;height:6px;border-radius:50%;background:#fff;animation:blink 1.2s infinite}
+@keyframes blink{50%{opacity:.2}}
+.privacy{display:flex;gap:8px;align-items:flex-start;font-size:.85rem;color:#7b6c3a;background:rgba(193,180,137,.15);border-radius:12px;padding:8px 10px;margin-bottom:10px}
+.sent{display:grid;gap:8px;margin-top:12px}
+.sent div{font-size:.9rem;background:#F4F9F8;border-radius:12px;padding:8px 12px;white-space:pre-wrap;word-break:break-word;animation:in .35s var(--ease) both}
+details.prompt{border:1px solid var(--line);border-radius:14px;margin-top:10px;background:#FAFCFC}
+details.prompt summary{list-style:none;padding:12px 14px;display:flex;align-items:center;justify-content:space-between;gap:8px;font-weight:500}
+details.prompt summary::-webkit-details-marker{display:none}
+details.prompt summary .icon{color:var(--muted);transition:transform .2s var(--ease)}
+details.prompt[open] summary .icon{transform:rotate(-90deg)}
+details.prompt p{padding:0 14px 12px;white-space:pre-wrap;font-size:.95rem;line-height:1.9}
+details.prompt .btn{margin:0 14px 14px;min-height:44px;font-size:.95rem;background:var(--teal)}
+.toast{position:fixed;z-index:40;top:calc(env(safe-area-inset-top) + 12px);right:16px;left:16px;max-width:528px;margin:0 auto;background:var(--green);color:#fff;padding:12px 16px;border-radius:14px;box-shadow:0 12px 30px -10px rgba(0,0,0,.35);transform:translateY(-140%);transition:transform .3s var(--ease);text-align:center}
+.toast.err{background:#b42318}
+.toast.on{transform:none}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+<script src="{{cfg.supabaseJs}}" defer></script>
+</head>
+<body>
+{{@include icons.svg}}
+<div class="wrap">
+  <header>
+    <img class="moe" src="../assets/moe-logo.png" alt="وزارة التعليم">
+    <img class="yafea" src="../assets/yafea-logo.png" alt="يافع المستقبل">
+  </header>
+
+  <section class="hero">
+    <small>{{cover.tag}}</small>
+    <h1>{{cover.title}} {{cover.title_accent}}</h1>
+    <div class="status" id="status"><span class="dot"></span><span id="statusTxt">…</span></div>
+  </section>
+
+  <div id="pollSlot"></div>
+
+  <section class="card" id="welcome">
+    <h2><svg class="icon"><use href="#i-spark"/></svg> {{join-page.welcome_title}}</h2>
+    <p class="hint" style="margin:0">{{join-page.welcome_text}}</p>
+  </section>
+
+  <section class="card" id="shareCard">
+    <h2><svg class="icon"><use href="#i-send"/></svg> {{join-page.share_title}}</h2>
+    <p class="hint">{{join-page.share_hint}}</p>
+    <div style="margin-bottom:12px">
+      <label for="name">{{join-page.name_label}}</label>
+      <input id="name" maxlength="40" autocomplete="name" placeholder="{{join-page.name_placeholder|text}}">
+    </div>
+    <div class="privacy"><svg class="icon"><use href="#i-lock"/></svg><span>{{join-page.share_privacy}}</span></div>
+    <textarea id="body" maxlength="600" placeholder="{{join-page.share_placeholder|text}}"></textarea>
+    <div class="row"><span class="count" id="count">0/600</span><button class="btn" id="send"><svg class="icon"><use href="#i-send"/></svg>{{join-page.share_button}}</button></div>
+    <div class="sent" id="sent"></div>
+  </section>
+
+  <section class="card">
+    <h2><svg class="icon"><use href="#i-copy"/></svg> {{join-page.prompts_title}}</h2>
+    <div id="prompts"></div>
+  </section>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+const D = {{DATA}};
+const $ = s => document.querySelector(s);
+const ico = id => `<svg class="icon"><use href="#${id}"/></svg>`;
+const store = {
+  get(k, d){ try { const v = localStorage.getItem('aiws_' + k); return v === null ? d : JSON.parse(v); } catch (e) { return d; } },
+  set(k, v){ try { localStorage.setItem('aiws_' + k, JSON.stringify(v)); } catch (e) {} },
+};
+function uid(){
+  if (crypto.randomUUID) return crypto.randomUUID();
+  const a = new Uint8Array(16); crypto.getRandomValues(a); return [...a].map(b => b.toString(16).padStart(2, '0')).join('');
+}
+const device = store.get('device', null) || (() => { const d = uid(); store.set('device', d); return d; })();
+let toastT;
+function toast(msg, err){ const t = $('#toast'); t.textContent = msg; t.className = 'toast on' + (err ? ' err' : ''); clearTimeout(toastT); toastT = setTimeout(() => t.className = 'toast' + (err ? ' err' : ''), 2600); }
+
+/* ---------- الاسم ---------- */
+const nameEl = $('#name');
+nameEl.value = store.get('name', '');
+nameEl.addEventListener('input', () => store.set('name', nameEl.value.trim()));
+
+/* ---------- الأوامر الجاهزة ---------- */
+$('#prompts').innerHTML = D.prompts.map((p, i) => `<details class="prompt"><summary>${p.title.replace(/</g,'&lt;')}${ico('i-next')}</summary><p></p><button class="btn copy" data-i="${i}">${ico('i-copy')}<span>${D.copy}</span></button></details>`).join('');
+document.querySelectorAll('details.prompt p').forEach((p, i) => p.textContent = D.prompts[i].text);
+document.querySelectorAll('.copy').forEach(b => b.onclick = async () => {
+  const txt = D.prompts[b.dataset.i].text;
+  let ok = false;
+  try { await navigator.clipboard.writeText(txt); ok = true; } catch (e) {
+    const ta = document.createElement('textarea'); ta.value = txt; ta.setAttribute('readonly', ''); ta.style.position = 'fixed'; ta.style.opacity = '0';
+    document.body.appendChild(ta); ta.select(); ta.setSelectionRange(0, txt.length); try { ok = document.execCommand('copy'); } catch (_) {} ta.remove();
+  }
+  if (ok) { b.querySelector('span').textContent = D.copied; setTimeout(() => b.querySelector('span').textContent = D.copy, 1600); }
+});
+
+/* ---------- المشاركة ---------- */
+const bodyEl = $('#body'), sendBtn = $('#send');
+bodyEl.addEventListener('input', () => $('#count').textContent = bodyEl.value.length + '/600');
+function renderSent(){
+  $('#sent').innerHTML = '';
+  store.get('sent', []).slice(-5).reverse().forEach(t => { const d = document.createElement('div'); d.textContent = t; $('#sent').append(d); });
+}
+renderSent();
+
+/* ---------- الاتصال ---------- */
+let sb = null, state = { mode: 'idle', poll_key: null };
+function setStatus(on){ $('#status').classList.toggle('on', on); $('#statusTxt').textContent = on ? 'متصلة بالعرض' : D.t.offline; }
+
+sendBtn.onclick = async () => {
+  const body = bodyEl.value.trim();
+  if (!body || !sb) return;
+  sendBtn.disabled = true;
+  const { error } = await sb.from('aiws_posts').insert({ room: D.room, device, author: nameEl.value.trim() || null, body });
+  sendBtn.disabled = false;
+  if (error) { toast(/rate_limited/.test(error.message) ? D.t.error_rate : D.t.error_net, true); return; }
+  const sent = store.get('sent', []); sent.push(body); store.set('sent', sent.slice(-20));
+  bodyEl.value = ''; $('#count').textContent = '0/600'; bodyEl.blur();
+  renderSent(); toast(D.t.share_sent);
+};
+
+function renderState(){
+  const slot = $('#pollSlot');
+  const p = state.mode === 'poll' && D.polls[state.poll_key] ? state.poll_key : null;
+  $('#welcome').style.display = state.mode === 'idle' && !p ? '' : 'none';
+  if (!p) { slot.innerHTML = ''; slot.dataset.p = ''; return; }
+  if (slot.dataset.p === p) return;
+  slot.dataset.p = p;
+  const poll = D.polls[p], voted = store.get('voted', {})[p];
+  slot.innerHTML = `<section class="card poll-card"><span class="pulse">تصويت الآن</span><h2>${poll.question.replace(/</g,'&lt;')}</h2>
+    <div class="opts ${voted !== undefined ? 'done' : ''}">${poll.options.map((o, i) => `<button class="opt ${voted === i ? 'picked' : ''}" data-i="${i}"><span class="n">${i + 1}</span><span>${o.replace(/</g,'&lt;')}</span></button>`).join('')}</div>
+    <div class="done-msg" ${voted === undefined ? 'hidden' : ''}>${ico('i-check-circle')}<span>${D.t.poll_done}</span></div></section>`;
+  slot.querySelectorAll('.opt').forEach(b => b.onclick = () => vote(p, Number(b.dataset.i), slot));
+  if (state.mode === 'poll') slot.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+async function vote(p, i, slot){
+  const voted = store.get('voted', {});
+  if (voted[p] !== undefined || !sb) return;
+  const opts = slot.querySelector('.opts');
+  opts.classList.add('done'); opts.children[i].classList.add('picked');
+  if (navigator.vibrate) navigator.vibrate(15);
+  const { error } = await sb.from('aiws_votes').insert({ room: D.room, poll_key: p, choice: i, device });
+  if (error && error.code !== '23505') { opts.classList.remove('done'); opts.children[i].classList.remove('picked'); toast(D.t.error_net, true); return; }
+  voted[p] = i; store.set('voted', voted);
+  slot.querySelector('.done-msg').hidden = false;
+}
+
+async function fetchState(){
+  if (!sb) return;
+  const { data, error } = await sb.from('aiws_state').select('mode,poll_key').eq('room', D.room).maybeSingle();
+  if (!error && data) { state = data; renderState(); }
+}
+function connect(){
+  if (!window.supabase) { setTimeout(connect, 400); return; }
+  sb = window.supabase.createClient(D.url, D.key, { auth: { persistSession: false } });
+  fetchState();
+  sb.channel('aiws-phone-' + device.slice(0, 8))
+    .on('postgres_changes', { event: '*', schema: 'public', table: 'aiws_state', filter: 'room=eq.' + D.room }, ({ new: s }) => { if (s && s.mode) { state = s; renderState(); } })
+    .subscribe(st => setStatus(st === 'SUBSCRIBED'));
+  const presence = sb.channel('aiws-room-' + D.room, { config: { presence: { key: device } } });
+  presence.subscribe(st => { if (st === 'SUBSCRIBED') presence.track({ role: 'phone' }); });
+  // iPhone يوقف الاتصال عند قفل الشاشة؛ نحدّث الحالة عند العودة ودوريًا
+  document.addEventListener('visibilitychange', () => { if (!document.hidden) fetchState(); });
+  setInterval(fetchState, 15000);
+}
+setStatus(false);
+renderState();
+window.addEventListener('load', connect);
+</script>
+</body>
+</html>

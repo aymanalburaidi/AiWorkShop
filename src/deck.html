@@ -1,0 +1,1026 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{settings.page_title|text}}</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+/* ========== ألوان هوية وزارة التعليم (دليل الهوية البصرية 2025) ========== */
+:root{
+  --navy:#15445a; --green:#07a869; --blue:#3d7eb9; --teal:#0da9a6; --sand:#c1b489; --grey:#c2c1c1;
+  --blue2:#218caa; --sky:#69cee3; --violet:#7258a4;
+  --bg:#F5F8F8; --surface:#FFFFFF; --ink:#15445a; --muted:#5B7380; --line:#DDE7E8;
+  --grad:linear-gradient(115deg,#07a869 0%,#0da9a6 50%,#3d7eb9 100%);
+  --shadow:0 14px 34px -18px rgba(21,68,90,.28);
+  --radius:18px;
+  /* الحركة */
+  --ease-out-quart:cubic-bezier(.165,.84,.44,1);
+  --ease-out-expo:cubic-bezier(.19,1,.22,1);
+  --ease-in-out-cubic:cubic-bezier(.645,.045,.355,1);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;overflow:hidden}
+body{
+  font-family:'Tajawal',system-ui,sans-serif;font-weight:400;font-size:18px;
+  background:var(--bg);color:var(--ink);line-height:1.75;min-width:1100px;
+  display:grid;grid-template-rows:auto 1fr auto;height:100vh;
+}
+/* الحد الأقصى لوزن الخط 500 */
+h1,h2,h3,b,strong,th,button{font-weight:500}
+button{font-family:inherit;cursor:pointer}
+.ltr{direction:ltr;unicode-bidi:isolate;display:inline-block}
+.icon{width:1.25em;height:1.25em;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;flex:none;vertical-align:-.22em}
+
+/* ========== الخلفية الحية ========== */
+.bg{position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none}
+.bg::after{content:"";position:absolute;inset:-40px;background-image:radial-gradient(rgba(21,68,90,.08) 1.2px,transparent 1.2px);background-size:28px 28px;mask-image:linear-gradient(180deg,#000,transparent 85%);animation:drift 60s linear infinite}
+@keyframes drift{to{transform:translate(28px,28px)}}
+.blob{position:absolute;border-radius:50%;filter:blur(90px);opacity:.22;animation:float 24s ease-in-out infinite alternate}
+.b1{width:560px;height:560px;background:var(--teal);top:-220px;left:-160px}
+.b2{width:480px;height:480px;background:var(--green);bottom:-220px;right:-140px;animation-duration:28s}
+.b3{width:360px;height:360px;background:var(--blue);top:40%;left:45%;opacity:.12;animation-duration:32s}
+@keyframes float{to{transform:translate(70px,40px) scale(1.14)}}
+
+/* ========== الترويسة ========== */
+.progress{position:fixed;top:0;right:0;left:0;height:3px;z-index:20;background:rgba(21,68,90,.06)}
+.progress span{display:block;height:100%;width:0;background:var(--grad);transition:width .8s var(--ease-out-expo)}
+.topbar{position:relative;z-index:10;display:flex;align-items:center;justify-content:space-between;padding:16px 40px 4px}
+.org,.partner{display:flex;align-items:center;gap:14px;animation:logoIn 1s var(--ease-out-expo) both .1s}
+.partner{animation-name:logoIn2}
+@keyframes logoIn{from{opacity:0;transform:translateX(30px)}}
+@keyframes logoIn2{from{opacity:0;transform:translateX(-30px)}}
+.org img{height:62px;width:auto}
+.org-name{font-size:.84rem;color:var(--muted);line-height:1.5;border-inline-start:1px solid var(--line);padding-inline-start:14px}
+.partner img{height:48px;width:auto}
+
+/* ========== الشرائح والانتقال ========== */
+.deck{position:relative;z-index:1;min-height:0;overflow:hidden}
+.slide{
+  position:absolute;inset:0;overflow-y:auto;padding:12px 64px 24px;display:flex;
+  opacity:0;visibility:hidden;transform:translateX(-60px);filter:blur(6px);
+  transition:opacity .6s var(--ease-out-quart),transform .9s var(--ease-out-expo),filter .6s var(--ease-out-quart),visibility 0s linear .9s;
+}
+.slide.active{opacity:1;visibility:visible;transform:none;filter:none;transition:opacity .6s var(--ease-out-quart),transform .9s var(--ease-out-expo),filter .6s var(--ease-out-quart),visibility 0s}
+.slide.leaving{transform:translateX(60px);transition-duration:.35s,.5s,.35s,0s}
+.deck[data-dir="prev"] .slide:not(.active):not(.leaving){transform:translateX(60px)}
+.deck[data-dir="prev"] .slide.leaving{transform:translateX(-60px)}
+.slide-inner{margin:auto;width:100%;max-width:1180px}
+
+/* ظهور العناصر تباعًا */
+.reveal{opacity:0}
+.slide.active .reveal{animation:rise .8s var(--ease-out-quart) both;animation-delay:calc(var(--i,0) * 80ms + 220ms)}
+@keyframes rise{from{opacity:0;transform:translateY(26px);filter:blur(6px)}to{opacity:1;transform:none;filter:none}}
+/* العناوين كلمة كلمة */
+.split .w{display:inline-block;opacity:0}
+.slide.active .split .w{animation:word .9s var(--ease-out-expo) both;animation-delay:calc(var(--w) * 55ms + 120ms)}
+@keyframes word{from{opacity:0;transform:translateY(.55em) rotate(2deg);filter:blur(8px)}to{opacity:1;transform:none;filter:none}}
+
+/* ========== الطباعة ========== */
+.kicker{display:inline-flex;align-items:center;gap:8px;padding:5px 14px;border-radius:999px;background:rgba(13,169,166,.1);color:#0a7f7d;font-weight:500;font-size:.92rem;margin-bottom:14px}
+.slide.active .kicker .icon{animation:spinIn .9s var(--ease-out-expo) both .3s}
+@keyframes spinIn{from{transform:rotate(-120deg) scale(.4);opacity:0}}
+h1{font-size:4.4rem;line-height:1.35;font-weight:500}
+h2{font-size:2.5rem;line-height:1.4;margin-bottom:10px}
+h3{font-size:1.16rem;margin-bottom:4px}
+.grad-text{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+.lead{font-size:1.2rem;color:var(--muted);max-width:820px}
+.muted{color:var(--muted)}
+.head{margin-bottom:24px}
+
+/* ========== الأزرار ========== */
+.btn{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line);background:var(--surface);color:var(--ink);padding:9px 18px;border-radius:12px;font-size:.96rem;transition:transform .18s var(--ease-out-quart),box-shadow .18s,background .18s}
+.btn:hover{transform:translateY(-2px);box-shadow:var(--shadow)}
+.btn:active{transform:scale(.97)}
+.btn.primary{background:var(--navy);color:#fff;border-color:var(--navy)}
+.btn.small{padding:6px 12px;font-size:.86rem}
+.btn.ghost{background:transparent;border-color:transparent;color:var(--muted)}
+.btn:disabled{opacity:.35;pointer-events:none}
+.icon-btn{width:40px;height:40px;display:grid;place-items:center;border-radius:12px;border:1px solid var(--line);background:rgba(255,255,255,.8);color:var(--muted);transition:.18s}
+.icon-btn:hover{background:var(--navy);color:#fff}
+
+/* ========== البطاقات ========== */
+.grid{display:grid;gap:18px;grid-template-columns:repeat(4,1fr)}
+.card{background:rgba(255,255,255,.94);border:1px solid var(--line);border-radius:var(--radius);padding:22px;box-shadow:var(--shadow);transition:transform .3s var(--ease-out-quart),box-shadow .3s}
+.card:hover{transform:translateY(-6px);box-shadow:0 22px 40px -18px rgba(21,68,90,.32)}
+.card p{color:var(--muted)}
+.ic{width:50px;height:50px;border-radius:14px;display:grid;place-items:center;margin-bottom:14px;font-size:1.35rem;flex:none}
+.card:hover .ic .icon{animation:nudge .5s var(--ease-out-quart)}
+@keyframes nudge{40%{transform:translateY(-3px) rotate(-8deg)}}
+.c-green{background:rgba(7,168,105,.1);color:var(--green)}
+.c-teal{background:rgba(13,169,166,.1);color:var(--teal)}
+.c-blue{background:rgba(61,126,185,.1);color:var(--blue)}
+.c-sand{background:rgba(193,180,137,.2);color:#8a7a45}
+.c-violet{background:rgba(114,88,164,.1);color:var(--violet)}
+.c-navy{background:rgba(21,68,90,.08);color:var(--navy)}
+
+/* ========== الغلاف ========== */
+#s-title .slide-inner{display:flex;flex-direction:column;min-height:100%}
+.cover{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}
+.tag{display:inline-flex;align-items:center;gap:10px;padding:8px 22px;border-radius:999px;background:var(--navy);color:#fff;font-size:1.05rem;font-weight:500;margin-bottom:24px}
+.tag::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 0 0 rgba(7,168,105,.6);animation:ping 2.4s var(--ease-out-quart) infinite 1.2s}
+@keyframes ping{70%{box-shadow:0 0 0 10px rgba(7,168,105,0)}100%{box-shadow:0 0 0 0 rgba(7,168,105,0)}}
+.cover h1{max-width:1000px}
+.cover-rule{width:140px;height:4px;border-radius:4px;background:var(--grad);margin:28px auto 22px;transform-origin:center}
+.slide.active .cover-rule{animation:draw 1.1s var(--ease-out-expo) both .9s}
+@keyframes draw{from{transform:scaleX(0)}}
+.partnership{font-size:1.3rem;color:var(--muted);max-width:860px;font-weight:300;line-height:1.9}
+.school{color:var(--green);font-weight:500}
+.cover-foot{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:16px;padding-top:18px;border-top:1px solid var(--line)}
+.cover-foot .person:last-child{justify-self:end}
+.person{display:flex;align-items:center;gap:12px}
+.person .ic{margin:0;width:44px;height:44px}
+.person small{display:block;color:var(--muted);font-size:.86rem}
+.person span{font-size:1.1rem;font-weight:500}
+.date-chip{display:flex;align-items:center;gap:10px;padding:8px 18px;border-radius:999px;background:#fff;border:1px solid var(--line);color:var(--muted);font-size:.95rem;box-shadow:var(--shadow)}
+.date-chip .icon{color:var(--teal)}
+.date-chip i{width:1px;height:16px;background:var(--line)}
+.date-chip b{color:var(--ink)}
+
+/* ========== مقدّم ورشة العمل ========== */
+.trainer{display:grid;grid-template-columns:1fr 380px;gap:56px;align-items:center}
+.trainer h2{font-size:3rem;margin-bottom:12px}
+.badge{display:inline-flex;align-items:center;gap:10px;padding:8px 16px;border-radius:12px;background:rgba(7,168,105,.1);color:#067a4d;font-weight:500;margin-bottom:22px}
+.role{display:flex;align-items:center;gap:16px;background:rgba(255,255,255,.94);border:1px solid var(--line);border-radius:16px;padding:16px 18px;box-shadow:var(--shadow);margin-bottom:12px}
+.role .ic{margin:0}
+.role p{font-size:1.14rem}
+.license-wrap{perspective:1200px}
+.license{width:100%;border-radius:22px;box-shadow:0 30px 60px -24px rgba(21,68,90,.45);transform-style:preserve-3d;transition:transform .4s var(--ease-out-quart);display:block;background:#fff}
+.slide.active .license-wrap{animation:cardIn 1.2s var(--ease-out-expo) both .3s}
+@keyframes cardIn{from{opacity:0;transform:translateY(40px) rotateX(18deg) rotateY(-14deg)}}
+
+/* ========== الانضمام ========== */
+.join{display:grid;grid-template-columns:1fr 400px;gap:56px;align-items:center}
+.qr-big{background:#fff;border-radius:28px;padding:22px;box-shadow:0 30px 60px -26px rgba(21,68,90,.45);position:relative}
+.qr-big img{width:100%;display:block}
+.qr-big::before{content:"";position:absolute;inset:-3px;border-radius:30px;background:var(--grad);z-index:-1;opacity:.9}
+.slide.active .qr-big{animation:qrIn 1s var(--ease-out-expo) both .35s}
+@keyframes qrIn{from{opacity:0;transform:scale(.9) rotate(-3deg)}}
+.url{margin-top:14px;text-align:center;font-size:1rem;color:var(--muted)}
+.url b{color:var(--ink)}
+.join-steps{list-style:none;display:grid;gap:10px;counter-reset:s;margin:22px 0}
+.join-steps li{counter-increment:s;display:flex;gap:14px;align-items:center;font-size:1.14rem}
+.join-steps li::before{content:counter(s);flex:none;width:34px;height:34px;border-radius:10px;background:var(--navy);color:#fff;display:grid;place-items:center;font-weight:500}
+.online{display:inline-flex;align-items:center;gap:10px;padding:10px 18px;border-radius:14px;background:rgba(7,168,105,.1);color:#067a4d;font-size:1.1rem}
+.online .dot{width:10px;height:10px;border-radius:50%;background:var(--green);animation:ping 2s infinite}
+.online b{font-size:1.5rem;font-variant-numeric:tabular-nums}
+
+/* ========== الاستطلاع الحي ========== */
+.poll-wrap{display:grid;grid-template-columns:1fr 250px;gap:40px;align-items:start}
+.poll{display:grid;gap:14px}
+.poll-opt{position:relative;overflow:hidden;display:flex;align-items:center;gap:14px;padding:16px 20px;border-radius:14px;border:1px solid var(--line);background:#fff;font-size:1.12rem;transition:border-color .3s}
+.poll-opt .fill{position:absolute;inset:0 0 0 auto;width:100%;transform:scaleX(0);transform-origin:right;background:linear-gradient(90deg,rgba(61,126,185,.14),rgba(7,168,105,.22));transition:transform .9s var(--ease-in-out-cubic)}
+.poll-opt>*:not(.fill){position:relative}
+.poll-opt .n{width:36px;height:36px;border-radius:10px;display:grid;place-items:center;background:rgba(21,68,90,.07);font-weight:500}
+.poll-opt .lbl{flex:1}
+.poll-opt .num{color:var(--blue);font-weight:500;min-width:92px;text-align:left;font-variant-numeric:tabular-nums}
+.poll-opt.top{border-color:var(--green)}
+.poll-opt.top .n{background:var(--green);color:#fff}
+.poll-opt.bump{animation:bump .5s var(--ease-out-quart)}
+@keyframes bump{40%{transform:scale(1.015)}}
+.side-qr{background:#fff;border:1px solid var(--line);border-radius:20px;padding:16px;text-align:center;box-shadow:var(--shadow)}
+.side-qr img{width:100%;display:block}
+.side-qr p{font-size:.9rem;color:var(--muted);margin-top:8px}
+.total{display:flex;align-items:center;gap:10px;margin-top:16px;color:var(--muted)}
+.total b{color:var(--ink);font-size:1.3rem;font-variant-numeric:tabular-nums}
+
+/* ========== الأهداف والمسار ========== */
+.goals{display:grid;gap:12px}
+.goal{display:flex;gap:18px;align-items:center;background:rgba(255,255,255,.94);border:1px solid var(--line);border-radius:16px;padding:14px 20px;box-shadow:var(--shadow)}
+.goal b{font-size:1.9rem;min-width:40px;text-align:center}
+.goal p{font-size:1.1rem}
+.tl-bar{display:flex;height:16px;margin:4px 0 24px;gap:4px}
+.tl-bar span{height:100%;transform:scaleX(0);transform-origin:right;border-radius:5px}
+.slide.active .tl-bar span{animation:grow .7s var(--ease-out-expo) forwards;animation-delay:calc(var(--k) * 160ms + 400ms)}
+@keyframes grow{to{transform:scaleX(1)}}
+.tl-list{display:grid;gap:12px;grid-template-columns:repeat(3,1fr)}
+.tl-item{display:flex;gap:14px;align-items:center;background:rgba(255,255,255,.94);border:1px solid var(--line);border-radius:14px;padding:12px 16px}
+.tl-item .min{flex:none;min-width:58px;text-align:center;border-radius:10px;padding:6px 4px;color:#fff;font-weight:500;line-height:1.3}
+.tl-item p{color:var(--muted);font-size:.95rem}
+.tl-c0{background:var(--navy)}.tl-c1{background:var(--blue)}.tl-c2{background:var(--teal)}.tl-c3{background:var(--green)}.tl-c4{background:#a39463}.tl-c5{background:var(--violet)}
+
+/* ========== معادلة الأمر ========== */
+.formula{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:22px}
+.fchip{border:1.5px solid transparent;padding:9px 18px;border-radius:14px;font-size:1.05rem;background:#fff;box-shadow:var(--shadow);transition:transform .2s var(--ease-out-quart),background .2s,color .2s}
+.fchip:hover,.fchip.on{transform:translateY(-4px)}
+.fchip small{display:block;font-weight:400;font-size:.78rem;color:var(--muted)}
+.plus{font-size:1.3rem;color:var(--grey)}
+.k-role{border-color:var(--green);color:#067a4d} .k-task{border-color:var(--blue);color:#2c5f8f}
+.k-ctx{border-color:var(--sand);color:#7b6c3a} .k-fmt{border-color:var(--violet);color:#5a4585} .k-lim{border-color:var(--teal);color:#0a7f7d}
+.fchip.on,.fchip.on small{color:#fff}
+.k-role.on{background:var(--green)} .k-task.on{background:var(--blue)} .k-ctx.on{background:#a39463} .k-fmt.on{background:var(--violet)} .k-lim.on{background:var(--teal)}
+.compare{display:grid;gap:14px}
+.bad,.good{border-radius:16px;padding:16px 20px;font-size:1.08rem;display:flex;gap:12px;align-items:flex-start}
+.bad{background:#FFF5F5;border:1px dashed #F2B8B5;color:#8c3a36}
+.good{background:#fff;border:1px solid var(--line);box-shadow:var(--shadow);line-height:2.2}
+.bad .icon,.good .icon{margin-top:.4em}
+.good>.icon{color:var(--green)}
+.seg{padding:3px 6px;border-radius:8px;transition:box-shadow .25s,transform .25s var(--ease-out-quart);display:inline}
+.seg.hl{box-shadow:0 0 0 2px currentColor}
+.s-role{background:rgba(7,168,105,.12);color:#067a4d} .s-task{background:rgba(61,126,185,.12);color:#2c5f8f} .s-ctx{background:rgba(193,180,137,.25);color:#6b5d30}
+.s-fmt{background:rgba(114,88,164,.12);color:#5a4585} .s-lim{background:rgba(13,169,166,.12);color:#0a7f7d}
+
+/* ========== التبويبات والمحادثة ========== */
+.tabs{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px}
+.tab{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line);background:#fff;padding:7px 16px;border-radius:999px;color:var(--muted);transition:background .2s,color .2s}
+.tab.on{background:var(--navy);color:#fff;border-color:var(--navy)}
+.chat{background:#fff;border:1px solid var(--line);border-radius:20px;box-shadow:var(--shadow);overflow:hidden}
+.chat-head{display:flex;align-items:center;gap:10px;padding:10px 16px;border-bottom:1px solid var(--line);background:#F7FAFA;color:var(--muted);font-size:.9rem}
+.chat-head .icon{color:var(--teal)}
+.chat-body{padding:18px;display:grid;gap:14px;height:42vh;overflow-y:auto;scroll-behavior:smooth}
+.msg{max-width:92%;padding:12px 16px;border-radius:16px;white-space:pre-wrap}
+.msg.user{justify-self:start;background:var(--navy);color:#fff;border-bottom-right-radius:4px;animation:rise .5s var(--ease-out-quart) both}
+.msg.ai{justify-self:end;background:#F0F8F7;border:1px solid #D5ECEA;border-bottom-left-radius:4px;min-height:52px}
+.msg.ai.typing::after{content:"▍";color:var(--teal);animation:blink .8s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+.thinking{display:inline-flex;gap:5px}
+.thinking i{width:8px;height:8px;border-radius:50%;background:var(--teal);animation:bounce 1s infinite}
+.thinking i:nth-child(2){animation-delay:.15s}.thinking i:nth-child(3){animation-delay:.3s}
+@keyframes bounce{50%{transform:translateY(-6px);opacity:.4}}
+.row-between{display:flex;justify-content:space-between;align-items:center;gap:10px}
+
+/* ========== الأسئلة ========== */
+.qgrid{display:grid;gap:16px;grid-template-columns:repeat(3,1fr)}
+.qcard{background:#fff;border:1px solid var(--line);border-radius:16px;padding:18px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:10px;animation:rise .6s var(--ease-out-quart) both;animation-delay:calc(var(--n) * 110ms)}
+.level{align-self:flex-start;font-size:.8rem;font-weight:500;padding:3px 10px;border-radius:999px;background:rgba(61,126,185,.1);color:var(--blue)}
+.qcard ol{list-style:none;display:grid;gap:6px}
+.qcard li{padding:6px 12px;border-radius:10px;background:#F7FAFA;border:1px solid var(--line);transition:background .35s,border-color .35s,color .35s}
+.qcard.shown li.ok{background:rgba(7,168,105,.1);border-color:var(--green);color:#067a4d;font-weight:500}
+.qcard.shown li:not(.ok){opacity:.55}
+.ans{display:none;font-size:.95rem;background:rgba(193,180,137,.14);border:1px solid rgba(193,180,137,.6);border-radius:10px;padding:10px 12px}
+.qcard.shown .ans{display:flex;gap:8px;animation:rise .45s var(--ease-out-quart) both}
+
+/* ========== التغذية الراجعة والتبسيط ========== */
+.duo{display:grid;gap:20px;grid-template-columns:1fr 1fr}
+.panel{background:rgba(255,255,255,.96);border:1px solid var(--line);border-radius:20px;padding:22px;box-shadow:var(--shadow)}
+.panel h3{display:flex;align-items:center;gap:10px}
+.student{background:#F7FAFA;border-inline-start:3px solid var(--violet);padding:10px 14px;border-radius:10px;margin:12px 0 14px}
+.fb{display:grid;gap:8px}
+.fb div{padding:10px 14px;border-radius:12px;display:flex;gap:10px;align-items:flex-start}
+.fb .icon{margin-top:.3em}
+.fb .f1{background:rgba(7,168,105,.08)} .fb .f1 .icon{color:var(--green)}
+.fb .f2{background:rgba(193,180,137,.18)} .fb .f2 .icon{color:#8a7a45}
+.fb .f3{background:rgba(61,126,185,.08)} .fb .f3 .icon{color:var(--blue)}
+.flip{position:relative;min-height:180px;perspective:1200px;margin:12px 0}
+.flip-inner{position:relative;width:100%;min-height:180px;transition:transform .9s var(--ease-out-expo);transform-style:preserve-3d}
+.flip.on .flip-inner{transform:rotateY(180deg)}
+.face{position:absolute;inset:0;backface-visibility:hidden;border-radius:14px;padding:16px;display:flex;flex-direction:column;justify-content:center}
+.face.front{background:#F7FAFA;border:1px solid var(--line)}
+.face.back{background:linear-gradient(135deg,rgba(13,169,166,.1),rgba(61,126,185,.1));border:1px solid rgba(13,169,166,.35);transform:rotateY(180deg)}
+.face small{font-weight:500;color:var(--muted);margin-bottom:6px}
+
+/* ========== الاستخدام المسؤول ========== */
+.banner{margin-top:22px;border-radius:18px;padding:16px 22px;background:var(--navy);color:#fff;display:flex;align-items:center;gap:14px;font-size:1.1rem}
+.banner .steps{display:flex;gap:8px}
+.banner .steps span{background:rgba(255,255,255,.1);padding:5px 14px;border-radius:999px}
+.slide.active .banner .steps span{animation:rise .6s var(--ease-out-quart) both}
+.banner .steps span:nth-child(1){animation-delay:.9s!important}.banner .steps span:nth-child(2){animation-delay:1.05s!important}.banner .steps span:nth-child(3){animation-delay:1.2s!important}.banner .steps span:nth-child(4){animation-delay:1.35s!important}
+.banner>.icon{color:var(--sky)}
+
+/* ========== النشاط والمؤقّت ========== */
+.activity{display:grid;grid-template-columns:1.4fr 1fr;gap:36px;align-items:center}
+.steps-list{list-style:none;display:grid;gap:10px;counter-reset:s}
+.steps-list li{counter-increment:s;display:flex;gap:14px;align-items:center;background:rgba(255,255,255,.94);border:1px solid var(--line);border-radius:14px;padding:11px 16px}
+.steps-list li::before{content:counter(s);flex:none;width:32px;height:32px;border-radius:10px;background:var(--navy);color:#fff;display:grid;place-items:center;font-weight:500}
+.output{margin-top:14px;padding:14px 18px;border-radius:14px;background:rgba(7,168,105,.08);border:1px solid rgba(7,168,105,.4);display:flex;gap:12px;align-items:flex-start}
+.output .icon{color:var(--green);margin-top:.3em}
+.timer{text-align:center}
+.timer svg.ring-svg{width:260px;height:auto;transform:rotate(-90deg)}
+.timer .track{stroke:#E3ECED}
+.timer .arc{stroke:url(#tg);stroke-linecap:round;transition:stroke-dashoffset 1s linear}
+.timer-wrap{position:relative;display:inline-block}
+.time{position:absolute;inset:0;display:grid;place-items:center;font-size:3.1rem;font-weight:500;direction:ltr;font-variant-numeric:tabular-nums}
+.timer.done .time{color:#c0392b;animation:pulse2 1s infinite}
+@keyframes pulse2{50%{transform:scale(1.06)}}
+.timer-btns{display:flex;gap:8px;justify-content:center;margin-top:12px}
+
+/* ========== الأوامر ========== */
+.prompts{display:grid;gap:16px;grid-template-columns:1fr 1fr}
+.prompt-box{background:#fff;border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow);overflow:hidden;display:flex;flex-direction:column}
+.prompt-head{display:flex;justify-content:space-between;align-items:center;padding:9px 14px 9px 10px;background:#F7FAFA;border-bottom:1px solid var(--line);font-weight:500}
+.prompt-head span{display:flex;align-items:center;gap:10px}
+.prompt-head span .icon{color:var(--teal)}
+.prompt-text{padding:14px 16px;font-size:.98rem;white-space:pre-wrap;line-height:2}
+.ph{background:rgba(193,180,137,.25);color:#6b5d30;border-radius:6px;padding:1px 6px;font-weight:500}
+.copy-btn.done{background:var(--green);color:#fff;border-color:var(--green)}
+
+/* ========== جدار المشاركات ========== */
+.wall-head{display:flex;justify-content:space-between;align-items:flex-end;gap:24px;margin-bottom:18px}
+.wall-meta{display:flex;align-items:center;gap:14px}
+.wall-meta .side-qr{width:120px;padding:8px;border-radius:14px}
+.wall-count{text-align:center}
+.wall-count b{display:block;font-size:2.4rem;line-height:1;font-variant-numeric:tabular-nums}
+.wall-count span{color:var(--muted);font-size:.9rem}
+#s-wall .slide-inner{margin-top:0}
+.wall{columns:3;column-gap:16px;min-height:200px}
+.post{break-inside:avoid;margin-bottom:16px;background:#fff;border:1px solid var(--line);border-radius:16px;padding:16px 18px;box-shadow:var(--shadow);position:relative;animation:postIn .6s var(--ease-out-quart) both}
+.post.new{animation:postIn .6s var(--ease-out-quart) both,glow 2.4s var(--ease-out-quart) .2s}
+@keyframes postIn{from{opacity:0;transform:translateY(16px) scale(.95)}}
+@keyframes glow{0%{box-shadow:0 0 0 3px rgba(7,168,105,.55)}100%{box-shadow:var(--shadow)}}
+.post p{white-space:pre-wrap;word-break:break-word;font-size:1.02rem;display:-webkit-box;-webkit-line-clamp:9;-webkit-box-orient:vertical;overflow:hidden}
+.post footer{margin-top:10px;display:flex;align-items:center;gap:8px;color:var(--muted);font-size:.86rem}
+.post footer .av{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;background:rgba(13,169,166,.12);color:var(--teal);font-weight:500;font-size:.8rem}
+.post .hide{position:absolute;top:8px;left:8px;opacity:0;transition:opacity .18s}
+.post:hover .hide{opacity:1}
+.post.out{animation:postOut .2s ease-in forwards}
+@keyframes postOut{to{opacity:0;transform:scale(.94)}}
+.wall-empty{column-span:all;text-align:center;color:var(--muted);padding:50px 0;border:1.5px dashed var(--line);border-radius:18px}
+body:not(.presenter) .post .hide{display:none}
+
+/* ========== الخاتمة ========== */
+.closing{display:grid;grid-template-columns:1.5fr 1fr;gap:40px;align-items:center}
+.quote{font-size:2.5rem;font-weight:500;line-height:1.6;margin:14px 0 18px}
+.qr-card{background:#fff;border:1px solid var(--line);border-radius:22px;padding:24px;box-shadow:var(--shadow);text-align:center}
+.qr-card img{width:230px;height:230px;image-rendering:pixelated;display:block;margin:0 auto 14px}
+.qr-card h3{margin-bottom:2px}
+#confetti{position:fixed;inset:0;pointer-events:none;z-index:30}
+
+/* ========== شريط التنقل ========== */
+.navbar{position:relative;z-index:10;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:8px 40px 14px}
+.dots{display:flex;gap:6px;justify-content:center}
+.dots button{width:8px;height:8px;border-radius:999px;border:0;background:#C9D6D8;transition:width .3s var(--ease-out-quart),background .3s;padding:0}
+.dots button.on{width:24px;background:var(--grad)}
+.counter{color:var(--muted);min-width:60px;text-align:center;direction:ltr;font-variant-numeric:tabular-nums}
+.mid{display:flex;align-items:center;gap:14px}
+.live-dot{width:10px;height:10px;border-radius:50%;background:var(--grey)}
+.live-dot.on{background:var(--green)}
+.live-dot.pres{box-shadow:0 0 0 3px rgba(114,88,164,.35)}
+
+/* ========== ملاحظات المقدّم (N) ========== */
+.notes{position:fixed;z-index:25;bottom:78px;right:50%;transform:translate(50%,20px);width:760px;background:var(--navy);color:#E6F0F1;border-radius:16px;padding:14px 18px;font-size:.96rem;opacity:0;pointer-events:none;transition:.3s var(--ease-out-quart);box-shadow:0 20px 40px -10px rgba(0,0,0,.4)}
+.notes.on{opacity:1;transform:translate(50%,0);pointer-events:auto}
+.notes b{color:var(--sky)}
+.toast{position:fixed;z-index:40;top:20px;right:50%;transform:translate(50%,-20px);background:var(--green);color:#fff;padding:10px 20px;border-radius:12px;opacity:0;transition:.25s var(--ease-out-quart);pointer-events:none}
+.toast.on{opacity:1;transform:translate(50%,0)}
+
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
+}
+</style>
+<script src="{{cfg.supabaseJs}}" defer></script>
+</head>
+<body>
+{{@include icons.svg}}
+
+<div class="bg" aria-hidden="true"><div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div></div>
+<canvas id="confetti" aria-hidden="true"></canvas>
+<div class="progress"><span id="progressBar"></span></div>
+
+<!-- الترويسة: شعار الوزارة يمينًا وشعار يافع يسارًا -->
+<header class="topbar">
+  <div class="org">
+    <img src="assets/moe-logo.png" alt="وزارة التعليم">
+    <span class="org-name">{{settings.org_line1}}<br>{{settings.org_line2}}</span>
+  </div>
+  <div class="partner"><img src="assets/yafea-logo.png" alt="شركة يافع المستقبل للبحث والتطوير"></div>
+</header>
+
+<main class="deck" id="deck">
+
+  <!-- 1: الغلاف -->
+  <section class="slide" id="s-title" data-notes="{{cover.notes|text}}">
+    <div class="slide-inner">
+      <div class="cover">
+        <span class="tag reveal">{{cover.tag}}</span>
+        <h1 class="split">{{cover.title}}<br><span class="grad-text">{{cover.title_accent}}</span></h1>
+        <div class="cover-rule"></div>
+        <p class="partnership reveal">{{cover.partnership_before}} <span class="school">{{cover.school}}</span> {{cover.partnership_after}}</p>
+      </div>
+      <div class="cover-foot reveal">
+        <div class="person"><span class="ic c-teal"><svg class="icon"><use href="#i-mic"/></svg></span><div><small>{{settings.presenter_label}}</small><span>{{settings.presenter_name}}</span></div></div>
+        <div class="date-chip"><svg class="icon"><use href="#i-calendar"/></svg><b id="dWeek"></b><i></i><span id="dGreg"></span><i></i><span id="dHijri"></span></div>
+        <div class="person"><span class="ic c-green"><svg class="icon"><use href="#i-school"/></svg></span><div><small>{{settings.principal_label}}</small><span>{{settings.principal_name}}</span></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2: مقدّم ورشة العمل -->
+  <section class="slide" id="s-trainer" data-notes="{{trainer.notes|text}}">
+    <div class="slide-inner trainer">
+      <div>
+        <span class="kicker reveal"><svg class="icon"><use href="#i-user"/></svg> {{trainer.kicker}}</span>
+        <h2 class="split">{{trainer.name}}</h2>
+        <div class="badge reveal"><svg class="icon"><use href="#i-award"/></svg> {{trainer.badge}}</div>
+        {{@roles trainer.roles}}
+      </div>
+      <div class="license-wrap"><img class="license" id="license" src="assets/trainer-license.jpg" alt="{{trainer.license_alt|text}}"></div>
+    </div>
+  </section>
+
+  <!-- 3: الانضمام بالجوال -->
+  <section class="slide" id="s-join" data-notes="{{join.notes|text}}">
+    <div class="slide-inner join">
+      <div>
+        <span class="kicker reveal"><svg class="icon"><use href="#i-phone"/></svg> {{join.kicker}}</span>
+        <h2 class="split">{{join.title}}</h2>
+        <p class="lead reveal">{{join.lead}}</p>
+        <ol class="join-steps">{{@steps join.steps}}</ol>
+        <div class="online reveal"><span class="dot"></span><b class="js-online">0</b> متصلة الآن</div>
+      </div>
+      <div>
+        <div class="qr-big"><img src="assets/join-qr.svg" alt="رمز الانضمام"></div>
+        <p class="url">{{join.link_label}}: <b class="ltr">{{@joinurl_display}}</b></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4: استطلاع البداية (حي) -->
+  <section class="slide" id="s-poll1" data-poll="p1" data-notes="{{poll-open.notes|text}}">
+    <div class="slide-inner">
+      <div class="head">
+        <span class="kicker reveal"><svg class="icon"><use href="#i-vote"/></svg> {{poll-open.kicker}}</span>
+        <h2 class="split">{{poll-open.question}}</h2>
+        <p class="lead reveal">{{poll-open.lead}}</p>
+      </div>
+      <div class="poll-wrap">
+        <div><div class="poll reveal" data-poll-list="p1"></div><div class="total reveal"><svg class="icon"><use href="#i-users"/></svg> <b data-poll-total="p1">0</b> صوت</div></div>
+        <div class="side-qr reveal"><img src="assets/join-qr.svg" alt=""><p>{{@joinurl_display}}</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5: لماذا؟ -->
+  <section class="slide" id="s-why" data-notes="{{why.notes|text}}">
+    <div class="slide-inner">
+      <div class="head">
+        <span class="kicker reveal"><svg class="icon"><use href="#i-bulb"/></svg> {{why.kicker}}</span>
+        <h2 class="split">{{why.title}}</h2>
+      </div>
+      <div class="grid">{{@cards why.cards}}</div>
+      <div class="banner reveal"><svg class="icon"><use href="#i-spark"/></svg> {{why.banner}}</div>
+    </div>
+  </section>
+
+  <!-- 6: الأهداف -->
+  <section class="slide" id="s-goals" data-notes="{{goals.notes|text}}">
+    <div class="slide-inner">
+      <div class="head">
+        <span class="kicker reveal"><svg class="icon"><use href="#i-target"/></svg> {{goals.kicker}}</span>
+        <h2 class="split">{{goals.title}}</h2>
+      </div>
+      <div class="goals">{{@goals goals.goals}}</div>
+    </div>
+  </section>
+
+  <!-- 7: مسار ورشة العمل -->
+  <section class="slide" id="s-agenda" data-notes="{{agenda.notes|text}}">
+    <div class="slide-inner">
+      <div class="head">
+        <span class="kicker reveal"><svg class="icon"><use href="#i-calendar"/></svg> {{agenda.kicker}}</span>
+        <h2 class="split">{{agenda.title}}</h2>
+      </div>
+      <div class="tl-bar">{{@tlbar agenda.items}}</div>
+      <div class="tl-list">{{@tllist agenda.items}}</div>
+    </div>
+  </section>
+
+  <!-- 8: معادلة الأمر الفعّال -->
+  <section class="slide" id="s-formula" data-notes="{{formula.notes|text}}">
+    <div class="slide-inner">
+      <div class="head">
+        <span class="kicker reveal"><svg class="icon"><use href="#i-spark"/></svg> {{formula.kicker}}</span>
+        <h2 class="split">{{formula.title}}</h2>
+        <p class="lead reveal">{{formula.lead}}</p>
+      </div>
+      <div class="formula reveal">{{@chips formula.chips}}</div>
+      <div class="compare">
+        <div class="bad reveal"><svg class="icon"><use href="#i-x-circle"/></svg><div><b>{{formula.bad_label}}</b> {{formula.bad}}</div></div>
+        <div class="good reveal"><svg class="icon"><use href="#i-check-circle"/></svg><div><b>{{formula.good_label}}</b> {{@segs formula.good}}</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 9: مثال التخطيط -->
+  <section class="slide" id="s-plan" data-notes="{{plan.notes|text}}">
+    <div class="slide-inner">
+      <div class="head">
+        <span class="kicker reveal"><svg class="icon"><use href="#i-clipboard"/></svg> {{plan.kicker}}</span>
+        <h2 class="split">{{plan.title}}</h2>
+      </div>
+      <div class="row-between reveal">
+        <div class="tabs" id="planTabs">{{@tabs plan}}</div>
+        <button class="btn ghost small" id="planReplay" aria-label="إعادة المثال"><svg class="icon"><use href="#i-refresh"/></svg></button>
+      </div>
+      <div class="chat reveal">
+        <div class="chat-head"><svg class="icon"><use href="#i-spark"/></svg> {{plan.chat_title}}</div>
+        <div class="chat-body" id="planBody"><div class="msg user" id="planPrompt"></div><div class="msg ai" id="planAnswer"></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 10: مثال الأسئلة -->
+  <section class="slide" id="s-quiz" data-notes="{{quiz.notes|text}}">
+    <div class="slide-inner">
+      <div class="head">
+        <span class="kicker reveal"><svg class="icon"><use href="#i-chart"/></svg> {{quiz.kicker}}</span>
+        <h2 class="split">{{quiz.title}}</h2>
+      </div>
+      <div class="tabs reveal" id="quizTabs">{{@tabs quiz}}</div>
+      <div class="qgrid reveal" id="quizGrid"></div>
+    </div>
+  </section>
+
+  <!-- 11: التغذية الراجعة والتبسيط -->
+  <section class="slide" id="s-more" data-notes="{{more.notes|text}}">
+    <div class="slide-inner">
+      <div class="head">
+        <span class="kicker reveal"><svg class="icon"><use href="#i-msg"/></svg> {{more.kicker}}</span>
+        <h2 class="split">{{more.title}}</h2>
+      </div>
+      <div class="duo">
+        <div class="panel reveal">
+          <h3><svg class="icon" style="color:var(--violet)"><use href="#i-msg"/></svg> {{more.fb_title}}</h3>
+          <div class="student"><b>{{more.student_label}}</b><br>{{more.student_answer}}</div>
+          <div class="fb">
+            <div class="f1"><svg class="icon"><use href="#i-check-circle"/></svg><span>{{more.fb_strength}}</span></div>
+            <div class="f2"><svg class="icon"><use href="#i-alert"/></svg><span>{{more.fb_improve}}</span></div>
+            <div class="f3"><svg class="icon"><use href="#i-arrow"/></svg><span>{{more.fb_next}}</span></div>
+          </div>
+        </div>
+        <div class="panel reveal">
+          <div class="row-between"><h3><svg class="icon" style="color:var(--teal)"><use href="#i-refresh"/></svg> {{more.simplify_title}}</h3><button class="btn small primary" id="flipBtn">{{more.simplify_button}}</button></div>
+          <div class="flip" id="flip">
+            <div class="flip-inner">
+              <div class="face front"><small>{{more.original_label}}</small>{{more.original_text}}</div>
+              <div class="face back"><small>{{more.simple_label}}</small>{{more.simple_text}}</div>
+            </div>
+          </div>
+          <p class="muted">{{more.simplify_note}}</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 12: الاستخدام المسؤول -->
+  <section class="slide" id="s-ethics" data-notes="{{ethics.notes|text}}">
+    <div class="slide-inner">
+      <div class="head">
+        <span class="kicker reveal"><svg class="icon"><use href="#i-shield"/></svg> {{ethics.kicker}}</span>
+        <h2 class="split">{{ethics.title}}</h2>
+      </div>
+      <div class="grid">{{@cards ethics.cards}}</div>
+      <div class="banner reveal"><svg class="icon"><use href="#i-refresh"/></svg><span class="steps">{{@pills ethics.steps}}</span></div>
+    </div>
+  </section>
+
+  <!-- 13: النشاط التطبيقي (الجوالات: صندوق المشاركة) -->
+  <section class="slide" id="s-activity" data-mode="share" data-notes="{{activity.notes|text}}">
+    <div class="slide-inner activity">
+      <div>
+        <span class="kicker reveal"><svg class="icon"><use href="#i-pen"/></svg> {{activity.kicker}}</span>
+        <h2 class="split">{{activity.title}}</h2>
+        <ol class="steps-list">{{@steps activity.steps}}</ol>
+        <div class="output reveal"><svg class="icon"><use href="#i-flag"/></svg><span>{{activity.output}}</span></div>
+      </div>
+      <div class="timer reveal" id="timer">
+        <div class="timer-wrap">
+          <svg class="ring-svg" viewBox="0 0 200 200" aria-hidden="true">
+            <defs><linearGradient id="tg" x1="0" x2="1"><stop offset="0" stop-color="#07a869"/><stop offset="1" stop-color="#3d7eb9"/></linearGradient></defs>
+            <circle class="track" cx="100" cy="100" r="88" fill="none" stroke-width="10"/>
+            <circle class="arc" id="arc" cx="100" cy="100" r="88" fill="none" stroke-width="10"/>
+          </svg>
+          <div class="time" id="time">08:00</div>
+        </div>
+        <div class="timer-btns">
+          <button class="btn primary" id="tStart"></button>
+          <button class="btn" id="tPlus"><svg class="icon"><use href="#i-plus"/></svg> {{activity.minute}}</button>
+          <button class="btn" id="tReset" aria-label="إعادة المؤقت"><svg class="icon"><use href="#i-rotate"/></svg></button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 14: الأوامر الجاهزة -->
+  <section class="slide" id="s-prompts" data-mode="share" data-notes="{{prompts.notes|text}}">
+    <div class="slide-inner">
+      <div class="head">
+        <span class="kicker reveal"><svg class="icon"><use href="#i-copy"/></svg> {{prompts.kicker}}</span>
+        <h2 class="split">{{prompts.title}}</h2>
+        <p class="lead reveal">{{prompts.lead}}</p>
+      </div>
+      <div class="prompts">{{@prompts}}</div>
+    </div>
+  </section>
+
+  <!-- 15: جدار المشاركات (حي) -->
+  <section class="slide" id="s-wall" data-mode="share" data-notes="{{wall.notes|text}}">
+    <div class="slide-inner">
+      <div class="wall-head">
+        <div>
+          <span class="kicker reveal"><svg class="icon"><use href="#i-msg"/></svg> {{wall.kicker}}</span>
+          <h2 class="split">{{wall.title}}</h2>
+          <p class="lead reveal">{{wall.lead}}</p>
+        </div>
+        <div class="wall-meta reveal">
+          <div class="wall-count"><b id="wallCount">0</b><span>{{wall.count_label}}</span></div>
+          <div class="side-qr"><img src="assets/join-qr.svg" alt=""></div>
+        </div>
+      </div>
+      <div class="wall" id="wall"></div>
+    </div>
+  </section>
+
+  <!-- 16: استطلاع الختام (حي) -->
+  <section class="slide" id="s-poll2" data-poll="p2" data-notes="{{poll-close.notes|text}}">
+    <div class="slide-inner">
+      <div class="head">
+        <span class="kicker reveal"><svg class="icon"><use href="#i-vote"/></svg> {{poll-close.kicker}}</span>
+        <h2 class="split">{{poll-close.question}}</h2>
+        <p class="lead reveal">{{poll-close.lead}}</p>
+      </div>
+      <div class="poll-wrap">
+        <div><div class="poll reveal" data-poll-list="p2"></div><div class="total reveal"><svg class="icon"><use href="#i-users"/></svg> <b data-poll-total="p2">0</b> صوت</div></div>
+        <div class="side-qr reveal"><img src="assets/join-qr.svg" alt=""><p>{{@joinurl_display}}</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 17: الخاتمة والتواصل -->
+  <section class="slide" id="s-close" data-mode="idle" data-notes="{{closing.notes|text}}">
+    <div class="slide-inner closing">
+      <div>
+        <span class="kicker reveal"><svg class="icon"><use href="#i-flag"/></svg> {{closing.kicker}}</span>
+        <p class="quote reveal">{{closing.quote}}</p>
+        <p class="lead reveal">{{closing.lead}}</p>
+        <p class="reveal" style="margin-top:22px;font-size:1.6rem;font-weight:500">{{closing.thanks}}</p>
+      </div>
+      <div class="qr-card reveal">
+        <img src="assets/contact-qr.png" alt="رمز التواصل مع مقدّم ورشة العمل">
+        <h3>{{closing.contact_title}}</h3>
+        <p class="muted">{{settings.presenter_name}}</p>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<nav class="navbar" aria-label="التنقل بين الشرائح">
+  <button class="btn" id="prevBtn"><svg class="icon"><use href="#i-prev"/></svg>السابق</button>
+  <div class="mid">
+    <span class="live-dot" id="liveDot" title="الاتصال المباشر"></span>
+    <div class="dots" id="dots"></div>
+    <span class="counter" id="counter"></span>
+    <button class="icon-btn" id="fsBtn" aria-label="ملء الشاشة"><svg class="icon"><use href="#i-max"/></svg></button>
+  </div>
+  <button class="btn primary" id="nextBtn">التالي<svg class="icon"><use href="#i-next"/></svg></button>
+</nav>
+
+<aside class="notes" id="notes" aria-live="polite"></aside>
+<div class="toast" id="toast"></div>
+
+<script>
+const D = {{DATA}};
+const $ = s => document.querySelector(s);
+const $$ = s => [...document.querySelectorAll(s)];
+const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const ico = id => `<svg class="icon"><use href="#${id}"/></svg>`;
+const escHtml = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+/* ========== التاريخ الميلادي والهجري من المتصفح ========== */
+(function(){
+  const d = new Date();
+  const part = (loc, opts, type) => new Intl.DateTimeFormat(loc, opts).formatToParts(d).find(p => p.type === type)?.value || '';
+  const g = 'ar-SA-u-ca-gregory-nu-latn', h = 'ar-SA-u-ca-islamic-umalqura-nu-latn';
+  $('#dWeek').textContent = new Intl.DateTimeFormat(g, {weekday:'long'}).format(d);
+  $('#dGreg').textContent = `${part(g,{day:'numeric'},'day')} ${part(g,{month:'long'},'month')} ${part(g,{year:'numeric'},'year')}م`;
+  $('#dHijri').textContent = `${part(h,{day:'numeric'},'day')} ${part(h,{month:'long'},'month')} ${part(h,{year:'numeric'},'year')}هـ`;
+})();
+
+/* ========== تقسيم العناوين إلى كلمات للحركة ========== */
+$$('.split').forEach(el => {
+  let n = 0;
+  const walk = node => [...node.childNodes].forEach(c => {
+    if (c.nodeType === 3) {
+      const frag = document.createDocumentFragment();
+      c.textContent.split(/(\s+)/).forEach(t => {
+        if (!t) return;
+        if (/^\s+$/.test(t)) { frag.append(t); return; }
+        const s = document.createElement('span'); s.className = 'w'; s.style.setProperty('--w', n++); s.textContent = t; frag.append(s);
+      });
+      c.replaceWith(frag);
+    } else if (c.nodeType === 1 && c.tagName !== 'BR') {
+      if (c.classList.contains('grad-text') || c.classList.contains('ltr')) { c.classList.add('w'); c.style.setProperty('--w', n++); }
+      else walk(c);
+    }
+  });
+  walk(el);
+});
+
+/* ========== محرك الشرائح ========== */
+const deck = $('#deck');
+const slides = $$('.slide');
+let cur = 0;
+slides.forEach((s, idx) => {
+  s.querySelectorAll('.reveal').forEach((el, i) => el.style.setProperty('--i', i));
+  const b = document.createElement('button');
+  b.setAttribute('aria-label', 'الشريحة ' + (idx + 1));
+  b.onclick = () => go(idx);
+  $('#dots').appendChild(b);
+});
+function update(){
+  $('#counter').textContent = (cur + 1) + ' / ' + slides.length;
+  $('#progressBar').style.width = ((cur + 1) / slides.length * 100) + '%';
+  $$('#dots button').forEach((d, i) => d.classList.toggle('on', i === cur));
+  $('#prevBtn').disabled = cur === 0;
+  $('#nextBtn').disabled = cur === slides.length - 1;
+  $('#notes').innerHTML = '<b>ملاحظة:</b> ' + escHtml(slides[cur].dataset.notes || '');
+}
+function go(n){
+  n = Math.max(0, Math.min(slides.length - 1, n));
+  if (n === cur) return;
+  deck.dataset.dir = n > cur ? 'next' : 'prev';
+  const old = slides[cur];
+  old.classList.remove('active'); old.classList.add('leaving');
+  setTimeout(() => old.classList.remove('leaving'), 600);
+  cur = n; enter();
+}
+function enter(){
+  const s = slides[cur];
+  s.classList.add('active'); s.scrollTop = 0;
+  update();
+  history.replaceState(null, '', location.pathname + location.search + '#' + (cur + 1));
+  if (hooks[s.id]) hooks[s.id]();
+  Live.slideChanged(s);
+}
+$('#nextBtn').onclick = () => go(cur + 1);
+$('#prevBtn').onclick = () => go(cur - 1);
+document.addEventListener('keydown', e => {
+  if (e.target.closest('input,textarea')) return;
+  if (['ArrowLeft','PageDown'].includes(e.key) || e.code === 'Space'){ e.preventDefault(); go(cur + 1); }
+  else if (['ArrowRight','PageUp'].includes(e.key)){ e.preventDefault(); go(cur - 1); }
+  else if (e.key === 'Home') go(0);
+  else if (e.key === 'End') go(slides.length - 1);
+  else if (e.code === 'KeyN') $('#notes').classList.toggle('on');
+  else if (e.code === 'KeyF') toggleFs();
+  else if (e.code === 'KeyK') Live.askKey();
+});
+function toggleFs(){ if (!document.fullscreenElement) document.documentElement.requestFullscreen?.(); else document.exitFullscreen?.(); }
+$('#fsBtn').onclick = toggleFs;
+function toast(msg){ const t = $('#toast'); t.textContent = msg; t.classList.add('on'); setTimeout(() => t.classList.remove('on'), 1800); }
+
+/* ========== ميلان بطاقة الرخصة مع المؤشر ========== */
+const lic = $('#license');
+lic.parentElement.addEventListener('mousemove', e => {
+  const r = lic.getBoundingClientRect();
+  const x = (e.clientX - r.left) / r.width - .5, y = (e.clientY - r.top) / r.height - .5;
+  lic.style.transform = `rotateY(${x * 14}deg) rotateX(${-y * 12}deg) translateZ(10px)`;
+});
+lic.parentElement.addEventListener('mouseleave', () => lic.style.transform = '');
+
+/* ========== معادلة الأمر ========== */
+$$('.fchip').forEach(c => c.onclick = () => {
+  const k = c.dataset.k, on = !c.classList.contains('on');
+  $$('.fchip').forEach(x => x.classList.remove('on'));
+  $$('.seg').forEach(x => x.classList.remove('hl'));
+  if (on){ c.classList.add('on'); $$('.seg[data-k="' + k + '"]').forEach(x => x.classList.add('hl')); }
+});
+
+/* ========== محاكاة الكتابة ========== */
+let planSub = Object.keys(D.plans)[0], typeToken = 0;
+function runPlan(){
+  const t = ++typeToken, d = D.plans[planSub], ans = $('#planAnswer'), body = $('#planBody');
+  const p = $('#planPrompt'); p.style.animation = 'none'; p.offsetHeight; p.style.animation = ''; p.textContent = d.prompt;
+  ans.classList.remove('typing');
+  if (reduced){ ans.textContent = d.answer; return; }
+  ans.innerHTML = '<span class="thinking"><i></i><i></i><i></i></span>';
+  setTimeout(() => {
+    if (t !== typeToken) return;
+    ans.textContent = ''; ans.classList.add('typing');
+    let i = 0;
+    const step = () => {
+      if (t !== typeToken) return;
+      i = Math.min(d.answer.length, i + 3);
+      ans.textContent = d.answer.slice(0, i);
+      body.scrollTop = body.scrollHeight;
+      if (i < d.answer.length) setTimeout(step, 18); else ans.classList.remove('typing');
+    };
+    step();
+  }, 900);
+}
+$$('#planTabs .tab').forEach(b => b.onclick = () => {
+  $$('#planTabs .tab').forEach(x => x.classList.toggle('on', x === b));
+  planSub = b.dataset.sub; runPlan();
+});
+$('#planReplay').onclick = runPlan;
+
+/* ========== بطاقات الأسئلة ========== */
+let quizSub = Object.keys(D.quiz)[0];
+function renderQuiz(){
+  $('#quizGrid').innerHTML = D.quiz[quizSub].map((q, i) => `
+    <div class="qcard" style="--n:${i}">
+      <span class="level">${q.lv}</span>
+      <p><b>${i + 1}.</b> ${q.q}</p>
+      ${q.o ? '<ol>' + q.o.map((o, j) => `<li class="${j === q.a ? 'ok' : ''}">${'أبجد'[j]}) ${o}</li>`).join('') + '</ol>' : `<p class="muted">${escHtml(D.t.essay)}</p>`}
+      <button class="btn small show-ans">${escHtml(D.t.show)}</button>
+      <div class="ans">${ico('i-bulb')}<span>${q.n}</span></div>
+    </div>`).join('');
+  $$('.show-ans').forEach(b => b.onclick = () => {
+    const c = b.closest('.qcard'); c.classList.toggle('shown');
+    b.textContent = c.classList.contains('shown') ? D.t.hide : D.t.show;
+  });
+}
+$$('#quizTabs .tab').forEach(b => b.onclick = () => {
+  $$('#quizTabs .tab').forEach(x => x.classList.toggle('on', x === b));
+  quizSub = b.dataset.sub; renderQuiz();
+});
+renderQuiz();
+
+/* ========== قبل/بعد التبسيط ========== */
+$('#flipBtn').onclick = () => {
+  const f = $('#flip'); f.classList.toggle('on');
+  $('#flipBtn').textContent = f.classList.contains('on') ? D.t.original : D.t.simplify;
+};
+
+/* ========== المؤقّت ========== */
+const C = 2 * Math.PI * 88;
+let total = D.timer, left = D.timer, tInt = null;
+const arc = $('#arc'); arc.style.strokeDasharray = C;
+function drawTimer(){
+  $('#time').textContent = String(Math.floor(left / 60)).padStart(2, '0') + ':' + String(left % 60).padStart(2, '0');
+  arc.style.strokeDashoffset = C * (1 - left / total);
+  $('#timer').classList.toggle('done', left === 0);
+}
+const setStart = run => $('#tStart').innerHTML = run ? ico('i-pause') + '<span>' + escHtml(D.t.pause) + '</span>' : ico('i-play') + '<span>' + escHtml(D.t.start) + '</span>';
+function stopTimer(){ clearInterval(tInt); tInt = null; setStart(false); }
+$('#tStart').onclick = () => {
+  if (tInt){ stopTimer(); return; }
+  if (left === 0) return;
+  setStart(true);
+  tInt = setInterval(() => { left--; drawTimer(); if (left === 0){ stopTimer(); confetti(90); } }, 1000);
+};
+$('#tPlus').onclick = () => { left += 60; total = Math.max(total, left); drawTimer(); };
+$('#tReset').onclick = () => { stopTimer(); total = left = D.timer; drawTimer(); };
+setStart(false); drawTimer();
+
+/* ========== النسخ ========== */
+async function copyText(txt){
+  try { await navigator.clipboard.writeText(txt); return true; }
+  catch (e){
+    const ta = document.createElement('textarea'); ta.value = txt; ta.style.position = 'fixed'; ta.style.opacity = '0';
+    document.body.appendChild(ta); ta.select(); let ok = false; try { ok = document.execCommand('copy'); } catch (_){}
+    ta.remove(); return ok;
+  }
+}
+$$('.copy-btn').forEach(b => b.onclick = async () => {
+  const ok = await copyText(b.closest('.prompt-box').querySelector('.prompt-text').textContent.trim());
+  if (!ok) return;
+  b.classList.add('done'); b.innerHTML = ico('i-check') + '<span>' + escHtml(D.t.copied) + '</span>';
+  setTimeout(() => { b.classList.remove('done'); b.innerHTML = ico('i-copy') + '<span>' + escHtml(D.t.copy) + '</span>'; }, 1800);
+});
+
+/* ========== القصاصات ========== */
+const cv = $('#confetti'), cx = cv.getContext('2d');
+let parts = [], raf = null;
+function confetti(n = 160){
+  if (reduced) return;
+  cv.width = innerWidth; cv.height = innerHeight;
+  const colors = ['#07a869','#0da9a6','#3d7eb9','#c1b489','#15445a','#69cee3'];
+  for (let i = 0; i < n; i++) parts.push({ x: innerWidth / 2 + (Math.random() - .5) * 240, y: innerHeight * .35, vx: (Math.random() - .5) * 14, vy: Math.random() * -13 - 4, s: Math.random() * 7 + 5, r: Math.random() * 6, vr: (Math.random() - .5) * .3, c: colors[i % colors.length], life: 0 });
+  if (!raf) loop();
+}
+function loop(){
+  cx.clearRect(0, 0, cv.width, cv.height);
+  parts = parts.filter(p => p.life < 220 && p.y < cv.height + 40);
+  parts.forEach(p => { p.vy += .32; p.vx *= .99; p.x += p.vx; p.y += p.vy; p.r += p.vr; p.life++;
+    cx.save(); cx.translate(p.x, p.y); cx.rotate(p.r); cx.fillStyle = p.c; cx.fillRect(-p.s / 2, -p.s / 3, p.s, p.s * .66); cx.restore(); });
+  raf = parts.length ? requestAnimationFrame(loop) : null;
+  if (!raf) cx.clearRect(0, 0, cv.width, cv.height);
+}
+
+/* ========== الاتصال المباشر (Supabase) ========== */
+const Live = (() => {
+  let sb = null, key = null;
+  const votes = {}, seenPosts = new Set();
+  let postCount = 0;
+  for (const p of Object.keys(D.polls)) votes[p] = D.polls[p].options.map(() => 0);
+
+  // قوائم الاستطلاع
+  for (const [p, poll] of Object.entries(D.polls)) {
+    const list = document.querySelector(`[data-poll-list="${p}"]`);
+    list.innerHTML = poll.options.map((o, i) => `<div class="poll-opt" data-i="${i}"><span class="fill"></span><span class="n">${i + 1}</span><span class="lbl">${escHtml(o)}</span><span class="num">0</span></div>`).join('');
+  }
+  function animateNum(el, to){
+    const from = Number(el.dataset.v || 0); el.dataset.v = to;
+    if (reduced || from === to) { el.textContent = el.dataset.fmt ? el.dataset.fmt.replace('#', to) : to; return; }
+    const t0 = performance.now(), dur = 600;
+    const tick = t => { const k = Math.min(1, (t - t0) / dur), e = 1 - Math.pow(1 - k, 4);
+      el.textContent = Math.round(from + (to - from) * e); if (k < 1) requestAnimationFrame(tick); };
+    requestAnimationFrame(tick);
+  }
+  function renderPoll(p, bumped){
+    const v = votes[p], tot = v.reduce((a, b) => a + b, 0), max = Math.max(...v);
+    document.querySelectorAll(`[data-poll-list="${p}"] .poll-opt`).forEach((row, i) => {
+      const pct = tot ? Math.round(v[i] / tot * 100) : 0;
+      row.querySelector('.fill').style.transform = `scaleX(${tot ? v[i] / tot : 0})`;
+      row.querySelector('.num').textContent = v[i] + (tot ? ' · %' + pct : '');
+      row.classList.toggle('top', tot > 0 && v[i] === max);
+      if (bumped === i) { row.classList.remove('bump'); row.offsetWidth; row.classList.add('bump'); }
+    });
+    animateNum(document.querySelector(`[data-poll-total="${p}"]`), tot);
+  }
+  function addPost(p, fresh){
+    if (seenPosts.has(p.id)) return;
+    seenPosts.add(p.id);
+    const wall = $('#wall');
+    wall.querySelector('.wall-empty')?.remove();
+    const el = document.createElement('article');
+    el.className = 'post' + (fresh ? ' new' : '');
+    el.dataset.id = p.id;
+    const name = (p.author || '').trim();
+    el.innerHTML = `<button class="btn ghost small hide" title="إخفاء">${ico('i-eye-off')}</button><p></p><footer><span class="av"></span><span class="nm"></span></footer>`;
+    el.querySelector('p').textContent = p.body;
+    el.querySelector('.av').textContent = name ? name.replace(/^أ\.\s*/, '').charAt(0) : '•';
+    el.querySelector('.nm').textContent = name || 'مشاركة';
+    el.querySelector('.hide').onclick = () => hidePost(p.id, el);
+    wall.prepend(el);
+    postCount++; animateNum($('#wallCount'), postCount);
+  }
+  function emptyWall(){ if (!postCount) $('#wall').innerHTML = `<div class="wall-empty">${escHtml(D.t.wallEmpty)}</div>`; }
+  async function hidePost(id, el){
+    if (!sb || !key) return;
+    const { error } = await sb.rpc('aiws_hide_post', { p_room: D.room, p_secret: key, p_id: id });
+    if (error) { toast('تعذّر الإخفاء'); return; }
+    el.classList.add('out'); setTimeout(() => el.remove(), 220);
+    postCount--; animateNum($('#wallCount'), postCount); emptyWall();
+  }
+
+  async function loadAll(){
+    const [{ data: vs }, { data: ps }] = await Promise.all([
+      sb.from('aiws_votes').select('poll_key,choice').eq('room', D.room),
+      sb.from('aiws_posts').select('id,author,body,created_at').eq('room', D.room).order('created_at', { ascending: true }).limit(300),
+    ]);
+    for (const p of Object.keys(votes)) votes[p].fill(0);
+    (vs || []).forEach(v => { if (votes[v.poll_key] && votes[v.poll_key][v.choice] !== undefined) votes[v.poll_key][v.choice]++; });
+    Object.keys(votes).forEach(p => renderPoll(p));
+    (ps || []).forEach(p => addPost(p, false));
+    emptyWall();
+  }
+
+  function connect(){
+    if (!window.supabase) { setTimeout(connect, 500); return; }
+    sb = window.supabase.createClient(D.url, D.key, { auth: { persistSession: false } });
+    loadAll();
+    sb.channel('aiws-deck-' + D.room)
+      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'aiws_votes', filter: 'room=eq.' + D.room }, ({ new: v }) => {
+        if (!votes[v.poll_key]) return; votes[v.poll_key][v.choice]++; renderPoll(v.poll_key, v.choice);
+      })
+      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'aiws_posts', filter: 'room=eq.' + D.room }, ({ new: p }) => {
+        if (!p.hidden) addPost(p, true);
+      })
+      .subscribe(st => $('#liveDot').classList.toggle('on', st === 'SUBSCRIBED'));
+    const presence = sb.channel('aiws-room-' + D.room);
+    presence.on('presence', { event: 'sync' }, () => {
+      const n = Object.values(presence.presenceState()).filter(m => m[0]?.role === 'phone').length;
+      $$('.js-online').forEach(el => animateNum(el, n));
+    }).subscribe();
+    initKey();
+  }
+
+  async function initKey(){
+    const q = new URLSearchParams(location.search);
+    if (q.get('k')) { localStorage.setItem('aiws_key', q.get('k')); q.delete('k'); history.replaceState(null, '', location.pathname + (q.toString() ? '?' + q : '') + location.hash); }
+    const k = localStorage.getItem('aiws_key');
+    if (!k) return;
+    const { data } = await sb.rpc('aiws_verify', { p_room: D.room, p_secret: k });
+    if (data === true) { key = k; document.body.classList.add('presenter'); $('#liveDot').classList.add('pres'); slideChanged(slides[cur]); }
+    else localStorage.removeItem('aiws_key');
+  }
+  async function askKey(){
+    const k = prompt('مفتاح المقدّم:');
+    if (!k) return;
+    localStorage.setItem('aiws_key', k.trim());
+    await initKey();
+    toast(key ? 'فُعّل وضع المقدّم' : 'المفتاح غير صحيح');
+  }
+  let lastState = '';
+  function slideChanged(s){
+    if (!sb || !key) return;
+    const poll = s.dataset.poll, mode = poll ? 'poll' : (s.dataset.mode || null);
+    if (!mode) return;
+    const sig = mode + ':' + (poll || '');
+    if (sig === lastState) return;
+    lastState = sig;
+    // الطلب لا يُرسل إلا عند انتظار نتيجته
+    sb.rpc('aiws_set_state', { p_room: D.room, p_secret: key, p_mode: mode, p_poll: poll || null })
+      .then(({ error }) => { if (error) { lastState = ''; toast('تعذّر تحديث الجوالات'); } });
+  }
+  return { connect, slideChanged, askKey };
+})();
+
+/* ========== أحداث دخول الشرائح ========== */
+const hooks = {
+  's-plan': () => setTimeout(runPlan, 500),
+  's-quiz': renderQuiz,
+  's-close': () => setTimeout(() => confetti(), 800),
+};
+
+/* ========== التشغيل ========== */
+const start = parseInt(location.hash.slice(1), 10);
+cur = (start >= 1 && start <= slides.length) ? start - 1 : 0;
+window.addEventListener('load', () => Live.connect());
+enter();
+</script>
+</body>
+</html>

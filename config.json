@@ -1,0 +1,8 @@
+{
+  "siteUrl": "https://aymanalburaidi.github.io/AiWorkShop/",
+  "joinPath": "join/",
+  "room": "hs7-ai",
+  "supabaseUrl": "https://dqedhfwaquqaddbtfvtx.supabase.co",
+  "supabaseKey": "sb_publishable_zROcySsWThanD_me0Dq8dw_tGAHzGKk",
+  "supabaseJs": "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.112.3/dist/umd/supabase.js"
+}
