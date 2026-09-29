@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#15445a">
+<meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="ورشة العمل">
 <meta name="format-detection" content="telephone=no">
@@ -22,59 +23,83 @@
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
 body{font-family:'Tajawal',system-ui,-apple-system,sans-serif;font-weight:400;font-size:17px;line-height:1.7;background:var(--bg);color:var(--ink);min-height:100dvh;
-  padding:calc(env(safe-area-inset-top) + 12px) calc(env(safe-area-inset-right) + 16px) calc(env(safe-area-inset-bottom) + 28px) calc(env(safe-area-inset-left) + 16px)}
+  padding:calc(env(safe-area-inset-top) + 12px) calc(env(safe-area-inset-right) + 16px) calc(env(safe-area-inset-bottom) + 24px) calc(env(safe-area-inset-left) + 16px)}
 h1,h2,h3,b,button{font-weight:500}
 button{font-family:inherit;touch-action:manipulation;cursor:pointer}
+[hidden]{display:none!important}
 .icon{width:1.2em;height:1.2em;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;flex:none;vertical-align:-.2em}
 .wrap{max-width:560px;margin:0 auto;display:grid;gap:14px}
 header{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:4px 2px 6px}
 header img.moe{height:40px} header img.yafea{height:28px}
-.hero{background:var(--navy);color:#fff;border-radius:22px;padding:18px 18px 20px;position:relative;overflow:hidden}
-.hero::after{content:"";position:absolute;inset:auto -40px -60px auto;width:170px;height:170px;border-radius:50%;background:var(--grad);opacity:.45;filter:blur(8px)}
+.hero{background:var(--navy);color:#fff;border-radius:22px;padding:18px 18px 18px;position:relative;overflow:hidden}
+.hero::after{content:"";position:absolute;inset:auto -40px -60px auto;width:170px;height:170px;border-radius:50%;background:var(--grad);opacity:.45;filter:blur(8px);animation:drift 9s ease-in-out infinite alternate}
+@keyframes drift{to{transform:translate(-30px,-14px) scale(1.15)}}
 .hero small{opacity:.8}
-.hero h1{font-size:1.35rem;line-height:1.5;position:relative;z-index:1}
-.status{display:flex;align-items:center;gap:8px;font-size:.88rem;margin-top:10px;position:relative;z-index:1;opacity:.9}
+.hero h1{font-size:1.3rem;line-height:1.5;position:relative;z-index:1}
+.hero-row{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-top:10px;position:relative;z-index:1;font-size:.88rem}
+.status{display:flex;align-items:center;gap:8px;opacity:.9}
 .status .dot{width:9px;height:9px;border-radius:50%;background:#9fb3bb}
 .status.on .dot{background:#34d399;box-shadow:0 0 0 4px rgba(52,211,153,.25)}
+.me{display:flex;align-items:center;gap:6px;opacity:.95}
+.me button{background:rgba(255,255,255,.14);color:#fff;border:0;border-radius:999px;padding:3px 10px;font-size:.8rem;min-height:30px}
 .card{background:#fff;border:1px solid var(--line);border-radius:20px;padding:18px;box-shadow:var(--shadow);animation:in .45s var(--ease) both}
 @keyframes in{from{opacity:0;transform:translateY(12px) scale(.98)}}
-.card h2{font-size:1.15rem;display:flex;align-items:center;gap:8px;margin-bottom:6px}
+.card h2{font-size:1.12rem;display:flex;align-items:center;gap:8px;margin-bottom:6px}
 .card h2 .icon{color:var(--teal)}
 .hint{color:var(--muted);font-size:.95rem;margin-bottom:12px}
-label{display:block;font-size:.92rem;color:var(--muted);margin-bottom:6px}
 input,textarea{width:100%;font-family:inherit;font-size:17px;color:var(--ink);border:1.5px solid var(--line);border-radius:14px;padding:12px 14px;background:#FAFCFC;outline:none;transition:border-color .15s,box-shadow .15s;-webkit-appearance:none;appearance:none}
 input:focus,textarea:focus{border-color:var(--teal);box-shadow:0 0 0 4px rgba(13,169,166,.14)}
-textarea{min-height:130px;resize:vertical;line-height:1.7}
+textarea{min-height:140px;max-height:50vh;resize:vertical;line-height:1.7}
 .row{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:10px}
 .count{font-size:.82rem;color:var(--muted);direction:ltr}
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:50px;padding:0 22px;border-radius:14px;border:0;background:var(--navy);color:#fff;font-size:1.05rem;transition:transform .12s var(--ease),opacity .15s}
+.btn{text-decoration:none;display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:50px;padding:0 22px;border-radius:14px;border:0;background:var(--navy);color:#fff;font-size:1.05rem;transition:transform .12s var(--ease),opacity .15s}
 .btn:active{transform:scale(.97)}
 .btn:disabled{opacity:.45}
 .btn.full{width:100%}
+.btn.ghost{background:#EEF4F4;color:var(--ink)}
 .opts{display:grid;gap:10px}
-.opt{position:relative;overflow:hidden;display:flex;align-items:center;gap:12px;text-align:right;width:100%;min-height:56px;padding:12px 14px;border-radius:14px;border:1.5px solid var(--line);background:#fff;color:var(--ink);font-size:1.05rem;transition:border-color .15s,background .15s,transform .12s var(--ease)}
+.opt{position:relative;display:flex;align-items:center;gap:12px;text-align:right;width:100%;min-height:56px;padding:12px 14px;border-radius:14px;border:1.5px solid var(--line);background:#fff;color:var(--ink);font-size:1.05rem;transition:border-color .15s,background .15s,transform .12s var(--ease)}
 .opt:active{transform:scale(.98)}
 .opt .n{width:32px;height:32px;border-radius:10px;display:grid;place-items:center;background:rgba(21,68,90,.07);flex:none}
 .opt.picked{border-color:var(--green);background:rgba(7,168,105,.08)}
 .opt.picked .n{background:var(--green);color:#fff}
 .opts.done .opt:not(.picked){opacity:.5}
 .done-msg{display:flex;gap:8px;align-items:center;margin-top:12px;color:#067a4d;font-size:.95rem}
-[hidden]{display:none!important}
-.poll-card{border:2px solid var(--teal)}
+.live-card{border:2px solid var(--teal)}
 .pulse{display:inline-flex;align-items:center;gap:6px;font-size:.8rem;color:#fff;background:var(--teal);padding:2px 10px;border-radius:999px;margin-bottom:8px}
 .pulse::before{content:"";width:6px;height:6px;border-radius:50%;background:#fff;animation:blink 1.2s infinite}
 @keyframes blink{50%{opacity:.2}}
+.word-row{display:flex;gap:8px}
+.word-row input{flex:1}
 .privacy{display:flex;gap:8px;align-items:flex-start;font-size:.85rem;color:#7b6c3a;background:rgba(193,180,137,.15);border-radius:12px;padding:8px 10px;margin-bottom:10px}
+.attach{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
+.attach label.btn{min-height:44px;font-size:.95rem;padding:0 16px}
+.preview{position:relative;margin-top:10px}
+.preview img{display:block;width:100%;max-height:280px;object-fit:contain;border-radius:14px;background:#EEF4F4}
+.preview button{position:absolute;top:8px;left:8px;min-height:36px;padding:0 12px;font-size:.85rem;background:rgba(21,68,90,.85)}
 .sent{display:grid;gap:8px;margin-top:12px}
-.sent div{font-size:.9rem;background:#F4F9F8;border-radius:12px;padding:8px 12px;white-space:pre-wrap;word-break:break-word;animation:in .35s var(--ease) both}
+.sent h3{font-size:.9rem;color:var(--muted)}
+.sent #sent>div{font-size:.9rem;background:#F4F9F8;border-radius:12px;padding:8px 12px;white-space:pre-wrap;word-break:break-word;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;animation:in .35s var(--ease) both}
 details.prompt{border:1px solid var(--line);border-radius:14px;margin-top:10px;background:#FAFCFC}
-details.prompt summary{list-style:none;padding:12px 14px;display:flex;align-items:center;justify-content:space-between;gap:8px;font-weight:500}
+details.prompt summary{list-style:none;padding:12px 14px;display:flex;align-items:center;gap:10px;font-weight:500}
+details.prompt summary span{flex:1}
 details.prompt summary::-webkit-details-marker{display:none}
-details.prompt summary .icon{color:var(--muted);transition:transform .2s var(--ease)}
-details.prompt[open] summary .icon{transform:rotate(-90deg)}
+details.prompt summary .icon:first-child{color:var(--teal)}
+details.prompt summary .chev{color:var(--muted);transition:transform .2s var(--ease)}
+details.prompt[open] summary .chev{transform:rotate(-90deg)}
 details.prompt p{padding:0 14px 12px;white-space:pre-wrap;font-size:.95rem;line-height:1.9}
 details.prompt .btn{margin:0 14px 14px;min-height:44px;font-size:.95rem;background:var(--teal)}
-.toast{position:fixed;z-index:40;top:calc(env(safe-area-inset-top) + 12px);right:16px;left:16px;max-width:528px;margin:0 auto;background:var(--green);color:#fff;padding:12px 16px;border-radius:14px;box-shadow:0 12px 30px -10px rgba(0,0,0,.35);transform:translateY(-140%);transition:transform .3s var(--ease);text-align:center}
+.contact .btn{width:100%;background:var(--grad)}
+.site-foot{text-align:center;color:var(--muted);font-size:.82rem;padding:6px 0 0}
+/* نافذة الاسم */
+.sheet{position:fixed;inset:0;z-index:60;background:rgba(10,30,40,.55);backdrop-filter:blur(6px);display:flex;align-items:flex-end;justify-content:center;padding:16px;padding-bottom:calc(env(safe-area-inset-bottom) + 16px)}
+.sheet-card{width:100%;max-width:520px;background:#fff;border-radius:24px;padding:22px 20px;box-shadow:0 30px 60px -20px rgba(0,0,0,.4);animation:up .45s var(--ease) both}
+@keyframes up{from{transform:translateY(40px);opacity:0}}
+.sheet-card h2{font-size:1.25rem;margin-bottom:6px}
+.sheet-card p{color:var(--muted);font-size:.95rem;margin-bottom:14px}
+.sheet-card .err{color:#b42318;font-size:.88rem;margin-top:8px}
+.sheet-card .btn{margin-top:14px}
+.toast{position:fixed;z-index:70;top:calc(env(safe-area-inset-top) + 12px);right:16px;left:16px;max-width:528px;margin:0 auto;background:var(--green);color:#fff;padding:12px 16px;border-radius:14px;box-shadow:0 12px 30px -10px rgba(0,0,0,.35);transform:translateY(-160%);transition:transform .3s var(--ease);text-align:center}
 .toast.err{background:#b42318}
 .toast.on{transform:none}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
@@ -84,6 +109,7 @@ details.prompt .btn{margin:0 14px 14px;min-height:44px;font-size:.95rem;backgrou
 <body>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
   <defs>
+    <linearGradient id="tg" x1="0" x2="1"><stop offset="0" stop-color="#07a869"/><stop offset="1" stop-color="#3d7eb9"/></linearGradient>
     <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
     <symbol id="i-layers" viewBox="0 0 24 24"><path d="M12 3 3 8l9 5 9-5-9-5z"/><path d="m3 13 9 5 9-5"/></symbol>
     <symbol id="i-chart" viewBox="0 0 24 24"><path d="M4 20V11M10 20V5M16 20v-6M21 20H3"/></symbol>
@@ -126,6 +152,12 @@ details.prompt .btn{margin:0 14px 14px;min-height:44px;font-size:.95rem;backgrou
     <symbol id="i-phone" viewBox="0 0 24 24"><rect x="6" y="2.5" width="12" height="19" rx="3"/><path d="M11 18h2"/></symbol>
     <symbol id="i-send" viewBox="0 0 24 24"><path d="M21 3 10 14"/><path d="M21 3 14 21l-4-7-7-4z"/></symbol>
     <symbol id="i-wifi" viewBox="0 0 24 24"><path d="M2 8.5a15 15 0 0 1 20 0M5 12a10 10 0 0 1 14 0M8.5 15.5a5 5 0 0 1 7 0"/><path d="M12 19h.01"/></symbol>
+    <symbol id="i-image" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="3"/><circle cx="9" cy="10" r="2"/><path d="m21 16-5-5-9 9"/></symbol>
+    <symbol id="i-layout" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="3"/><path d="M3 9h18M9 9v11"/></symbol>
+    <symbol id="i-link" viewBox="0 0 24 24"><path d="M10 14a4.5 4.5 0 0 0 6.4 0l3-3a4.5 4.5 0 0 0-6.4-6.4l-1 1"/><path d="M14 10a4.5 4.5 0 0 0-6.4 0l-3 3a4.5 4.5 0 0 0 6.4 6.4l1-1"/></symbol>
+    <symbol id="i-x" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></symbol>
+    <symbol id="i-cloud" viewBox="0 0 24 24"><path d="M7 18h10a4 4 0 0 0 .6-8A6 6 0 0 0 6 9.5 4.3 4.3 0 0 0 7 18z"/></symbol>
+    <symbol id="i-trophy" viewBox="0 0 24 24"><path d="M8 4h8v5a4 4 0 0 1-8 0z"/><path d="M8 6H5a3 3 0 0 0 3 4M16 6h3a3 3 0 0 1-3 4M12 13v4M8 21h8M9 17h6"/></symbol>
     <symbol id="i-next" viewBox="0 0 24 24"><path d="M15 6l-6 6 6 6"/></symbol>
     <symbol id="i-prev" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></symbol>
   </defs>
@@ -140,40 +172,65 @@ details.prompt .btn{margin:0 14px 14px;min-height:44px;font-size:.95rem;backgrou
   <section class="hero">
     <small>ورشة عمل</small>
     <h1>الذكاء الاصطناعي في خدمة المعلم والمعلمة</h1>
-    <div class="status" id="status"><span class="dot"></span><span id="statusTxt">…</span></div>
+    <div class="hero-row">
+      <div class="status" id="status"><span class="dot"></span><span id="statusTxt"></span></div>
+      <div class="me" id="me" hidden><span id="meName"></span><button id="changeName">تغيير الاسم</button></div>
+    </div>
   </section>
 
-  <div id="pollSlot"></div>
+  <div id="liveSlot"></div>
 
   <section class="card" id="welcome">
-    <h2><svg class="icon"><use href="#i-spark"/></svg> أهلًا بكِ</h2>
-    <p class="hint" style="margin:0">أبقي هذه الصفحة مفتوحة. عندما يبدأ التصويت يظهر هنا تلقائيًا.</p>
+    <h2><svg class="icon"><use href="#i-spark"/></svg> أبقي هذه الصفحة مفتوحة</h2>
+    <p class="hint" style="margin:0">عندما يبدأ التصويت أو نشاط جديد يظهر هنا تلقائيًا.</p>
   </section>
 
   <section class="card" id="shareCard">
-    <h2><svg class="icon"><use href="#i-send"/></svg> أرسلي مشاركتك</h2>
-    <p class="hint">اكتبي الأمر الذي جربتِه أو أفضل ما خرجتِ به. تظهر مشاركتك على الشاشة أمام الجميع.</p>
-    <div style="margin-bottom:12px">
-      <label for="name">اسمك (اختياري)</label>
-      <input id="name" maxlength="40" autocomplete="name" placeholder="مثال: أ. نورة">
-    </div>
+    <h2><svg class="icon" id="shareIcon"><use href="#i-send"/></svg> <span id="shareTitle">أرسلي مشاركتك</span></h2>
+    <p class="hint" id="shareHint">الصقي الأمر الذي جربتِه أو النتيجة كاملة مهما طالت. تظهر مشاركتك على الشاشة أمام الجميع.</p>
     <div class="privacy"><svg class="icon"><use href="#i-lock"/></svg><span>لا تكتبي أسماء الطالبات أو بياناتهن.</span></div>
-    <textarea id="body" maxlength="600" placeholder="اكتبي مشاركتك هنا"></textarea>
-    <div class="row"><span class="count" id="count">0/600</span><button class="btn" id="send"><svg class="icon"><use href="#i-send"/></svg>أرسلي</button></div>
-    <div class="sent" id="sent"></div>
+    <textarea id="body" maxlength="5000" placeholder="اكتبي أو الصقي هنا"></textarea>
+    <div class="preview" id="preview" hidden><img id="previewImg" alt=""><button class="btn" id="removeImg">حذف الصورة</button></div>
+    <div class="row">
+      <div class="attach">
+        <label class="btn ghost"><svg class="icon"><use href="#i-image"/></svg>إرفاق صورة<input type="file" id="file" accept="image/*" hidden></label>
+      </div>
+      <button class="btn" id="send"><svg class="icon"><use href="#i-send"/></svg><span>أرسلي</span></button>
+    </div>
+    <div class="row" style="margin-top:6px"><span></span><span class="count" id="count">0/5000</span></div>
+    <div class="sent" id="sentWrap" hidden><h3>مشاركاتك</h3><div id="sent" style="display:grid;gap:8px"></div></div>
   </section>
 
   <section class="card">
     <h2><svg class="icon"><use href="#i-copy"/></svg> الأوامر الجاهزة</h2>
     <div id="prompts"></div>
   </section>
+
+  <section class="card contact">
+    <h2><svg class="icon"><use href="#i-user"/></svg> الصفحات الاجتماعية للمدرب</h2>
+    <a class="btn" href="https://go.yafea.org.sa/ayman" target="_blank" rel="noopener"><svg class="icon"><use href="#i-link"/></svg>حسابات التواصل</a>
+  </section>
+
+  <p class="site-foot">ورشة عمل: الذكاء الاصطناعي في خدمة المعلم والمعلمة</p>
+</div>
+
+<!-- الاسم الثلاثي: يُطلب مرة واحدة -->
+<div class="sheet" id="sheet" hidden>
+  <form class="sheet-card" id="nameForm">
+    <h2>أهلًا بكِ في ورشة العمل</h2>
+    <p>اكتبي اسمك الثلاثي مرة واحدة، ويظهر مع مشاركاتك على الشاشة. يحفظه جوالك فلا تكتبينه مرة أخرى.</p>
+    <input id="nameInput" maxlength="80" autocomplete="name" enterkeyhint="done" placeholder="مثال: نورة عبدالله الشمري">
+    <div class="err" id="nameErr" hidden>اكتبي الاسم الثلاثي كاملًا (ثلاث كلمات على الأقل).</div>
+    <button class="btn full" type="submit">ابدئي</button>
+  </form>
 </div>
 <div class="toast" id="toast"></div>
 
 <script>
-const D = {"url":"https://dqedhfwaquqaddbtfvtx.supabase.co","key":"sb_publishable_zROcySsWThanD_me0Dq8dw_tGAHzGKk","room":"hs7-ai","joinUrl":"https://aymanalburaidi.github.io/AiWorkShop/join/","polls":{"p1":{"question":"ما المهمة التي تأخذ أكثر وقتك كل أسبوع؟","options":["تحضير الدروس وتخطيطها","إعداد الأسئلة والاختبارات","التصحيح وكتابة التغذية الراجعة","تكييف المحتوى لمستويات الطالبات"]},"p2":{"question":"ما أول استخدام ستجربينه هذا الأسبوع؟","options":["تخطيط درس","إعداد اختبار قصير","كتابة تغذية راجعة","تبسيط نص لطالباتي"]}},"prompts":[{"title":"تخطيط درس","text":"أنت معلم [اسم المادة] خبير في المرحلة الثانوية. أعدّ خطة درس لموضوع [اسم الموضوع] لطالبات [الصف]، مدة الحصة [45] دقيقة. تضمّن: 3 أهداف قابلة للقياس، وتهيئة من واقع الطالبة، وخطوات الشرح، ونشاطًا تعاونيًا، وتقويمًا ختاميًا من 3 أسئلة، وواجبًا قصيرًا. اعرض الخطة في جدول مع زمن كل مرحلة."},{"title":"اختبار قصير","text":"أعدّ اختبارًا قصيرًا في موضوع [اسم الموضوع] لمادة [اسم المادة]، [الصف]، من [5] أسئلة اختيار من متعدد وسؤالين مقاليين قصيرين، بمستويات متدرجة (تذكّر، فهم، تطبيق، تفكير عليا). اجعل البدائل الخاطئة من أخطاء الطالبات الشائعة، وأضف مفتاح الإجابة مع تعليل مختصر لكل إجابة."},{"title":"تغذية راجعة","text":"هذه إجابة طالبة (دون اسمها) عن السؤال: [نص السؤال]. الإجابة: [إجابة الطالبة]. اكتب لها تغذية راجعة في 3 أسطر: نقطة قوة، وخطأ واحد مع توضيحه، وخطوة عملية للتحسين، بلغة مشجعة تناسب طالبة [الصف]."},{"title":"تبسيط نص","text":"بسّط الفقرة الآتية لطالبة في [الصف] تجد صعوبة في مادة [اسم المادة]، مع الحفاظ على الدقة العلمية. استخدم جملًا قصيرة ومثالًا من الحياة اليومية، ثم أضف سؤالين للتحقق من الفهم. النص: [الصق النص هنا]"}],"t":{"page_title":"شاركي في ورشة العمل","welcome_title":"أهلًا بكِ","welcome_text":"أبقي هذه الصفحة مفتوحة. عندما يبدأ التصويت يظهر هنا تلقائيًا.","name_label":"اسمك (اختياري)","name_placeholder":"مثال: أ. نورة","poll_done":"سجّلنا صوتك، والنتيجة على الشاشة الآن.","share_title":"أرسلي مشاركتك","share_hint":"اكتبي الأمر الذي جربتِه أو أفضل ما خرجتِ به. تظهر مشاركتك على الشاشة أمام الجميع.","share_placeholder":"اكتبي مشاركتك هنا","share_button":"أرسلي","share_sent":"وصلت مشاركتك، وتظهر الآن على الشاشة.","share_privacy":"لا تكتبي أسماء الطالبات أو بياناتهن.","prompts_title":"الأوامر الجاهزة","error_rate":"أرسلتِ عدة مشاركات متتالية. انتظري دقيقة ثم أعيدي المحاولة.","error_net":"تعذّر الإرسال. تأكدي من اتصال الإنترنت وأعيدي المحاولة.","offline":"الاتصال ضعيف، نعيد المحاولة تلقائيًا"},"copy":"نسخ","copied":"تم"};
+const D = {"url":"https://dqedhfwaquqaddbtfvtx.supabase.co","key":"sb_publishable_zROcySsWThanD_me0Dq8dw_tGAHzGKk","room":"hs7-ai","joinUrl":"https://aymanalburaidi.github.io/AiWorkShop/join/","bucket":"aiws-uploads","polls":{"p1":{"question":"ما المهمة التي تأخذ أكثر وقتك كل أسبوع؟","options":["تحضير الدروس وتخطيطها","إعداد الأسئلة والاختبارات","التصحيح وكتابة التغذية الراجعة","تكييف المحتوى لمستويات الطالبات"]},"p2":{"question":"ما أول استخدام ستجربينه هذا الأسبوع؟","options":["تخطيط درس","إعداد اختبار قصير","كتابة تغذية راجعة","تبسيط نص لطالباتي"]}},"prompts":[{"title":"تخطيط درس","text":"أنت معلم [اسم المادة] خبير في المرحلة الثانوية. أعدّ خطة درس لموضوع [اسم الموضوع] لطالبات [الصف]، مدة الحصة [45] دقيقة. تضمّن: 3 أهداف قابلة للقياس، وتهيئة من واقع الطالبة، وخطوات الشرح، ونشاطًا تعاونيًا، وتقويمًا ختاميًا من 3 أسئلة، وواجبًا قصيرًا. اعرض الخطة في جدول مع زمن كل مرحلة.","icon":"clipboard"},{"title":"اختبار قصير","text":"أعدّ اختبارًا قصيرًا في موضوع [اسم الموضوع] لمادة [اسم المادة]، [الصف]، من [5] أسئلة اختيار من متعدد وسؤالين مقاليين قصيرين، بمستويات متدرجة (تذكّر، فهم، تطبيق، تفكير عليا). اجعل البدائل الخاطئة من أخطاء الطالبات الشائعة، وأضف مفتاح الإجابة مع تعليل مختصر لكل إجابة.","icon":"chart"},{"title":"تغذية راجعة","text":"هذه إجابة طالبة (دون اسمها) عن السؤال: [نص السؤال]. الإجابة: [إجابة الطالبة]. اكتب لها تغذية راجعة في 3 أسطر: نقطة قوة، وخطأ واحد مع توضيحه، وخطوة عملية للتحسين، بلغة مشجعة تناسب طالبة [الصف].","icon":"msg"},{"title":"تبسيط نص","text":"بسّط الفقرة الآتية لطالبة في [الصف] تجد صعوبة في مادة [اسم المادة]، مع الحفاظ على الدقة العلمية. استخدم جملًا قصيرة ومثالًا من الحياة اليومية، ثم أضف سؤالين للتحقق من الفهم. النص: [الصق النص هنا]","icon":"refresh"},{"title":"صورة توضيحية لدرسك","text":"ارسم صورة توضيحية ملونة بأسلوب رسوم تعليمية مبسطة لطالبات المرحلة الثانوية، تشرح مفهوم [اسم المفهوم] في مادة [اسم المادة]. أضف عناصر بصرية تساعد على الفهم، واجعل الخلفية بسيطة، ولا تضع نصوصًا طويلة داخل الصورة.","icon":"image"},{"title":"صفحة تفاعلية لطالباتك","text":"أنشئ صفحة ويب تفاعلية باللغة العربية (من اليمين إلى اليسار) لمراجعة درس [اسم الدرس] في مادة [اسم المادة] لطالبات [الصف]. تحتوي الصفحة على [8] بطاقات تنقلب عند الضغط لتظهر الإجابة، واختبار قصير من [5] أسئلة يعرض الدرجة في النهاية. اجعل التصميم بألوان هادئة ومناسبًا للجوال.","icon":"layout"}],"t":{"page_title":"شاركي في ورشة العمل","name_title":"أهلًا بكِ في ورشة العمل","name_text":"اكتبي اسمك الثلاثي مرة واحدة، ويظهر مع مشاركاتك على الشاشة. يحفظه جوالك فلا تكتبينه مرة أخرى.","name_placeholder":"مثال: نورة عبدالله الشمري","name_error":"اكتبي الاسم الثلاثي كاملًا (ثلاث كلمات على الأقل).","name_button":"ابدئي","hello":"مرحبًا","change_name":"تغيير الاسم","welcome_title":"أبقي هذه الصفحة مفتوحة","welcome_text":"عندما يبدأ التصويت أو نشاط جديد يظهر هنا تلقائيًا.","poll_now":"تصويت الآن","poll_done":"سجّلنا صوتك، والنتيجة على الشاشة الآن.","share_title":"أرسلي مشاركتك","share_hint":"الصقي الأمر الذي جربتِه أو النتيجة كاملة مهما طالت. تظهر مشاركتك على الشاشة أمام الجميع.","create_title":"تحدّي الإبداع: ارفعي عملك","create_hint":"ارفعي الصورة التي صنعتِها، أو ألصقي رابط صفحتك، وأضيفي وصفًا قصيرًا.","share_placeholder":"اكتبي أو الصقي هنا","attach_image":"إرفاق صورة","remove_image":"حذف الصورة","share_button":"أرسلي","sending":"جارٍ الإرسال","share_sent":"وصلت مشاركتك، وتظهر الآن على الشاشة.","share_privacy":"لا تكتبي أسماء الطالبات أو بياناتهن.","sent_title":"مشاركاتك","prompts_title":"الأوامر الجاهزة","contact_title":"الصفحات الاجتماعية للمدرب","contact_button":"حسابات التواصل","error_rate":"أرسلتِ عدة مشاركات متتالية. انتظري دقيقة ثم أعيدي المحاولة.","error_net":"تعذّر الإرسال. تأكدي من اتصال الإنترنت وأعيدي المحاولة.","error_image":"تعذّر رفع الصورة. جرّبي صورة أخرى أو أعيدي المحاولة.","offline":"الاتصال ضعيف، نعيد المحاولة تلقائيًا","online":"متصلة بالعرض","word_title":"بكلمة واحدة","word_question":"ما أول كلمة تخطر ببالك عند سماع \"الذكاء الاصطناعي في التعليم\"؟","word_placeholder":"اكتبي كلمة أو كلمتين","word_button":"أرسلي","word_sent":"وصلت كلمتك. أرسلي كلمة أخرى إن أردتِ."},"copy":"نسخ","copied":"تم"};
 const $ = s => document.querySelector(s);
 const ico = id => `<svg class="icon"><use href="#${id}"/></svg>`;
+const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const store = {
   get(k, d){ try { const v = localStorage.getItem('aiws_' + k); return v === null ? d : JSON.parse(v); } catch (e) { return d; } },
   set(k, v){ try { localStorage.setItem('aiws_' + k, JSON.stringify(v)); } catch (e) {} },
@@ -184,77 +241,156 @@ function uid(){
 }
 const device = store.get('device', null) || (() => { const d = uid(); store.set('device', d); return d; })();
 let toastT;
-function toast(msg, err){ const t = $('#toast'); t.textContent = msg; t.className = 'toast on' + (err ? ' err' : ''); clearTimeout(toastT); toastT = setTimeout(() => t.className = 'toast' + (err ? ' err' : ''), 2600); }
+function toast(msg, err){ const t = $('#toast'); t.textContent = msg; t.className = 'toast on' + (err ? ' err' : ''); clearTimeout(toastT); toastT = setTimeout(() => t.className = 'toast' + (err ? ' err' : ''), 2800); }
 
-/* ---------- الاسم ---------- */
-const nameEl = $('#name');
-nameEl.value = store.get('name', '');
-nameEl.addEventListener('input', () => store.set('name', nameEl.value.trim()));
+let sb = null, state = { mode: 'idle', poll_key: null }, presence = null;
+let name = store.get('name', '');
+
+/* ---------- الاسم الثلاثي (مرة واحدة، يُحفظ في الجوال) ---------- */
+const validName = n => n.trim().split(/\s+/).filter(w => w.length >= 2).length >= 3;
+function showName(){
+  $('#me').hidden = !name;
+  $('#meName').textContent = name ? D.t.hello + '، ' + name.split(/\s+/)[0] : '';
+}
+function openSheet(){ $('#nameInput').value = name; $('#nameErr').hidden = true; $('#sheet').hidden = false; setTimeout(() => $('#nameInput').focus(), 250); }
+$('#changeName').onclick = openSheet;
+$('#nameForm').onsubmit = e => {
+  e.preventDefault();
+  const v = $('#nameInput').value.trim().replace(/\s+/g, ' ');
+  if (!validName(v)) { $('#nameErr').hidden = false; return; }
+  name = v; store.set('name', v);
+  $('#sheet').hidden = true; $('#nameInput').blur();
+  showName(); register();
+};
+async function register(){
+  if (!sb || !name) return;
+  await sb.rpc('aiws_join', { p_room: D.room, p_device: device, p_name: name });
+  if (presence) presence.track({ role: 'phone', name });
+}
+showName();
+if (!validName(name)) openSheet();
 
 /* ---------- الأوامر الجاهزة ---------- */
-$('#prompts').innerHTML = D.prompts.map((p, i) => `<details class="prompt"><summary>${p.title.replace(/</g,'&lt;')}${ico('i-next')}</summary><p></p><button class="btn copy" data-i="${i}">${ico('i-copy')}<span>${D.copy}</span></button></details>`).join('');
+$('#prompts').innerHTML = D.prompts.map((p, i) => `<details class="prompt"><summary>${ico('i-' + (p.icon || 'spark'))}<span>${esc(p.title)}</span><svg class="icon chev"><use href="#i-next"/></svg></summary><p></p><button class="btn copy" data-i="${i}">${ico('i-copy')}<span>${esc(D.copy)}</span></button></details>`).join('');
 document.querySelectorAll('details.prompt p').forEach((p, i) => p.textContent = D.prompts[i].text);
-document.querySelectorAll('.copy').forEach(b => b.onclick = async () => {
-  const txt = D.prompts[b.dataset.i].text;
-  let ok = false;
-  try { await navigator.clipboard.writeText(txt); ok = true; } catch (e) {
+async function copyText(txt){
+  try { await navigator.clipboard.writeText(txt); return true; } catch (e) {
     const ta = document.createElement('textarea'); ta.value = txt; ta.setAttribute('readonly', ''); ta.style.position = 'fixed'; ta.style.opacity = '0';
-    document.body.appendChild(ta); ta.select(); ta.setSelectionRange(0, txt.length); try { ok = document.execCommand('copy'); } catch (_) {} ta.remove();
+    document.body.appendChild(ta); ta.select(); ta.setSelectionRange(0, txt.length); let ok = false; try { ok = document.execCommand('copy'); } catch (_) {} ta.remove(); return ok;
   }
-  if (ok) { b.querySelector('span').textContent = D.copied; setTimeout(() => b.querySelector('span').textContent = D.copy, 1600); }
+}
+document.querySelectorAll('.copy').forEach(b => b.onclick = async () => {
+  if (await copyText(D.prompts[b.dataset.i].text)) { b.querySelector('span').textContent = D.copied; setTimeout(() => b.querySelector('span').textContent = D.copy, 1600); }
 });
 
-/* ---------- المشاركة ---------- */
+/* ---------- الصورة: تصغير قبل الرفع ---------- */
+let imageBlob = null;
+async function shrink(file){
+  const url = URL.createObjectURL(file);
+  try {
+    const img = await new Promise((res, rej) => { const i = new Image(); i.onload = () => res(i); i.onerror = rej; i.src = url; });
+    const max = 1600, k = Math.min(1, max / Math.max(img.naturalWidth, img.naturalHeight));
+    const c = document.createElement('canvas'); c.width = Math.round(img.naturalWidth * k); c.height = Math.round(img.naturalHeight * k);
+    const x = c.getContext('2d'); x.fillStyle = '#fff'; x.fillRect(0, 0, c.width, c.height); x.drawImage(img, 0, 0, c.width, c.height);
+    return await new Promise(res => c.toBlob(res, 'image/jpeg', .84));
+  } finally { URL.revokeObjectURL(url); }
+}
+$('#file').onchange = async e => {
+  const f = e.target.files[0]; e.target.value = '';
+  if (!f) return;
+  try { imageBlob = await shrink(f); } catch (_) { imageBlob = null; toast(D.t.error_image, true); return; }
+  $('#previewImg').src = URL.createObjectURL(imageBlob);
+  $('#preview').hidden = false;
+};
+$('#removeImg').onclick = () => { imageBlob = null; $('#preview').hidden = true; };
+
+/* ---------- الإرسال ---------- */
 const bodyEl = $('#body'), sendBtn = $('#send');
-bodyEl.addEventListener('input', () => $('#count').textContent = bodyEl.value.length + '/600');
+bodyEl.addEventListener('input', () => $('#count').textContent = bodyEl.value.length + '/5000');
 function renderSent(){
+  const list = store.get('sent', []).slice(-5).reverse();
+  $('#sentWrap').hidden = !list.length;
   $('#sent').innerHTML = '';
-  store.get('sent', []).slice(-5).reverse().forEach(t => { const d = document.createElement('div'); d.textContent = t; $('#sent').append(d); });
+  list.forEach(t => { const d = document.createElement('div'); d.textContent = t; $('#sent').append(d); });
 }
 renderSent();
-
-/* ---------- الاتصال ---------- */
-let sb = null, state = { mode: 'idle', poll_key: null };
-function setStatus(on){ $('#status').classList.toggle('on', on); $('#statusTxt').textContent = on ? 'متصلة بالعرض' : D.t.offline; }
-
+async function post(topic, body, blob){
+  if (!sb) { toast(D.t.error_net, true); return false; }
+  if (!name) { openSheet(); return false; }
+  let image_path = null;
+  if (blob) {
+    image_path = `${D.room}/${device.slice(0, 12)}/${Date.now()}.jpg`;
+    const up = await sb.storage.from(D.bucket).upload(image_path, blob, { contentType: 'image/jpeg', upsert: false });
+    if (up.error) { toast(D.t.error_image, true); return false; }
+  }
+  const { error } = await sb.from('aiws_posts').insert({ room: D.room, device, author: name, body, topic, image_path });
+  if (error) { toast(/rate_limited/.test(error.message) ? D.t.error_rate : D.t.error_net, true); return false; }
+  return true;
+}
 sendBtn.onclick = async () => {
   const body = bodyEl.value.trim();
-  if (!body || !sb) return;
-  sendBtn.disabled = true;
-  const { error } = await sb.from('aiws_posts').insert({ room: D.room, device, author: nameEl.value.trim() || null, body });
-  sendBtn.disabled = false;
-  if (error) { toast(/rate_limited/.test(error.message) ? D.t.error_rate : D.t.error_net, true); return; }
-  const sent = store.get('sent', []); sent.push(body); store.set('sent', sent.slice(-20));
-  bodyEl.value = ''; $('#count').textContent = '0/600'; bodyEl.blur();
+  if (!body && !imageBlob) { bodyEl.focus(); return; }
+  sendBtn.disabled = true; sendBtn.querySelector('span').textContent = D.t.sending;
+  const ok = await post(state.mode === 'create' ? 'create' : 'share', body, imageBlob);
+  sendBtn.disabled = false; sendBtn.querySelector('span').textContent = D.t.share_button;
+  if (!ok) return;
+  const sent = store.get('sent', []); sent.push(body || D.t.attach_image); store.set('sent', sent.slice(-20));
+  bodyEl.value = ''; $('#count').textContent = '0/5000'; bodyEl.blur();
+  imageBlob = null; $('#preview').hidden = true;
   renderSent(); toast(D.t.share_sent);
 };
 
+/* ---------- حسب ما يعرضه المقدّم ---------- */
 function renderState(){
-  const slot = $('#pollSlot');
-  const p = state.mode === 'poll' && D.polls[state.poll_key] ? state.poll_key : null;
-  $('#welcome').style.display = state.mode === 'idle' && !p ? '' : 'none';
-  if (!p) { slot.innerHTML = ''; slot.dataset.p = ''; return; }
-  if (slot.dataset.p === p) return;
-  slot.dataset.p = p;
+  const slot = $('#liveSlot');
+  const sig = state.mode + ':' + (state.poll_key || '');
+  $('#welcome').hidden = state.mode !== 'idle';
+  const create = state.mode === 'create';
+  $('#shareTitle').textContent = create ? D.t.create_title : D.t.share_title;
+  $('#shareHint').textContent = create ? D.t.create_hint : D.t.share_hint;
+  $('#shareCard').classList.toggle('live-card', create || state.mode === 'share');
+  if (slot.dataset.sig === sig) return;
+  slot.dataset.sig = sig;
+  slot.innerHTML = '';
+  if (state.mode === 'poll' && D.polls[state.poll_key]) renderPoll(slot, state.poll_key);
+  else if (state.mode === 'word') renderWord(slot);
+  if (state.mode === 'poll' || state.mode === 'word') slot.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  else if (create || state.mode === 'share') $('#shareCard').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+function renderPoll(slot, p){
   const poll = D.polls[p], voted = store.get('voted', {})[p];
-  slot.innerHTML = `<section class="card poll-card"><span class="pulse">تصويت الآن</span><h2>${poll.question.replace(/</g,'&lt;')}</h2>
-    <div class="opts ${voted !== undefined ? 'done' : ''}">${poll.options.map((o, i) => `<button class="opt ${voted === i ? 'picked' : ''}" data-i="${i}"><span class="n">${i + 1}</span><span>${o.replace(/</g,'&lt;')}</span></button>`).join('')}</div>
-    <div class="done-msg" ${voted === undefined ? 'hidden' : ''}>${ico('i-check-circle')}<span>${D.t.poll_done}</span></div></section>`;
+  slot.innerHTML = `<section class="card live-card"><span class="pulse">${esc(D.t.poll_now)}</span><h2>${esc(poll.question)}</h2>
+    <div class="opts ${voted !== undefined ? 'done' : ''}">${poll.options.map((o, i) => `<button class="opt ${voted === i ? 'picked' : ''}" data-i="${i}"><span class="n">${i + 1}</span><span>${esc(o)}</span></button>`).join('')}</div>
+    <div class="done-msg" ${voted === undefined ? 'hidden' : ''}>${ico('i-check-circle')}<span>${esc(D.t.poll_done)}</span></div></section>`;
   slot.querySelectorAll('.opt').forEach(b => b.onclick = () => vote(p, Number(b.dataset.i), slot));
-  if (state.mode === 'poll') slot.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 async function vote(p, i, slot){
   const voted = store.get('voted', {});
   if (voted[p] !== undefined || !sb) return;
+  if (!name) { openSheet(); return; }
   const opts = slot.querySelector('.opts');
   opts.classList.add('done'); opts.children[i].classList.add('picked');
-  if (navigator.vibrate) navigator.vibrate(15);
-  const { error } = await sb.from('aiws_votes').insert({ room: D.room, poll_key: p, choice: i, device });
+  const { error } = await sb.from('aiws_votes').insert({ room: D.room, poll_key: p, choice: i, device, author: name });
   if (error && error.code !== '23505') { opts.classList.remove('done'); opts.children[i].classList.remove('picked'); toast(D.t.error_net, true); return; }
   voted[p] = i; store.set('voted', voted);
   slot.querySelector('.done-msg').hidden = false;
 }
+function renderWord(slot){
+  slot.innerHTML = `<section class="card live-card"><span class="pulse">${esc(D.t.word_title)}</span><h2>${esc(D.t.word_question)}</h2>
+    <form class="word-row"><input maxlength="40" enterkeyhint="send" placeholder="${esc(D.t.word_placeholder)}"><button class="btn">${esc(D.t.word_button)}</button></form></section>`;
+  const f = slot.querySelector('form'), inp = f.querySelector('input'), btn = f.querySelector('button');
+  f.onsubmit = async e => {
+    e.preventDefault();
+    const w = inp.value.trim(); if (!w) return;
+    btn.disabled = true;
+    const ok = await post('word', w, null);
+    btn.disabled = false;
+    if (ok) { inp.value = ''; toast(D.t.word_sent); }
+  };
+}
 
+/* ---------- الاتصال ---------- */
+function setStatus(on){ $('#status').classList.toggle('on', on); $('#statusTxt').textContent = on ? D.t.online : D.t.offline; }
 async function fetchState(){
   if (!sb) return;
   const { data, error } = await sb.from('aiws_state').select('mode,poll_key').eq('room', D.room).maybeSingle();
@@ -263,12 +399,12 @@ async function fetchState(){
 function connect(){
   if (!window.supabase) { setTimeout(connect, 400); return; }
   sb = window.supabase.createClient(D.url, D.key, { auth: { persistSession: false } });
-  fetchState();
+  fetchState(); register();
   sb.channel('aiws-phone-' + device.slice(0, 8))
     .on('postgres_changes', { event: '*', schema: 'public', table: 'aiws_state', filter: 'room=eq.' + D.room }, ({ new: s }) => { if (s && s.mode) { state = s; renderState(); } })
     .subscribe(st => setStatus(st === 'SUBSCRIBED'));
-  const presence = sb.channel('aiws-room-' + D.room, { config: { presence: { key: device } } });
-  presence.subscribe(st => { if (st === 'SUBSCRIBED') presence.track({ role: 'phone' }); });
+  presence = sb.channel('aiws-room-' + D.room, { config: { presence: { key: device } } });
+  presence.subscribe(st => { if (st === 'SUBSCRIBED') presence.track({ role: 'phone', name }); });
   // iPhone يوقف الاتصال عند قفل الشاشة؛ نحدّث الحالة عند العودة ودوريًا
   document.addEventListener('visibilitychange', () => { if (!document.hidden) fetchState(); });
   setInterval(fetchState, 15000);

@@ -66,20 +66,20 @@ const R = {
   segs: ref => items(get(ref)).map(([k, t]) => `<span class="seg s-${k}" data-k="${esc(k)}">${inline(t)}</span>`).join(' '),
   tabs: id => subs(id).map((s, i) =>
     `<button class="tab${i ? '' : ' on'}" data-sub="${s}">${ico(C[id][s + '.icon'] || 'spark')} ${inline(C[id][s + '.tab'])}</button>`).join('\n'),
-  prompts: () => promptList().map(p =>
+  prompts: id => promptList(id).map(p =>
     `<div class="prompt-box reveal"><div class="prompt-head"><span>${ico(p.icon)} ${inline(p.title)}</span><button class="btn small copy-btn">${ico('copy')}<span>${esc(get('prompts.copy'))}</span></button></div>
 <div class="prompt-text">${withPh(inline(p.text))}</div></div>`).join('\n'),
   include: file => read('src/' + file),
   joinurl: () => esc(joinUrl),
   joinurl_display: () => esc(joinUrl.replace(/^https?:\/\//, '').replace(/\/$/, '')),
 };
-function promptList() {
-  return Object.keys(C.prompts).filter(k => /^prompt\d+\.title$/.test(k)).map(k => k.split('.')[0])
-    .map(p => ({ title: C.prompts[p + '.title'], icon: C.prompts[p + '.icon'] || 'spark', text: C.prompts[p + '.text'] }));
+function promptList(id) {
+  return Object.keys(C[id]).filter(k => /^prompt\d+\.title$/.test(k)).map(k => k.split('.')[0])
+    .map(p => ({ title: C[id][p + '.title'], icon: C[id][p + '.icon'] || 'spark', text: C[id][p + '.text'] }));
 }
 const poll = id => ({ question: plain(get(id + '.question')), options: items(get(id + '.options')).map(([t]) => plain(t)) });
 const live = {
-  url: cfg.supabaseUrl, key: cfg.supabaseKey, room: cfg.room, joinUrl,
+  url: cfg.supabaseUrl, key: cfg.supabaseKey, room: cfg.room, joinUrl, bucket: 'aiws-uploads',
   polls: { p1: poll('poll-open'), p2: poll('poll-close') },
 };
 const deckData = {
@@ -90,16 +90,21 @@ const deckData = {
   }))])),
   t: {
     show: get('quiz.show_answer'), hide: get('quiz.hide_answer'), essay: get('quiz.essay_label'),
-    start: get('activity.start'), pause: get('activity.pause'), copy: get('prompts.copy'), copied: get('prompts.copied'),
+    start: get('activity.start'), pause: get('activity.pause'), minute: get('activity.minute'), copy: get('prompts.copy'), copied: get('prompts.copied'),
     simplify: get('more.simplify_button'), original: get('more.original_button'),
-    wallEmpty: get('wall.empty'), countLabel: get('wall.count_label'),
+    wallEmpty: get('wall.empty'), countLabel: get('wall.count_label'), readMore: get('wall.read_more'), openLink: get('wall.open_link'),
+    wordEmpty: get('word.empty'), rosterEmpty: get('settings.roster_empty'), rosterTotal: get('settings.roster_total'),
   },
-  timer: Number(get('activity.timer_minutes')) * 60,
 };
+const pl = id => promptList(id).map(p => ({ title: plain(p.title), text: plain(p.text), icon: p.icon }));
 const joinData = {
   ...live,
-  prompts: promptList().map(p => ({ title: plain(p.title), text: plain(p.text) })),
-  t: Object.fromEntries(Object.entries(C['join-page']).map(([k, v]) => [k, plain(v)])),
+  prompts: [...pl('prompts'), ...pl('challenge')],
+  t: {
+    ...Object.fromEntries(Object.entries(C['join-page']).map(([k, v]) => [k, plain(v)])),
+    word_title: plain(get('word.phone_title')), word_question: plain(get('word.question')),
+    word_placeholder: plain(get('word.phone_placeholder')), word_button: plain(get('word.phone_button')), word_sent: plain(get('word.phone_sent')),
+  },
   copy: get('prompts.copy'), copied: get('prompts.copied'),
 };
 

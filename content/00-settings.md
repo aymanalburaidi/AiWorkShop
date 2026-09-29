@@ -20,6 +20,27 @@
 ## org_line2
 بمنطقة الحدود الشمالية
 
+## org_line3
+الثانوية السابعة بعرعر
+
+## footer_title
+ورشة عمل: الذكاء الاصطناعي في خدمة المعلم والمعلمة
+
+## presenter_link
+https://go.yafea.org.sa/ayman
+
+## roster_title
+المتدربات
+
+## roster_hint
+عدد المشاركات (تصويت، كلمات، أعمال)
+
+## roster_empty
+تظهر أسماء المتدربات هنا بعد انضمامهن من الجوال.
+
+## roster_total
+مشاركة
+
 ## presenter_label
 مقدّم ورشة العمل
 
