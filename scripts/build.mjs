@@ -61,6 +61,8 @@ const R = {
   pills: ref => items(get(ref)).map(([t]) => `<span>${inline(t)}</span>`).join(''),
   roles: ref => items(get(ref)).map(([icon, t]) =>
     `<div class="role reveal"><span class="ic c-teal">${ico(icon)}</span><p>${inline(t)}</p></div>`).join('\n'),
+  schools: ref => items(get(ref)).map(([icon, school, label, name], i) =>
+    `<div class="school-card" style="--n:${i}"><span class="ic c-green">${ico(icon)}</span><h3>${inline(school)}</h3><small>${inline(label)}</small><b>${inline(name)}</b></div>`).join('\n'),
   chips: ref => items(get(ref)).map(([k, name, hint]) =>
     `<button class="fchip k-${k}" data-k="${esc(k)}">${inline(name)}<small>${inline(hint)}</small></button>`).join('<span class="plus">+</span>'),
   segs: ref => items(get(ref)).map(([k, t]) => `<span class="seg s-${k}" data-k="${esc(k)}">${inline(t)}</span>`).join(' '),
