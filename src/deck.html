@@ -556,7 +556,7 @@ body[data-slide="s-join"] #net,body[data-slide="s-close"] #net{opacity:.6}
 <main class="deck" id="deck">
 
   <!-- 1: الغلاف -->
-  <section class="slide" id="s-title" data-notes="{{cover.notes|text}}">
+  <section class="slide" id="s-title" data-notes="{{@notes cover}}">
     <div class="slide-inner">
       <div class="cover">
         <span class="tag reveal">{{cover.tag}}</span>
@@ -572,7 +572,7 @@ body[data-slide="s-join"] #net,body[data-slide="s-close"] #net{opacity:.6}
   </section>
 
   <!-- 2: الشراكة المجتمعية -->
-  <section class="slide" id="s-partners" data-notes="{{partners.notes|text}}">
+  <section class="slide" id="s-partners" data-notes="{{@notes partners}}">
     <div class="slide-inner partners">
       <span class="kicker reveal"><svg class="icon"><use href="#i-users"/></svg> {{partners.kicker}}</span>
       <p class="partners-lead split">{{partners.lead}}</p>
@@ -583,7 +583,7 @@ body[data-slide="s-join"] #net,body[data-slide="s-close"] #net{opacity:.6}
   </section>
 
   <!-- 3: مقدّم ورشة العمل -->
-  <section class="slide" id="s-trainer" data-notes="{{trainer.notes|text}}">
+  <section class="slide" id="s-trainer" data-notes="{{@notes trainer}}">
     <div class="slide-inner trainer">
       <div>
         <span class="kicker reveal"><svg class="icon"><use href="#i-user"/></svg> {{trainer.kicker}}</span>
@@ -596,7 +596,7 @@ body[data-slide="s-join"] #net,body[data-slide="s-close"] #net{opacity:.6}
   </section>
 
   <!-- 3: الانضمام بالجوال -->
-  <section class="slide" id="s-join" data-notes="{{join.notes|text}}">
+  <section class="slide" id="s-join" data-notes="{{@notes join}}">
     <div class="slide-inner join">
       <div>
         <span class="kicker reveal"><svg class="icon"><use href="#i-phone"/></svg> {{join.kicker}}</span>
@@ -613,7 +613,7 @@ body[data-slide="s-join"] #net,body[data-slide="s-close"] #net{opacity:.6}
   </section>
 
   <!-- 4: استطلاع البداية (حي) -->
-  <section class="slide" id="s-poll1" data-poll="p1" data-notes="{{poll-open.notes|text}}">
+  <section class="slide" id="s-poll1" data-poll="p1" data-notes="{{@notes poll-open}}">
     <div class="slide-inner">
       <div class="head">
         <span class="kicker reveal"><svg class="icon"><use href="#i-vote"/></svg> {{poll-open.kicker}}</span>
@@ -628,7 +628,7 @@ body[data-slide="s-join"] #net,body[data-slide="s-close"] #net{opacity:.6}
   </section>
 
   <!-- 5: سحابة الكلمات (حي) -->
-  <section class="slide" id="s-word" data-mode="word" data-notes="{{word.notes|text}}">
+  <section class="slide" id="s-word" data-mode="word" data-notes="{{@notes word}}">
     <div class="slide-inner">
       <div class="wall-head">
         <div>
@@ -646,7 +646,7 @@ body[data-slide="s-join"] #net,body[data-slide="s-close"] #net{opacity:.6}
   </section>
 
   <!-- 6: لماذا؟ -->
-  <section class="slide" id="s-why" data-notes="{{why.notes|text}}">
+  <section class="slide" id="s-why" data-notes="{{@notes why}}">
     <div class="slide-inner">
       <div class="head">
         <span class="kicker reveal"><svg class="icon"><use href="#i-bulb"/></svg> {{why.kicker}}</span>
@@ -658,7 +658,7 @@ body[data-slide="s-join"] #net,body[data-slide="s-close"] #net{opacity:.6}
   </section>
 
   <!-- 6: الأهداف -->
-  <section class="slide" id="s-goals" data-notes="{{goals.notes|text}}">
+  <section class="slide" id="s-goals" data-notes="{{@notes goals}}">
     <div class="slide-inner">
       <div class="head">
         <span class="kicker reveal"><svg class="icon"><use href="#i-target"/></svg> {{goals.kicker}}</span>
@@ -669,7 +669,7 @@ body[data-slide="s-join"] #net,body[data-slide="s-close"] #net{opacity:.6}
   </section>
 
   <!-- 7: مسار ورشة العمل -->
-  <section class="slide" id="s-agenda" data-notes="{{agenda.notes|text}}">
+  <section class="slide" id="s-agenda" data-notes="{{@notes agenda}}">
     <div class="slide-inner">
       <div class="head">
         <span class="kicker reveal"><svg class="icon"><use href="#i-calendar"/></svg> {{agenda.kicker}}</span>
@@ -681,7 +681,7 @@ body[data-slide="s-join"] #net,body[data-slide="s-close"] #net{opacity:.6}
   </section>
 
   <!-- 8: معادلة الأمر الفعّال -->
-  <section class="slide" id="s-formula" data-notes="{{formula.notes|text}}">
+  <section class="slide" id="s-formula" data-notes="{{@notes formula}}">
     <div class="slide-inner">
       <div class="head">
         <span class="kicker reveal"><svg class="icon"><use href="#i-spark"/></svg> {{formula.kicker}}</span>
@@ -697,7 +697,7 @@ body[data-slide="s-join"] #net,body[data-slide="s-close"] #net{opacity:.6}
   </section>
 
   <!-- المرحلة المستهدفة في الأمر -->
-  <section class="slide" id="s-stage" data-notes="{{stage.notes|text}}">
+  <section class="slide" id="s-stage" data-notes="{{@notes stage}}">
     <div class="slide-inner">
       <div class="head">
         <span class="kicker reveal"><svg class="icon"><use href="#i-target"/></svg> {{stage.kicker}}</span>
@@ -714,7 +714,7 @@ body[data-slide="s-join"] #net,body[data-slide="s-close"] #net{opacity:.6}
   </section>
 
   <!-- 9: مثال التخطيط -->
-  <section class="slide" id="s-plan" data-notes="{{plan.notes|text}}">
+  <section class="slide" id="s-plan" data-notes="{{@notes plan}}">
     <div class="slide-inner">
       <div class="head">
         <span class="kicker reveal"><svg class="icon"><use href="#i-clipboard"/></svg> {{plan.kicker}}</span>
@@ -732,7 +732,7 @@ body[data-slide="s-join"] #net,body[data-slide="s-close"] #net{opacity:.6}
   </section>
 
   <!-- 10: مثال الأسئلة -->
-  <section class="slide" id="s-quiz" data-notes="{{quiz.notes|text}}">
+  <section class="slide" id="s-quiz" data-notes="{{@notes quiz}}">
     <div class="slide-inner">
       <div class="head">
         <span class="kicker reveal"><svg class="icon"><use href="#i-chart"/></svg> {{quiz.kicker}}</span>
@@ -744,7 +744,7 @@ body[data-slide="s-join"] #net,body[data-slide="s-close"] #net{opacity:.6}
   </section>
 
   <!-- 11: التغذية الراجعة والتبسيط -->
-  <section class="slide" id="s-more" data-notes="{{more.notes|text}}">
+  <section class="slide" id="s-more" data-notes="{{@notes more}}">
     <div class="slide-inner">
       <div class="head">
         <span class="kicker reveal"><svg class="icon"><use href="#i-msg"/></svg> {{more.kicker}}</span>
@@ -775,7 +775,7 @@ body[data-slide="s-join"] #net,body[data-slide="s-close"] #net{opacity:.6}
   </section>
 
   <!-- 12: الاستخدام المسؤول -->
-  <section class="slide" id="s-ethics" data-notes="{{ethics.notes|text}}">
+  <section class="slide" id="s-ethics" data-notes="{{@notes ethics}}">
     <div class="slide-inner">
       <div class="head">
         <span class="kicker reveal"><svg class="icon"><use href="#i-shield"/></svg> {{ethics.kicker}}</span>
@@ -787,7 +787,7 @@ body[data-slide="s-join"] #net,body[data-slide="s-close"] #net{opacity:.6}
   </section>
 
   <!-- 14: النشاط التطبيقي (الجوالات: صندوق المشاركة) -->
-  <section class="slide" id="s-activity" data-mode="share" data-notes="{{activity.notes|text}}">
+  <section class="slide" id="s-activity" data-mode="share" data-notes="{{@notes activity}}">
     <div class="slide-inner activity">
       <div>
         <span class="kicker reveal"><svg class="icon"><use href="#i-pen"/></svg> {{activity.kicker}}</span>
@@ -800,7 +800,7 @@ body[data-slide="s-join"] #net,body[data-slide="s-close"] #net{opacity:.6}
   </section>
 
   <!-- 15: الأوامر الجاهزة -->
-  <section class="slide" id="s-prompts" data-mode="share" data-notes="{{prompts.notes|text}}">
+  <section class="slide" id="s-prompts" data-mode="share" data-notes="{{@notes prompts}}">
     <div class="slide-inner">
       <div class="head">
         <span class="kicker reveal"><svg class="icon"><use href="#i-copy"/></svg> {{prompts.kicker}}</span>
@@ -812,7 +812,7 @@ body[data-slide="s-join"] #net,body[data-slide="s-close"] #net{opacity:.6}
   </section>
 
   <!-- 16: تحدّي الإبداع (الجوالات: رفع صورة أو رابط) -->
-  <section class="slide" id="s-challenge" data-mode="create" data-notes="{{challenge.notes|text}}">
+  <section class="slide" id="s-challenge" data-mode="create" data-notes="{{@notes challenge}}">
     <div class="slide-inner">
       <div class="challenge-head">
         <div>
@@ -828,7 +828,7 @@ body[data-slide="s-join"] #net,body[data-slide="s-close"] #net{opacity:.6}
   </section>
 
   <!-- 17: إبداعات المتدربات (حي) -->
-  <section class="slide" id="s-wall" data-mode="create" data-notes="{{wall.notes|text}}">
+  <section class="slide" id="s-wall" data-mode="create" data-notes="{{@notes wall}}">
     <div class="slide-inner">
       <div class="wall-head">
         <div>
@@ -846,7 +846,7 @@ body[data-slide="s-join"] #net,body[data-slide="s-close"] #net{opacity:.6}
   </section>
 
   <!-- 18: استطلاع الختام (حي) -->
-  <section class="slide" id="s-poll2" data-poll="p2" data-notes="{{poll-close.notes|text}}">
+  <section class="slide" id="s-poll2" data-poll="p2" data-notes="{{@notes poll-close}}">
     <div class="slide-inner">
       <div class="head">
         <span class="kicker reveal"><svg class="icon"><use href="#i-vote"/></svg> {{poll-close.kicker}}</span>
@@ -861,7 +861,7 @@ body[data-slide="s-join"] #net,body[data-slide="s-close"] #net{opacity:.6}
   </section>
 
   <!-- 19: الخاتمة والتواصل -->
-  <section class="slide" id="s-close" data-mode="idle" data-notes="{{closing.notes|text}}">
+  <section class="slide" id="s-close" data-mode="idle" data-notes="{{@notes closing}}">
     <div class="slide-inner closing">
       <div>
         <span class="kicker reveal"><svg class="icon"><use href="#i-flag"/></svg> {{closing.kicker}}</span>

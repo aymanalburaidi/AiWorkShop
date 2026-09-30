@@ -24,6 +24,7 @@ h1,h2,h3,b,button{font-weight:500}
 button{font-family:inherit;cursor:pointer;touch-action:manipulation}
 [hidden]{display:none!important}
 .icon{width:1.2em;height:1.2em;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;flex:none;vertical-align:-.2em}
+.ltr{direction:ltr;unicode-bidi:isolate;display:inline-block}
 
 /* القفل */
 .lock{min-height:calc(100dvh - 40px);display:grid;place-items:center}
@@ -34,15 +35,16 @@ button{font-family:inherit;cursor:pointer;touch-action:manipulation}
 .lock-card p{color:var(--muted);font-size:.95rem;margin:6px 0 16px}
 input{width:100%;font-family:inherit;font-size:17px;color:var(--ink);background:rgba(255,255,255,.06);border:1.5px solid var(--line);border-radius:14px;padding:12px 14px;outline:none;text-align:center;direction:ltr}
 input:focus{border-color:var(--teal)}
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:48px;padding:0 20px;border-radius:14px;border:1px solid var(--line);background:rgba(255,255,255,.06);color:var(--ink);font-size:1rem;transition:transform .12s var(--ease),background .15s}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:48px;padding:0 20px;border-radius:14px;border:1px solid var(--line);background:rgba(255,255,255,.06);color:var(--ink);font-size:1rem;transition:transform .12s var(--ease),background .15s,opacity .2s}
 .btn:active{transform:scale(.97)}
 .btn.primary{background:var(--grad);border:0;color:#fff}
 .btn.full{width:100%;margin-top:12px}
-.btn:disabled{opacity:.4}
+.btn.sq{padding:0;width:48px}
+.btn:disabled{opacity:.35;cursor:default}
 .err{color:var(--red);font-size:.9rem;margin-top:10px}
 
 /* اللوحة */
-.app{max-width:1100px;margin:0 auto;min-height:calc(100dvh - 40px);display:grid;grid-template-rows:auto 1fr auto;gap:14px}
+.app{max-width:1200px;margin:0 auto;height:calc(100dvh - 28px - env(safe-area-inset-top) - env(safe-area-inset-bottom));display:grid;grid-template-rows:auto minmax(0,1fr) auto;gap:14px}
 .top{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
 .pos{display:flex;align-items:baseline;gap:10px}
 .pos b{font-size:2.2rem;line-height:1;font-variant-numeric:tabular-nums}
@@ -57,26 +59,69 @@ input:focus{border-color:var(--teal)}
 .chip.late b{color:var(--red)} .chip.early b{color:#5eead4} .chip.ok b{color:#86efac}
 .bar{height:4px;border-radius:4px;background:rgba(255,255,255,.1);overflow:hidden}
 .bar i{display:block;height:100%;width:0;background:var(--grad);transition:width .6s var(--ease)}
-.main{display:grid;grid-template-columns:1.7fr 1fr;gap:14px;min-height:0}
-.now,.nextc{background:var(--panel);border:1px solid var(--line);border-radius:22px;padding:20px 22px;overflow:auto}
-.lbl{display:inline-flex;align-items:center;gap:8px;font-size:.82rem;color:#0f2f3e;background:var(--sand);padding:1px 12px;border-radius:999px;margin-bottom:8px}
-.nextc .lbl{background:rgba(255,255,255,.12);color:var(--muted)}
-.now h2{font-size:1.7rem;line-height:1.5;margin-bottom:10px}
-.now .note{font-size:1.5rem;line-height:1.9;font-weight:300;white-space:pre-wrap}
-.nextc h3{font-size:1.15rem;line-height:1.6;margin-bottom:6px}
-.nextc .note{color:var(--muted);font-size:1rem;white-space:pre-wrap}
+.main{display:grid;grid-template-columns:2.2fr 1fr;gap:14px;min-height:0}
+.now,.nextc{background:var(--panel);border:1px solid var(--line);border-radius:22px;padding:18px 22px;overflow:auto;min-height:0}
+.lbl{display:inline-flex;align-items:center;gap:8px;font-size:.82rem;color:#0f2f3e;background:var(--sand);padding:1px 12px;border-radius:999px}
+.nextc .lbl{background:rgba(255,255,255,.12);color:var(--muted);margin-bottom:8px}
+.now-head{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.now h2{font-size:1.45rem;line-height:1.5;margin:6px 0 12px}
+
+/* أنواع الملاحظات */
+.t-say{--tc:#5eead4} .t-do{--tc:#e7d9a6} .t-ask{--tc:#93c5fd} .t-watch{--tc:#fdba74} .t-go{--tc:#86efac}
+.pips{display:flex;gap:6px;margin-inline-start:auto}
+.pips i{width:22px;height:6px;border-radius:6px;background:rgba(255,255,255,.14);transition:background .3s,width .3s var(--ease)}
+.pips i.on{background:var(--tc)}
+.pips i.cur{width:34px}
+.cnt{color:var(--muted);font-size:.9rem;font-variant-numeric:tabular-nums;direction:ltr}
+
+/* الملاحظات: تظهر واحدة بعد أخرى */
+.steps{list-style:none;display:flex;flex-direction:column;gap:8px}
+.step{border-radius:16px;border-inline-start:4px solid transparent;padding:6px 14px;transition:background .3s,opacity .3s,padding .3s var(--ease)}
+.step .ty{display:inline-flex;align-items:center;gap:6px;font-size:.8rem;line-height:1.7;color:var(--tc);background:color-mix(in srgb,var(--tc) 14%,transparent);padding:0 10px;border-radius:999px}
+.step p{font-weight:300;transition:font-size .3s var(--ease)}
+.step b{color:#fff}
+.step.done{opacity:.5;cursor:pointer;display:grid;grid-template-columns:auto 1fr;gap:10px;align-items:baseline}
+.step.done p{font-size:1rem;line-height:1.7}
+.step.done:hover{opacity:.8}
+.step.cur{background:rgba(255,255,255,.07);border-inline-start-color:var(--tc);padding:12px 18px 14px;animation:show .4s var(--ease) both}
+.step.cur .ty{font-size:.9rem;margin-bottom:4px}
+.step.cur p{font-size:1.6rem;line-height:1.85}
+@keyframes show{from{opacity:0;transform:translateY(12px)}}
+.cue{display:flex;align-items:center;gap:10px;margin-top:12px;padding:10px 16px;border-radius:14px;border:1px dashed rgba(134,239,172,.5);color:#86efac;animation:show .4s var(--ease) .15s both}
+.cue small{color:var(--muted);font-size:.85rem}
+.cue b{color:var(--ink)}
+.waiting{color:var(--muted);font-size:.95rem;margin-top:10px}
+
+.nextc h3{font-size:1.15rem;line-height:1.6;margin-bottom:4px}
+.nextc .meta{display:inline-flex;align-items:center;gap:6px;color:var(--muted);font-size:.9rem;direction:ltr;margin-bottom:6px}
+.nextc .note{color:var(--muted);font-size:1rem;font-weight:300}
+.keys{color:#7f9aa5;font-size:.82rem;line-height:1.7;margin-top:16px;padding-top:12px;border-top:1px solid var(--line)}
 .swap{animation:swap .45s var(--ease) both}
 @keyframes swap{from{opacity:0;transform:translateY(10px)}}
+
 .foot{display:flex;gap:10px;justify-content:space-between;flex-wrap:wrap}
-.foot .grp{display:flex;gap:8px}
-.foot .nav{min-width:120px;min-height:56px;font-size:1.1rem}
-.waiting{color:var(--muted);font-size:.95rem;margin-top:8px}
+.foot .grp{display:flex;gap:8px;align-items:center}
+.foot .nav{min-height:58px;font-size:1.1rem}
+.foot #nNext{min-width:240px}
+.slidectl{display:flex;align-items:center;gap:6px;padding:0 4px;border:1px solid var(--line);border-radius:16px;min-height:58px}
+.slidectl span{color:var(--muted);font-size:.85rem;padding:0 4px}
+.slidectl .btn{border:0;min-height:44px;width:44px}
 @media (max-width:760px){
   body{font-size:17px}
-  .main{grid-template-columns:1fr}
-  .now .note{font-size:1.25rem}
-  .foot .nav{flex:1}
-  .foot .grp{flex:1}
+  .app{gap:10px}
+  .main{grid-template-columns:1fr;grid-template-rows:minmax(0,1fr) auto}
+  .nextc{padding:10px 16px}
+  .nextc .note,.keys,#plannedChip{display:none}
+  .now{padding:14px 14px}
+  .step.cur p{font-size:1.3rem}
+  .pos b{font-size:1.6rem}
+  .chip{min-width:0;flex:1;padding:4px 8px}
+  .chip b{font-size:1.1rem}
+  .clock{width:100%}
+  .foot .grp{flex:1 1 100%}
+  .foot .grp:first-child .btn{flex:1}
+  .foot #nNext{min-width:0;flex:2!important}
+  .foot #tToggle{flex:1}
 }
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
@@ -137,6 +182,8 @@ input:focus{border-color:var(--teal)}
     <symbol id="i-trophy" viewBox="0 0 24 24"><path d="M8 4h8v5a4 4 0 0 1-8 0z"/><path d="M8 6H5a3 3 0 0 0 3 4M16 6h3a3 3 0 0 1-3 4M12 13v4M8 21h8M9 17h6"/></symbol>
     <symbol id="i-next" viewBox="0 0 24 24"><path d="M15 6l-6 6 6 6"/></symbol>
     <symbol id="i-prev" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></symbol>
+    <symbol id="i-down" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></symbol>
+    <symbol id="i-up" viewBox="0 0 24 24"><path d="M6 15l6-6 6 6"/></symbol>
   </defs>
 </svg>
 
@@ -159,7 +206,8 @@ input:focus{border-color:var(--teal)}
     <div class="top">
       <div class="pos"><b id="pos">1</b><span id="total"></span><div class="link" id="link"><span class="dot"></span><span id="linkTxt"></span></div></div>
       <div class="clock">
-        <div class="chip"><small>الموعد المخطط للشريحة</small><b id="planned">0:00</b></div>
+        <div class="chip" id="plannedChip"><small>الموعد المخطط للشريحة</small><b id="planned">0:00</b></div>
+        <div class="chip" id="leftChip"><small id="leftLbl">باقي للشريحة</small><b id="left">0:00</b></div>
         <div class="chip" id="elapsedChip"><small>الوقت المنقضي</small><b id="elapsed">0:00</b></div>
         <div class="chip" id="deltaChip"><small id="deltaLbl">في الوقت</small><b id="delta">0:00</b></div>
       </div>
@@ -168,29 +216,49 @@ input:focus{border-color:var(--teal)}
   </div>
 
   <div class="main">
-    <section class="now" id="nowBox"><span class="lbl">الشريحة الحالية</span><h2 id="nowTitle"></h2><div class="note" id="nowNote"></div><p class="waiting" id="waiting">بانتظار العرض. افتح العرض بوضع المقدّم على شاشة العرض.</p></section>
-    <section class="nextc" id="nextBox"><span class="lbl">التالية</span><h3 id="nextTitle"></h3><div class="note" id="nextNote"></div></section>
+    <section class="now" id="nowBox">
+      <div class="now-head"><span class="lbl">الشريحة الحالية</span><div class="pips" id="pips"></div><span class="cnt" id="cnt"></span></div>
+      <h2 id="nowTitle"></h2>
+      <ol class="steps" id="steps"></ol>
+      <div class="cue" id="cue" hidden><svg class="icon"><use href="#i-next"/></svg><small>بعدها في العرض</small><b id="cueTitle"></b></div>
+      <p class="waiting" id="waiting">بانتظار العرض. افتح العرض بوضع المقدّم على شاشة العرض.</p>
+    </section>
+    <section class="nextc" id="nextBox">
+      <span class="lbl">الشريحة التالية</span>
+      <h3 id="nextTitle"></h3>
+      <div class="meta" id="nextMeta"></div>
+      <div class="note" id="nextNote"></div>
+      <p class="keys">المسافة أو السهم السفلي للملاحظة التالية، والسهمان الأيمن والأيسر لشرائح العرض.</p>
+    </section>
   </div>
 
   <div class="foot">
     <div class="grp">
-      <button class="btn nav" id="prev"><svg class="icon"><use href="#i-prev"/></svg>السابق</button>
-      <button class="btn primary nav" id="next">التالي<svg class="icon"><use href="#i-next"/></svg></button>
+      <button class="btn nav" id="nPrev"><svg class="icon"><use href="#i-up"/></svg>السابقة</button>
+      <button class="btn primary nav" id="nNext">الملاحظة التالية<svg class="icon"><use href="#i-down"/></svg></button>
     </div>
     <div class="grp">
-      <button class="btn" id="tToggle"></button>
-      <button class="btn" id="tReset" aria-label="تصفير المؤقت"><svg class="icon"><use href="#i-rotate"/></svg></button>
+      <div class="slidectl">
+        <button class="btn" id="sPrev" aria-label="الشريحة السابقة"><svg class="icon"><use href="#i-prev"/></svg></button>
+        <span>الشريحة</span>
+        <button class="btn" id="sNext" aria-label="الشريحة التالية"><svg class="icon"><use href="#i-next"/></svg></button>
+      </div>
+      <button class="btn nav" id="tToggle"></button>
+      <button class="btn sq nav" id="tReset" aria-label="تصفير المؤقت"><svg class="icon"><use href="#i-rotate"/></svg></button>
     </div>
   </div>
 </div>
 
 <script>
-const D = {"url":"https://dqedhfwaquqaddbtfvtx.supabase.co","key":"sb_publishable_zROcySsWThanD_me0Dq8dw_tGAHzGKk","room":"hs7-ai","slides":[{"id":"s-title","title":"الذكاء الاصطناعي في خدمة المعلم والمعلمة","notes":"رحّب بالحضور، ثم انتقل إلى شريحة الشراكة.","at":0,"dur":30},{"id":"s-partners","title":"هذا اللقاء يُقدَّم بناءً على الشراكة المجتمعية لشركة يافع المستقبل للبحث والتطوير مع:","notes":"اشكر المدرستين ومديرتيهما على الاستضافة والتنسيق، ثم انتقل إلى التعريف بمقدّم ورشة العمل.","at":30,"dur":30},{"id":"s-trainer","title":"أيمن صالح البريدي","notes":"عرّف بنفسك في دقيقة واحدة.","at":60,"dur":60},{"id":"s-join","title":"رمز الانضمام بكاميرا الجوال","notes":"انتظر حتى يظهر عداد المتصلات، ثم انتقل إلى الاستطلاع.","at":120,"dur":90},{"id":"s-poll1","title":"ما المهمة التي تأخذ أكثر وقتك كل أسبوع؟","notes":"علّق على الخيار الأعلى: هذه المهمة التي سنختصر وقتها اليوم.","at":210,"dur":90},{"id":"s-word","title":"ما أول كلمة تخطر ببالك عند سماع \"الذكاء الاصطناعي في التعليم\"؟","notes":"علّق على الكلمات الأكبر، واربطها بما ستقدّمه ورشة العمل.","at":300,"dur":60},{"id":"s-why","title":"ماذا يقدّم لك الذكاء الاصطناعي في عملك اليومي؟","notes":"الأداة تختصر المهام المتكررة، والمعلمة تبقى صاحبة القرار.","at":360,"dur":90},{"id":"s-goals","title":"بنهاية ورشة العمل","notes":"اقرأ الأهداف بسرعة، وأشر إلى أن الهدف الرابع يتحقق في النشاط التطبيقي.","at":450,"dur":30},{"id":"s-agenda","title":"40 دقيقة، نصفها تطبيق ومشاركة من الجوال","notes":"خطة الاختصار إلى 30 دقيقة في WORKSHOP-GUIDE.md.","at":480,"dur":30},{"id":"s-formula","title":"معادلة الأمر الفعّال","notes":"اضغط كل عنصر ليظهر موضعه في المثال، ثم قارن الأمرين.","at":510,"dur":120},{"id":"s-stage","title":"الأمر نفسه، ومرحلتان مختلفتان","notes":"الأمر نفسه تغيّر فيه الصف فقط. اقرأ سطرًا من كل عمود، ثم مرّ على جدول الفروق.","at":630,"dur":150},{"id":"s-plan","title":"خطة درس في أقل من دقيقة","notes":"اختر المادة الأقرب للحضور. نبّه إلى أن الناتج مسودة تراجعها المعلمة وتعدّلها.","at":780,"dur":150},{"id":"s-quiz","title":"أسئلة متدرجة ببدائل تكشف الخطأ الشائع","notes":"اطلب من الحضور الإجابة قبل إظهار الحل، وركّز على البدائل المبنية على الأخطاء الشائعة.","at":930,"dur":120},{"id":"s-more","title":"التغذية الراجعة وتبسيط النص","notes":"مثالان سريعان. اضغط زر التبديل لإظهار النص المبسّط.","at":1050,"dur":90},{"id":"s-ethics","title":"أربع قواعد قبل البدء","notes":"لا بيانات طالبات، ولا اعتماد على المخرج دون مراجعة.","at":1140,"dur":60},{"id":"s-activity","title":"نشاط تطبيقي: منتجك الأول","notes":"شغّل المؤقت وساعد المتعثرات. بعده انتقل إلى جدار المشاركات.","at":1200,"dur":390},{"id":"s-prompts","title":"أوامر جاهزة","notes":"الأوامر نفسها موجودة في صفحة الجوال بزر نسخ، فلا حاجة لكتابتها.","at":1590,"dur":30},{"id":"s-challenge","title":"صورة أو صفحة بالذكاء الاصطناعي، إلى جدار الإبداعات","notes":"شغّل المؤقت. من تنتهي أولًا تظهر صورتها في الجدار مباشرة، فاعرضها لتحفيز البقية.","at":1620,"dur":420},{"id":"s-wall","title":"إبداعات المتدربات","notes":"اضغط أي بطاقة لعرضها كاملة. زر الإخفاء يظهر عند تمرير المؤشر على البطاقة.","at":2040,"dur":180},{"id":"s-poll2","title":"ما أول استخدام للتجربة هذا الأسبوع؟","notes":"علّق على النتيجة، ثم انتقل إلى الخاتمة.","at":2220,"dur":90},{"id":"s-close","title":"الخاتمة","notes":"اختم بدعوة الحضور إلى تجربة أمر واحد هذا الأسبوع، ثم اعرض رمز التواصل.","at":2310,"dur":90}],"t":{"page_title":"ملاحظات المقدّم","lock_title":"ملاحظات المقدّم","lock_hint":"هذه الصفحة لمقدّم ورشة العمل. أدخل كلمة السر لفتحها.","password_placeholder":"كلمة السر","unlock":"فتح","wrong":"كلمة السر غير صحيحة.","checking":"جارٍ التحقق","now":"الشريحة الحالية","next":"التالية","end":"نهاية العرض","elapsed":"الوقت المنقضي","planned":"الموعد المخطط للشريحة","on_time":"في الوقت","late":"متأخر","early":"متقدم","start":"بدء المؤقت","pause":"إيقاف","reset":"تصفير المؤقت","prev_btn":"السابق","next_btn":"التالي","linked":"متصل بالعرض","waiting":"بانتظار العرض. افتح العرض بوضع المقدّم على شاشة العرض."}};
+const D = {"url":"https://dqedhfwaquqaddbtfvtx.supabase.co","key":"sb_publishable_zROcySsWThanD_me0Dq8dw_tGAHzGKk","room":"hs7-ai","slides":[{"id":"s-title","title":"الذكاء الاصطناعي في خدمة المعلم والمعلمة","steps":[{"k":"do","h":"قبل البدء: العرض بملء الشاشة (\u003cspan class=\"ltr\">F\u003c/span>)، والنقطة أسفل الشاشة خضراء بحلقة بنفسجية."},{"k":"say","h":"السلام والترحيب: &quot;أسعد الله أوقاتكن، وشكرًا لحضوركن.&quot;"},{"k":"say","h":"الورشة في جملة: \u003cb>40 دقيقة عملية\u003c/b>، وكل متدربة تخرج منها بعمل جاهز لحصتها القادمة."},{"k":"go","h":"&quot;قبل أن نبدأ، كلمة شكر لمن جمعنا اليوم.&quot;"}],"at":0,"dur":30},{"id":"s-partners","title":"هذا اللقاء يُقدَّم بناءً على الشراكة المجتمعية لشركة يافع المستقبل للبحث والتطوير مع:","steps":[{"k":"say","h":"هذا اللقاء ثمرة \u003cb>الشراكة المجتمعية\u003c/b> بين شركة يافع المستقبل للبحث والتطوير والمدرستين."},{"k":"say","h":"الشكر بالاسم: \u003cb>أ. عنود بطيح عون العنزي\u003c/b> مديرة الابتدائية السادسة عشر، و\u003cb>أ. ود مجاهد سلطان العنزي\u003c/b> مديرة الثانوية السابعة."},{"k":"say","h":"شكر لمنسّقات اللقاء، وللمعلمات على وقتهن."},{"k":"go","h":"&quot;وقبل الدخول في الموضوع، تعريف سريع بمن يحدّثكن.&quot;"}],"at":30,"dur":30},{"id":"s-trainer","title":"أيمن صالح البريدي","steps":[{"k":"say","h":"الاسم والعمل: رئيس قسم التقنية بشركة يافع المستقبل، والمدير العام لمنصة يافع التعليمية."},{"k":"say","h":"مدرب معتمد من المؤسسة العامة للتدريب التقني والمهني، والرخصة ظاهرة على الشاشة."},{"k":"say","h":"جملة واحدة تربط خبرتك بموضوع اليوم: لماذا يهمّك أن تتقن المعلمة هذه الأدوات؟"},{"k":"watch","h":"\u003cb>دقيقة واحدة فقط.\u003c/b> الحضور جاء للتطبيق لا للسيرة."},{"k":"go","h":"&quot;الورشة تفاعلية، وجوالاتكن جزء منها. لنجهّزها الآن.&quot;"}],"at":60,"dur":60},{"id":"s-join","title":"رمز الانضمام بكاميرا الجوال","steps":[{"k":"say","h":"&quot;افتحن كاميرا الجوال ووجّهنها نحو الرمز، ثم اضغطن الرابط الذي يظهر.&quot;"},{"k":"say","h":"المطلوب في الصفحة: \u003cb>الاسم الثلاثي واختيار المدرسة\u003c/b>. يُكتبان مرة واحدة ويحفظهما الجوال."},{"k":"watch","h":"راقب عداد &quot;متصلة الآن&quot;. من تعذّر عليها المسح تكتب الرابط الظاهر تحت الرمز."},{"k":"do","h":"افتح لوحة المتدربات (\u003cspan class=\"ltr\">L\u003c/span>) لحظة ليرى الحضور الأسماء بلون كل مدرسة، ثم أغلقها."},{"k":"say","h":"تنبيه: الصفحة تبقى مفتوحة حتى نهاية الورشة، وتتغير وحدها مع كل نشاط."},{"k":"go","h":"حين يتصل أغلب الحضور: &quot;أول سؤال وصل إلى جوالاتكن الآن.&quot;"}],"at":120,"dur":90},{"id":"s-poll1","title":"ما المهمة التي تأخذ أكثر وقتك كل أسبوع؟","steps":[{"k":"say","h":"اقرأ السؤال: ما المهمة التي تأخذ أكثر وقتك كل أسبوع؟ صوت واحد لكل متدربة."},{"k":"watch","h":"\u003cb>30 ثانية\u003c/b> للتصويت. تابع عدد الأصوات حتى يقارب عدد المتصلات."},{"k":"say","h":"علّق على الخيار الأعلى: &quot;هذه المهمة بالذات سنختصر وقتها اليوم.&quot;"},{"k":"say","h":"&quot;احفظن هذه النتيجة، فسنعود إلى سؤال قريب منها في الختام.&quot;"},{"k":"go","h":"&quot;والآن سؤال أسرع، جوابه كلمة واحدة.&quot;"}],"at":210,"dur":90},{"id":"s-word","title":"ما أول كلمة تخطر ببالك عند سماع \"الذكاء الاصطناعي في التعليم\"؟","steps":[{"k":"say","h":"اقرأ السؤال: ما أول كلمة تخطر ببالك عند سماع &quot;الذكاء الاصطناعي في التعليم&quot;؟"},{"k":"watch","h":"الكلمة تكبر كلما تكررت. انتظر حتى تصل عشر كلمات تقريبًا."},{"k":"say","h":"علّق على أكبر كلمتين، متحمسة كانت أو متخوفة، دون حكم عليها."},{"k":"say","h":"الكلمات المتخوفة (غش، خطأ، بديل): &quot;سنجيب عنها في قواعد الاستخدام المسؤول.&quot;"},{"k":"go","h":"&quot;بين الحماس والتخوف، ماذا تقدّم هذه الأدوات فعلًا للمعلمة؟&quot;"}],"at":300,"dur":60},{"id":"s-why","title":"ماذا يقدّم لك الذكاء الاصطناعي في عملك اليومي؟","steps":[{"k":"say","h":"أربع فوائد، جملة لكل بطاقة: وقت أقل للإعداد، وأنشطة متنوعة، وتقويم أدق، ومراعاة الفروق الفردية."},{"k":"say","h":"اربط بنتيجة الاستطلاع: الخيار الذي تصدّر عندكن هو ما تعالجه إحدى هذه البطاقات."},{"k":"say","h":"مثال من الواقع: المسودة الأولى لخطة درس تخرج في دقائق، والوقت الباقي يذهب للمراجعة والتحسين."},{"k":"say","h":"اقرأ العبارة السفلية وشدّد عليها: \u003cb>&quot;الأداة تقترح، والقرار لك.&quot;\u003c/b>"},{"k":"go","h":"&quot;إذن ماذا سنتقن في هذه الدقائق؟&quot;"}],"at":360,"dur":90},{"id":"s-goals","title":"بنهاية ورشة العمل","steps":[{"k":"say","h":"لا تقرأ الأهداف كلها. اذكر ثلاثة: أمر واضح بعناصره الخمسة، وخطة درس في أقل من 5 دقائق، وأسئلة متدرجة بمفتاح إجابة."},{"k":"say","h":"أشر إلى الهدف الرابع: \u003cb>مخرج جاهز للحصة القادمة\u003c/b>، وهو ما تنتجه كل متدربة في النشاط."},{"k":"go","h":"&quot;وهذا طريقنا إلى ذلك.&quot;"}],"at":450,"dur":30},{"id":"s-agenda","title":"40 دقيقة، نصفها تطبيق ومشاركة من الجوال","steps":[{"k":"say","h":"40 دقيقة في ست محطات، ونصفها تطبيق ومشاركة من الجوال."},{"k":"say","h":"أشر إلى محطتي التطبيق وتحدّي الإبداع: &quot;هنا الجزء الأهم، فليبقَ الجوال قريبًا.&quot;"},{"k":"watch","h":"إن كان الوقت \u003cb>30 دقيقة\u003c/b>: تبويب واحد في التخطيط، وسؤالان في الأسئلة، وتجاوز شريحة التغذية الراجعة، و5 دقائق لكل نشاط."},{"k":"go","h":"&quot;نبدأ بالمهارة التي يقوم عليها كل شيء: كتابة الأمر.&quot;"}],"at":480,"dur":30},{"id":"s-formula","title":"معادلة الأمر الفعّال","steps":[{"k":"say","h":"القاعدة: \u003cb>جودة الإجابة من جودة الأمر.\u003c/b> الأداة لا تعرف المادة ولا الصف إلا إذا كُتبا في الأمر."},{"k":"say","h":"اقرأ الأمر العام: &quot;اكتب أسئلة عن المول.&quot;"},{"k":"ask","h":"&quot;ما الذي ينقص هذا الأمر؟&quot; انتظر إجابتين: الصف، وعدد الأسئلة، ونوعها."},{"k":"do","h":"اضغط العناصر الخمسة بالترتيب: الدور، ثم المهمة، ثم السياق، ثم الشكل، ثم القيود. كل ضغطة تلوّن موضع العنصر في الأمر الواضح."},{"k":"say","h":"مع كل عنصر سؤاله: من تكون الأداة؟ ما المطلوب؟ لمن ولماذا؟ كيف تُعرض الإجابة؟ ما الضوابط؟"},{"k":"say","h":"طمأنة: لا حاجة إلى حفظ المعادلة، فالأوامر الجاهزة في الجوال مبنية عليها."},{"k":"go","h":"&quot;وفي السياق عنصر واحد يُنسى كثيرًا: الصف.&quot;"}],"at":510,"dur":120},{"id":"s-stage","title":"الأمر نفسه، ومرحلتان مختلفتان","steps":[{"k":"say","h":"الأمر على الشاشة ثابت، والذي يتغير فيه كلمة واحدة: \u003cb>الصف\u003c/b>."},{"k":"do","h":"اترك التبديل بين &quot;رابع ابتدائي&quot; و&quot;أول ثانوي&quot; يدور مرتين دون كلام. يتبدل وحده كل ثلاث ثوانٍ."},{"k":"say","h":"اقرأ سطرًا من كل عمود: &quot;مكعب الثلج والقلم&quot; مقابل &quot;جسيمات متراصة وقوى تجاذب&quot;."},{"k":"say","h":"مرّ على جدول الفروق الأربعة: اللغة، والأمثلة، والنشاط، والتقويم."},{"k":"ask","h":"لمعلمات الابتدائية: &quot;أي الإجابتين تصلح لطالباتكن كما هي؟&quot; ثم السؤال نفسه لمعلمات الثانوية."},{"k":"say","h":"الخلاصة من العبارة السفلية: بدون المرحلة تكتب الأداة لقارئ عام. \u003cb>الصف جزء ثابت من كل أمر.\u003c/b>"},{"k":"go","h":"&quot;لنرَ المعادلة كاملة تعمل في خطة درس حقيقية.&quot;"}],"at":630,"dur":150},{"id":"s-plan","title":"خطة درس في أقل من دقيقة","steps":[{"k":"watch","h":"الكتابة تبدأ وحدها بتبويب الكيمياء (ثاني ثانوي)."},{"k":"say","h":"اقرأ الأمر بصوت مسموع وأشر إلى عناصره: الدور، والدرس، والصف، ومدة الحصة، ومكونات الخطة."},{"k":"say","h":"أثناء الكتابة أشر إلى التهيئة: سؤال كيس الأرز. الأداة اختارت مثالًا من واقع الطالبة لأن الأمر طلب ذلك."},{"k":"do","h":"اضغط تبويبًا ابتدائيًا (علوم رابع، أو لغتي ثالث) لتظهر خطة للمرحلة الأخرى."},{"k":"say","h":"قارن: مكعب الثلج والأنشطة الحسية هنا، مقابل الحساب والتحويل هناك. الفرق صنعه الصف المكتوب في الأمر."},{"k":"say","h":"تنبيه: \u003cb>الناتج مسودة.\u003c/b> الأزمنة تُراجع، والأهداف تُطابق مع دليل المعلم ونواتج التعلّم."},{"k":"watch","h":"زر الإعادة بجانب التبويبات يعيد الكتابة من أولها."},{"k":"go","h":"&quot;الخطة جاهزة. والسؤال بعدها دائمًا: كيف نقوّم؟&quot;"}],"at":780,"dur":150},{"id":"s-quiz","title":"أسئلة متدرجة ببدائل تكشف الخطأ الشائع","steps":[{"k":"do","h":"اختر التبويب الأقرب لأغلب الحضور. لكل مادة ثلاثة أسئلة: اثنان اختيار من متعدد، وثالث مقالي."},{"k":"ask","h":"اقرأ السؤال الأول، واطلب الإجابة برفع اليد قبل إظهارها."},{"k":"do","h":"اضغط &quot;إظهار الإجابة&quot;، واقرأ التعليق الذي يظهر تحتها."},{"k":"say","h":"الفكرة: \u003cb>البديل الخاطئ ليس عشوائيًا\u003c/b>، كل بديل يكشف خطأً شائعًا بعينه. في الكيمياء: 28 بدل 44 يعني أن الطالبة حسبت ذرة أكسجين واحدة."},{"k":"do","h":"انتقل إلى تبويب من المرحلة الأخرى، واعرض منه سؤالًا واحدًا."},{"k":"say","h":"تنبيه: مفتاح الإجابة يُراجع دائمًا، فالأداة قد تخطئ في الحساب."},{"k":"go","h":"&quot;التخطيط والأسئلة أكثر استخدامين. وهناك اثنان آخران يوفّران وقتًا كبيرًا.&quot;"}],"at":930,"dur":120},{"id":"s-more","title":"التغذية الراجعة وتبسيط النص","steps":[{"k":"say","h":"الاستخدام الأول: تغذية راجعة على إجابة طالبة، \u003cb>دون اسمها\u003c/b>."},{"k":"say","h":"اقرأ إجابة الطالبة، ثم الأجزاء الثلاثة: نقطة قوة، وخطأ واحد مع توضيحه، وخطوة تالية."},{"k":"say","h":"هذه الصيغة الثلاثية قالب ثابت لكل تعليق، والمعلمة تراجعه وتعدّله قبل إرساله."},{"k":"do","h":"الاستخدام الثاني: اضغط زر &quot;النص المبسّط&quot; لتنقلب البطاقة."},{"k":"say","h":"قارن: تعريف المول في الكتاب، مقابل تشبيهه بـ&quot;الدرزن&quot;. المعنى واحد واللغة أقرب."},{"k":"say","h":"اقرأ السطر أسفل البطاقة: التبسيط يكتمل بسؤالين للتحقق من الفهم ومراجعة للدقة العلمية."},{"k":"go","h":"&quot;كل ما سبق مشروط بأربع قواعد.&quot;"}],"at":1050,"dur":90},{"id":"s-ethics","title":"أربع قواعد قبل البدء","steps":[{"k":"say","h":"الأولى وهي الأهم: \u003cb>لا أسماء ولا درجات ولا بيانات شخصية للطالبات.\u003c/b> &quot;طالبة أ&quot; بدل الاسم."},{"k":"say","h":"الثانية: الأداة تخطئ أحيانًا بثقة تامة. كل معلومة ومعادلة وإجابة تُراجع قبل استخدامها."},{"k":"say","h":"الثالثة والرابعة في جملة: مطابقة المخرج مع الكتاب المقرر، والأداة مساعدة لا بديلة."},{"k":"say","h":"أشر إلى الشريط السفلي: توليد، ثم مراجعة، ثم تعديل، ثم استخدام. لا قفز من الأولى إلى الأخيرة."},{"k":"say","h":"إن ظهرت كلمات متخوفة في سحابة الكلمات، فهذا موضع الرد عليها."},{"k":"go","h":"&quot;انتهى دوري في الكلام، وجاء دوركن.&quot;"}],"at":1140,"dur":60},{"id":"s-activity","title":"نشاط تطبيقي: منتجك الأول","steps":[{"k":"say","h":"المطلوب: \u003cb>خطة درس مختصرة، أو 5 أسئلة متدرجة بمفتاح إجابة\u003c/b>، لدرس حقيقي من دروس الأسبوع القادم."},{"k":"say","h":"الطريقة: أي أداة محادثة ذكية متاحة، ثم نسخ أمر جاهز من الجوال وملء ما بين الأقواس، ثم طلب تعديل واحد على الأقل."},{"k":"say","h":"الإرسال من صفحة الجوال نفسها، والنتيجة الطويلة تُلصق كاملة."},{"k":"do","h":"اضغط &quot;بدء&quot; لتشغيل المؤقت، وابقَ على هذه الشريحة ليبقى ظاهرًا."},{"k":"do","h":"تجوّل بين الحضور. المتعثرة تحتاج غالبًا إلى ملء ثلاثة أقواس: المادة، والصف، والموضوع."},{"k":"watch","h":"كل مشاركة تصل تظهر في تنبيه أسفل الشاشة باسم صاحبتها. اذكر أول اسمين بصوت مسموع."},{"k":"watch","h":"قبل نهاية المؤقت بدقيقة: &quot;دقيقة أخيرة. أرسلن ما وصلتن إليه حتى لو لم يكتمل.&quot;"},{"k":"go","h":"&quot;ومن لم ترسل بعد، فالأوامر أمامها الآن.&quot;"}],"at":1200,"dur":390},{"id":"s-prompts","title":"أوامر جاهزة","steps":[{"k":"say","h":"أربعة أوامر جاهزة: تخطيط درس، واختبار قصير، وتغذية راجعة، وتبسيط نص. الأجزاء المظللة تتغير حسب المادة والصف."},{"k":"say","h":"الأوامر نفسها في صفحة الجوال بزر نسخ، وتبقى هناك بعد الورشة."},{"k":"watch","h":"صندوق المشاركة ما زال مفتوحًا في الجوالات، ومن تأخرت ترسل الآن."},{"k":"go","h":"&quot;أنتجنا نصوصًا. الآن ننتج شيئًا يُرى.&quot;"}],"at":1590,"dur":30},{"id":"s-challenge","title":"صورة أو صفحة بالذكاء الاصطناعي، إلى جدار الإبداعات","steps":[{"k":"say","h":"مساران، ويكفي واحد: \u003cb>صورة توضيحية\u003c/b> لدرس، أو \u003cb>صفحة تفاعلية\u003c/b> للمراجعة."},{"k":"say","h":"مسار الصورة: لصق الأمر في أداة تنشئ الصور، ثم حفظ الصورة في الجوال ورفعها من صفحة المشاركة."},{"k":"say","h":"مسار الصفحة: لصق الأمر في أداة تنشئ صفحات (مثل ميزة Canvas)، ثم نسخ رابط المشاركة ولصقه."},{"k":"say","h":"الأمران في الجوال بزر نسخ، والجوال فتح الآن خانة رفع الصورة والرابط."},{"k":"do","h":"اضغط &quot;بدء&quot; لتشغيل المؤقت."},{"k":"watch","h":"أول مشاركة تصل يظهر تنبيهها أسفل الشاشة. اذكر اسم صاحبتها لتحفيز البقية."},{"k":"watch","h":"إن فشل رفع صورة: لقطة شاشة لها ثم رفع اللقطة، أو لصق رابط الصورة."},{"k":"watch","h":"قبل النهاية بدقيقة: &quot;ارفعن ما عندكن الآن.&quot;"},{"k":"go","h":"&quot;لنرَ ماذا صنعتن.&quot;"}],"at":1620,"dur":420},{"id":"s-wall","title":"إبداعات المتدربات","steps":[{"k":"do","h":"اضغط بطاقتين أو ثلاثًا لعرضها كاملة (\u003cspan class=\"ltr\">Esc\u003c/span> للإغلاق). نوّع: صورة، وصفحة، ونص."},{"k":"ask","h":"لصاحبة كل عمل: &quot;ما الأمر الذي كتبتِه؟ وما التعديل الذي طلبتِه بعد أول نتيجة؟&quot;"},{"k":"say","h":"علّق على نقطة قوة محددة في كل عمل، مع اسم صاحبته ومدرستها."},{"k":"do","h":"افتح لوحة المتدربات (\u003cspan class=\"ltr\">L\u003c/span>): مجموع مشاركات كل مدرسة، والأكثر مشاركة. تحية للمدرستين."},{"k":"watch","h":"مشاركة غير مناسبة: مرّر المؤشر على بطاقتها واضغط زر الإخفاء."},{"k":"go","h":"&quot;سؤال أخير على جوالاتكن قبل الختام.&quot;"}],"at":2040,"dur":180},{"id":"s-poll2","title":"ما أول استخدام للتجربة هذا الأسبوع؟","steps":[{"k":"say","h":"اقرأ السؤال: ما أول استخدام للتجربة هذا الأسبوع؟"},{"k":"watch","h":"\u003cb>20 ثانية\u003c/b> للتصويت."},{"k":"say","h":"قارن باستطلاع البداية: هل اختارت الأغلبية المهمة التي كانت تأخذ أكثر وقتها؟"},{"k":"say","h":"التزام صغير: تجربة واحدة قبل نهاية الأسبوع، في درس حقيقي."},{"k":"go","h":"&quot;بقيت كلمة أخيرة.&quot;"}],"at":2220,"dur":90},{"id":"s-close","title":"الخاتمة","steps":[{"k":"say","h":"اقرأ العبارة: الذكاء الاصطناعي يختصر \u003cb>الوقت\u003c/b>، والمعلم والمعلمة يصنعان \u003cb>الأثر\u003c/b>."},{"k":"say","h":"الرسالة الأخيرة: المعلمة تعرف طالباتها، والأداة لا تعرفهن. أمر واحد هذا الأسبوع بداية كافية."},{"k":"say","h":"مشاركة ما ينجح مع الزميلات تضاعف الفائدة، والأوامر الجاهزة باقية في صفحة الجوال."},{"k":"say","h":"الرمز على الشاشة يقود إلى الصفحات الاجتماعية للمدرب، للأسئلة والمتابعة."},{"k":"say","h":"الشكر: للحضور، ولمديرتي المدرستين، ولكل من شاركت بعمل."},{"k":"do","h":"بعد انصراف الحضور: \u003cspan class=\"ltr\">pnpm run export\u003c/span> لتصدير التقرير قبل أي تصفير."}],"at":2310,"dur":90}],"types":{"say":{"label":"قل","icon":"mic"},"do":{"label":"نفّذ","icon":"spark"},"ask":{"label":"اسأل","icon":"msg"},"watch":{"label":"انتبه","icon":"alert"},"go":{"label":"انتقل","icon":"arrow"}},"t":{"page_title":"ملاحظات المقدّم","lock_title":"ملاحظات المقدّم","lock_hint":"هذه الصفحة لمقدّم ورشة العمل. أدخل كلمة السر لفتحها.","password_placeholder":"كلمة السر","unlock":"فتح","wrong":"كلمة السر غير صحيحة.","checking":"جارٍ التحقق","now":"الشريحة الحالية","next":"الشريحة التالية","then":"بعدها في العرض","note_next":"الملاحظة التالية","note_prev":"السابقة","slide_ctl":"الشريحة","slide_left":"باقي للشريحة","slide_over":"تجاوز وقت الشريحة","keys_hint":"المسافة أو السهم السفلي للملاحظة التالية، والسهمان الأيمن والأيسر لشرائح العرض.","end":"نهاية العرض","elapsed":"الوقت المنقضي","planned":"الموعد المخطط للشريحة","on_time":"في الوقت","late":"متأخر","early":"متقدم","start":"بدء المؤقت","pause":"إيقاف","reset":"تصفير المؤقت","prev_btn":"الشريحة السابقة","next_btn":"الشريحة التالية","linked":"متصل بالعرض","waiting":"بانتظار العرض. افتح العرض بوضع المقدّم على شاشة العرض."}};
 const $ = s => document.querySelector(s);
+const $$ = s => [...document.querySelectorAll(s)];
 const ico = id => `<svg class="icon"><use href="#${id}"/></svg>`;
 const fmt = s => { const a = Math.abs(Math.round(s)); return Math.floor(a / 60) + ':' + String(a % 60).padStart(2, '0'); };
-let sb = null, key = null, ctl = null, bc = null, cur = 0, linked = false;
+const LAST = D.slides.length - 1;
+let sb = null, key = null, ctl = null, bc = null, cur = 0, linked = false, enterAt = Date.now();
 const seen = new Set();
+const pos = {};   // موضع الملاحظة الظاهرة في كل شريحة
 
 /* ---------- القفل ---------- */
 function waitSb(){ return new Promise(r => { const t = () => window.supabase ? r() : setTimeout(t, 150); t(); }); }
@@ -217,26 +285,61 @@ $('#lockForm').onsubmit = e => { e.preventDefault(); $('#err').hidden = true; co
   if (saved) unlock(saved, true);
 })();
 
-/* ---------- العرض ---------- */
+/* ---------- الشريحة: تتبع العرض تلقائيًا ---------- */
 $('#total').textContent = '/ ' + D.slides.length;
 function render(animate){
   const s = D.slides[cur], n = D.slides[cur + 1];
+  if (pos[cur] === undefined) pos[cur] = 0;
   $('#pos').textContent = cur + 1;
   $('#nowTitle').textContent = s.title;
-  $('#nowNote').textContent = s.notes;
+  $('#steps').innerHTML = s.steps.map((x, i) => `<li class="step t-${x.k}" data-i="${i}"><span class="ty">${ico('i-' + D.types[x.k].icon)}${D.types[x.k].label}</span><p>${x.h}</p></li>`).join('');
+  $('#pips').innerHTML = s.steps.map(x => `<i class="t-${x.k}"></i>`).join('');
+  $('#cueTitle').textContent = n ? n.title : D.t.end;
   $('#nextTitle').textContent = n ? n.title : D.t.end;
-  $('#nextNote').textContent = n ? n.notes : '';
+  $('#nextMeta').innerHTML = n ? ico('i-clock') + fmt(n.dur) : '';
+  $('#nextNote').innerHTML = n ? n.steps[0].h : '';
   $('#planned').textContent = fmt(s.at);
   $('#bar').style.width = ((cur + 1) / D.slides.length * 100) + '%';
-  $('#prev').disabled = cur === 0; $('#next').disabled = cur === D.slides.length - 1;
+  $('#sPrev').disabled = cur === 0; $('#sNext').disabled = cur === LAST;
   if (animate) for (const el of [$('#nowBox'), $('#nextBox')]) { el.classList.remove('swap'); void el.offsetWidth; el.classList.add('swap'); }
-  tick();
+  $('#nowBox').scrollTop = 0;
+  paint(false); tick();
+}
+function setSlide(i){
+  i = Math.max(0, Math.min(LAST, i));
+  if (i === cur) return;
+  cur = i; enterAt = Date.now();
+  if (!t0 && cur > 0) { t0 = Date.now() - D.slides[cur].at * 1000; saveT(); }   // يبدأ المؤقّت تلقائيًا مع أول انتقال
+  render(true);
 }
 function setLinked(on){
   linked = on; $('#link').classList.toggle('on', on);
   $('#linkTxt').textContent = on ? D.t.linked : '';
   $('#waiting').hidden = on;
 }
+
+/* ---------- الملاحظات: يُظهرها المقدّم واحدة بعد أخرى ---------- */
+function paint(scroll){
+  const n = D.slides[cur].steps.length, p = pos[cur];
+  $$('#steps .step').forEach((el, i) => { el.hidden = i > p; el.classList.toggle('cur', i === p); el.classList.toggle('done', i < p); });
+  $$('#pips i').forEach((el, i) => { el.classList.toggle('on', i <= p); el.classList.toggle('cur', i === p); });
+  $('#cnt').textContent = (p + 1) + ' / ' + n;
+  $('#cue').hidden = p < n - 1;
+  $('#nPrev').disabled = p === 0; $('#nNext').disabled = p >= n - 1;
+  if (scroll) (p >= n - 1 ? $('#cue') : $('#steps .step.cur')).scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+}
+function step(d){
+  const p = Math.max(0, Math.min(D.slides[cur].steps.length - 1, pos[cur] + d));
+  if (p === pos[cur]) return;
+  pos[cur] = p; paint(true);
+}
+$('#nNext').onclick = e => { e.currentTarget.blur(); step(1); };
+$('#nPrev').onclick = e => { e.currentTarget.blur(); step(-1); };
+$('#steps').onclick = e => {
+  const el = e.target.closest?.('.step'); if (!el) return;
+  const i = Number(el.dataset.i);
+  if (i === pos[cur]) step(1); else { pos[cur] = i; paint(true); }
+};
 
 /* ---------- المؤقّت ---------- */
 let t0 = Number(localStorage.getItem('aiws_t0')) || 0, paused = Number(localStorage.getItem('aiws_paused')) || 0;
@@ -251,29 +354,26 @@ function tick(){
   if (t0 && e > end) { cls = 'late'; lbl = D.t.late; d = e - end; }
   else if (t0 && e < plan) { cls = 'early'; lbl = D.t.early; d = plan - e; }
   chip.className = 'chip ' + cls; $('#deltaLbl').textContent = lbl; $('#delta').textContent = fmt(d);
+  const left = D.slides[cur].dur - (Date.now() - enterAt) / 1000;   // الباقي من مدة الشريحة منذ دخولها
+  $('#leftChip').className = 'chip' + (left < 0 ? ' late' : '');
+  $('#leftLbl').textContent = left < 0 ? D.t.slide_over : D.t.slide_left; $('#left').textContent = fmt(left);
   $('#tToggle').innerHTML = running() ? ico('i-pause') + D.t.pause : ico('i-play') + D.t.start;
 }
-$('#tToggle').onclick = () => {
+$('#tToggle').onclick = e => {
+  e.currentTarget.blur();
   if (!t0) t0 = Date.now();
   else if (paused) { t0 += Date.now() - paused; paused = 0; }
   else paused = Date.now();
   saveT(); tick();
 };
-$('#tReset').onclick = () => { t0 = 0; paused = 0; saveT(); tick(); };
+$('#tReset').onclick = e => { e.currentTarget.blur(); t0 = 0; paused = 0; saveT(); tick(); };
 setInterval(tick, 1000);
 
 /* ---------- الربط بالعرض ---------- */
 async function sha(s){ const b = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(s)); return [...new Uint8Array(b)].map(x => x.toString(16).padStart(2, '0')).join(''); }
 function onMsg(m){
   if (!m || seen.has(m.id)) return; seen.add(m.id);
-  if (m.t === 'slide' && Number.isInteger(m.i)) {
-    setLinked(true);
-    if (m.i !== cur) {
-      cur = Math.max(0, Math.min(D.slides.length - 1, m.i));
-      if (!t0 && cur > 0) { t0 = Date.now() - D.slides[cur].at * 1000; saveT(); }   // يبدأ المؤقّت تلقائيًا مع أول انتقال
-      render(true);
-    }
-  }
+  if (m.t === 'slide' && Number.isInteger(m.i)) { setLinked(true); setSlide(m.i); }
 }
 function send(m){ m.id = Math.random().toString(36).slice(2); seen.add(m.id); try { bc?.postMessage(m); } catch (e) {} ctl?.send({ type: 'broadcast', event: 'm', payload: m }); }
 async function start(){
@@ -285,15 +385,18 @@ async function start(){
   send({ t: 'hello' });
   document.addEventListener('visibilitychange', () => { if (!document.hidden) send({ t: 'hello' }); });
 }
+/* تحكم احتياطي في شرائح العرض من هذه الصفحة */
 function go(to){
   if (linked) { send({ t: 'go', to }); return; }
-  cur = Math.max(0, Math.min(D.slides.length - 1, cur + (to === 'next' ? 1 : -1))); render(true);   // بلا عرض متصل: تصفح الملاحظات فقط
+  setSlide(cur + (to === 'next' ? 1 : -1));   // بلا عرض متصل: تصفح الملاحظات فقط
 }
-$('#next').onclick = () => go('next');
-$('#prev').onclick = () => go('prev');
+$('#sNext').onclick = e => { e.currentTarget.blur(); go('next'); };
+$('#sPrev').onclick = e => { e.currentTarget.blur(); go('prev'); };
 document.addEventListener('keydown', e => {
-  if ($('#app').hidden) return;
-  if (['ArrowLeft', 'PageDown', ' '].includes(e.key)) { e.preventDefault(); go('next'); }
+  if ($('#app').hidden || e.ctrlKey || e.metaKey || e.altKey) return;
+  if ([' ', 'ArrowDown', 'Enter'].includes(e.key)) { e.preventDefault(); step(1); }
+  else if (['ArrowUp', 'Backspace'].includes(e.key)) { e.preventDefault(); step(-1); }
+  else if (['ArrowLeft', 'PageDown'].includes(e.key)) { e.preventDefault(); go('next'); }
   else if (['ArrowRight', 'PageUp'].includes(e.key)) { e.preventDefault(); go('prev'); }
 });
 </script>

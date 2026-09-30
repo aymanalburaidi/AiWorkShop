@@ -46,8 +46,21 @@ const items = s => s.split('\n').filter(l => /^\s*-\s+/.test(l)).map(l => l.repl
 const ico = (name, cls = '') => `<svg class="icon ${cls}"><use href="#i-${name}"/></svg>`;
 const COLORS = ['green', 'teal', 'blue', 'violet', 'navy', 'sand'];
 
+/* ---------- ملاحظات المقدّم: سطر لكل ملاحظة "- النوع | النص" ---------- */
+const noteTypes = Object.fromEntries(items(get('presenter-page.note_types')).map(([k, label, icon]) => [k, { label: plain(label), icon }]));
+function noteSteps(id) {
+  const raw = get(id + '.notes'), lines = raw.split('\n').filter(l => /^\s*-\s+/.test(l));
+  if (!lines.length) return [{ k: 'say', text: raw }];
+  return lines.map(l => {
+    const s = l.replace(/^\s*-\s+/, ''), i = s.indexOf('|');
+    const k = i < 0 ? 'say' : s.slice(0, i).trim();
+    if (!noteTypes[k]) throw new Error(`نوع ملاحظة غير معروف "${k}" في ملف ${id} (المتاح: ${Object.keys(noteTypes).join('، ')})`);
+    return { k, text: s.slice(i + 1).trim() };
+  });
+}
+
 /* ---------- المكوّنات ---------- */
-const subs = id => Object.keys(C[id]).filter(k => k.endsWith('.tab')).map(k => k.slice(0, -4));
+const subs =id => Object.keys(C[id]).filter(k => k.endsWith('.tab')).map(k => k.slice(0, -4));
 const R = {
   cards: ref => items(get(ref)).map(([icon, title, text, color], i) =>
     `<div class="card reveal"><div class="ic c-${color || COLORS[i % 4]}">${ico(icon)}</div><h3>${inline(title)}</h3><p>${inline(text)}</p></div>`).join('\n'),
@@ -73,6 +86,7 @@ const R = {
   prompts: id => promptList(id).map(p =>
     `<div class="prompt-box reveal"><div class="prompt-head"><span>${ico(p.icon)} ${inline(p.title)}</span><button class="btn small copy-btn">${ico('copy')}<span>${esc(get('prompts.copy'))}</span></button></div>
 <div class="prompt-text">${withPh(inline(p.text))}</div></div>`).join('\n'),
+  notes: id => esc(noteSteps(id).map(s => plain(s.text)).join(' • ')),
   include: file => read('src/' + file),
   joinurl: () => esc(joinUrl),
   joinurl_display: () => esc(joinUrl.replace(/^https?:\/\//, '').replace(/\/$/, '')),
@@ -144,15 +158,17 @@ fs.writeFileSync(path.join(out, 'index.html'), deckHtml);
 /* ---------- صفحة ملاحظات المقدّم: الشرائح بترتيبها من العرض نفسه ---------- */
 const strip = h => h.replace(/<br\s*\/?>/g, ' ').replace(/<[^>]+>/g, '').replace(/&quot;/g, '"').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&amp;/g, '&').replace(/\s+/g, ' ').trim();
 const sched = Object.fromEntries(items(get('presenter-page.schedule')).map(([id, t]) => { const [m, sec] = t.split(':').map(Number); return [id, m * 60 + (sec || 0)]; }));
+const noteRef = Object.fromEntries([...read('src/deck.html').matchAll(/<section class="slide" id="([^"]+)"[^>]*\{\{@notes ([\w-]+)\}\}/g)].map(m => [m[1], m[2]]));
 let at = 0;
-const slideList = [...deckHtml.matchAll(/<section class="slide" id="([^"]+)"[^>]*data-notes="([^"]*)"[^>]*>([\s\S]*?)<\/section>/g)].map(m => {
-  const t = m[3].match(/class="[^"]*\bsplit\b[^"]*">([\s\S]*?)<\/(?:h1|h2|p)>/) || m[3].match(/class="kicker[^"]*">([\s\S]*?)<\/span>/);
+const slideList = [...deckHtml.matchAll(/<section class="slide" id="([^"]+)"[^>]*>([\s\S]*?)<\/section>/g)].map(m => {
+  const t = m[2].match(/class="[^"]*\bsplit\b[^"]*">([\s\S]*?)<\/(?:h1|h2|p)>/) || m[2].match(/class="kicker[^"]*">([\s\S]*?)<\/span>/);
   if (sched[m[1]] === undefined) console.warn('⚠ لا مدة للشريحة في presenter-page.schedule:', m[1]);
-  const dur = sched[m[1]] ?? 60, o = { id: m[1], title: t ? strip(t[1]) : m[1], notes: strip(m[2]), at, dur };
+  if (!noteRef[m[1]]) throw new Error('الشريحة بلا ملاحظات ({{@notes ...}}) في src/deck.html: ' + m[1]);
+  const dur = sched[m[1]] ?? 60, o = { id: m[1], title: t ? strip(t[1]) : m[1], steps: noteSteps(noteRef[m[1]]).map(s => ({ k: s.k, h: inline(s.text) })), at, dur };
   at += dur; return o;
 });
-const notesData = { url: cfg.supabaseUrl, key: cfg.supabaseKey, room: cfg.room, slides: slideList,
-  t: Object.fromEntries(Object.entries(C['presenter-page']).filter(([k]) => k !== 'schedule').map(([k, v]) => [k, plain(v)])) };
+const notesData = { url: cfg.supabaseUrl, key: cfg.supabaseKey, room: cfg.room, slides: slideList, types: noteTypes,
+  t: Object.fromEntries(Object.entries(C['presenter-page']).filter(([k]) => !['schedule', 'note_types'].includes(k)).map(([k, v]) => [k, plain(v)])) };
 fs.mkdirSync(path.join(out, 'notes'), { recursive: true });
 fs.writeFileSync(path.join(out, 'notes/index.html'), render(read('src/notes.html'), notesData));
 fs.writeFileSync(path.join(out, 'join/index.html'), render(read('src/join.html'), joinData));

@@ -24,6 +24,7 @@ h1,h2,h3,b,button{font-weight:500}
 button{font-family:inherit;cursor:pointer;touch-action:manipulation}
 [hidden]{display:none!important}
 .icon{width:1.2em;height:1.2em;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;flex:none;vertical-align:-.2em}
+.ltr{direction:ltr;unicode-bidi:isolate;display:inline-block}
 
 /* القفل */
 .lock{min-height:calc(100dvh - 40px);display:grid;place-items:center}
@@ -34,15 +35,16 @@ button{font-family:inherit;cursor:pointer;touch-action:manipulation}
 .lock-card p{color:var(--muted);font-size:.95rem;margin:6px 0 16px}
 input{width:100%;font-family:inherit;font-size:17px;color:var(--ink);background:rgba(255,255,255,.06);border:1.5px solid var(--line);border-radius:14px;padding:12px 14px;outline:none;text-align:center;direction:ltr}
 input:focus{border-color:var(--teal)}
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:48px;padding:0 20px;border-radius:14px;border:1px solid var(--line);background:rgba(255,255,255,.06);color:var(--ink);font-size:1rem;transition:transform .12s var(--ease),background .15s}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:48px;padding:0 20px;border-radius:14px;border:1px solid var(--line);background:rgba(255,255,255,.06);color:var(--ink);font-size:1rem;transition:transform .12s var(--ease),background .15s,opacity .2s}
 .btn:active{transform:scale(.97)}
 .btn.primary{background:var(--grad);border:0;color:#fff}
 .btn.full{width:100%;margin-top:12px}
-.btn:disabled{opacity:.4}
+.btn.sq{padding:0;width:48px}
+.btn:disabled{opacity:.35;cursor:default}
 .err{color:var(--red);font-size:.9rem;margin-top:10px}
 
 /* اللوحة */
-.app{max-width:1100px;margin:0 auto;min-height:calc(100dvh - 40px);display:grid;grid-template-rows:auto 1fr auto;gap:14px}
+.app{max-width:1200px;margin:0 auto;height:calc(100dvh - 28px - env(safe-area-inset-top) - env(safe-area-inset-bottom));display:grid;grid-template-rows:auto minmax(0,1fr) auto;gap:14px}
 .top{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
 .pos{display:flex;align-items:baseline;gap:10px}
 .pos b{font-size:2.2rem;line-height:1;font-variant-numeric:tabular-nums}
@@ -57,26 +59,69 @@ input:focus{border-color:var(--teal)}
 .chip.late b{color:var(--red)} .chip.early b{color:#5eead4} .chip.ok b{color:#86efac}
 .bar{height:4px;border-radius:4px;background:rgba(255,255,255,.1);overflow:hidden}
 .bar i{display:block;height:100%;width:0;background:var(--grad);transition:width .6s var(--ease)}
-.main{display:grid;grid-template-columns:1.7fr 1fr;gap:14px;min-height:0}
-.now,.nextc{background:var(--panel);border:1px solid var(--line);border-radius:22px;padding:20px 22px;overflow:auto}
-.lbl{display:inline-flex;align-items:center;gap:8px;font-size:.82rem;color:#0f2f3e;background:var(--sand);padding:1px 12px;border-radius:999px;margin-bottom:8px}
-.nextc .lbl{background:rgba(255,255,255,.12);color:var(--muted)}
-.now h2{font-size:1.7rem;line-height:1.5;margin-bottom:10px}
-.now .note{font-size:1.5rem;line-height:1.9;font-weight:300;white-space:pre-wrap}
-.nextc h3{font-size:1.15rem;line-height:1.6;margin-bottom:6px}
-.nextc .note{color:var(--muted);font-size:1rem;white-space:pre-wrap}
+.main{display:grid;grid-template-columns:2.2fr 1fr;gap:14px;min-height:0}
+.now,.nextc{background:var(--panel);border:1px solid var(--line);border-radius:22px;padding:18px 22px;overflow:auto;min-height:0}
+.lbl{display:inline-flex;align-items:center;gap:8px;font-size:.82rem;color:#0f2f3e;background:var(--sand);padding:1px 12px;border-radius:999px}
+.nextc .lbl{background:rgba(255,255,255,.12);color:var(--muted);margin-bottom:8px}
+.now-head{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.now h2{font-size:1.45rem;line-height:1.5;margin:6px 0 12px}
+
+/* أنواع الملاحظات */
+.t-say{--tc:#5eead4} .t-do{--tc:#e7d9a6} .t-ask{--tc:#93c5fd} .t-watch{--tc:#fdba74} .t-go{--tc:#86efac}
+.pips{display:flex;gap:6px;margin-inline-start:auto}
+.pips i{width:22px;height:6px;border-radius:6px;background:rgba(255,255,255,.14);transition:background .3s,width .3s var(--ease)}
+.pips i.on{background:var(--tc)}
+.pips i.cur{width:34px}
+.cnt{color:var(--muted);font-size:.9rem;font-variant-numeric:tabular-nums;direction:ltr}
+
+/* الملاحظات: تظهر واحدة بعد أخرى */
+.steps{list-style:none;display:flex;flex-direction:column;gap:8px}
+.step{border-radius:16px;border-inline-start:4px solid transparent;padding:6px 14px;transition:background .3s,opacity .3s,padding .3s var(--ease)}
+.step .ty{display:inline-flex;align-items:center;gap:6px;font-size:.8rem;line-height:1.7;color:var(--tc);background:color-mix(in srgb,var(--tc) 14%,transparent);padding:0 10px;border-radius:999px}
+.step p{font-weight:300;transition:font-size .3s var(--ease)}
+.step b{color:#fff}
+.step.done{opacity:.5;cursor:pointer;display:grid;grid-template-columns:auto 1fr;gap:10px;align-items:baseline}
+.step.done p{font-size:1rem;line-height:1.7}
+.step.done:hover{opacity:.8}
+.step.cur{background:rgba(255,255,255,.07);border-inline-start-color:var(--tc);padding:12px 18px 14px;animation:show .4s var(--ease) both}
+.step.cur .ty{font-size:.9rem;margin-bottom:4px}
+.step.cur p{font-size:1.6rem;line-height:1.85}
+@keyframes show{from{opacity:0;transform:translateY(12px)}}
+.cue{display:flex;align-items:center;gap:10px;margin-top:12px;padding:10px 16px;border-radius:14px;border:1px dashed rgba(134,239,172,.5);color:#86efac;animation:show .4s var(--ease) .15s both}
+.cue small{color:var(--muted);font-size:.85rem}
+.cue b{color:var(--ink)}
+.waiting{color:var(--muted);font-size:.95rem;margin-top:10px}
+
+.nextc h3{font-size:1.15rem;line-height:1.6;margin-bottom:4px}
+.nextc .meta{display:inline-flex;align-items:center;gap:6px;color:var(--muted);font-size:.9rem;direction:ltr;margin-bottom:6px}
+.nextc .note{color:var(--muted);font-size:1rem;font-weight:300}
+.keys{color:#7f9aa5;font-size:.82rem;line-height:1.7;margin-top:16px;padding-top:12px;border-top:1px solid var(--line)}
 .swap{animation:swap .45s var(--ease) both}
 @keyframes swap{from{opacity:0;transform:translateY(10px)}}
+
 .foot{display:flex;gap:10px;justify-content:space-between;flex-wrap:wrap}
-.foot .grp{display:flex;gap:8px}
-.foot .nav{min-width:120px;min-height:56px;font-size:1.1rem}
-.waiting{color:var(--muted);font-size:.95rem;margin-top:8px}
+.foot .grp{display:flex;gap:8px;align-items:center}
+.foot .nav{min-height:58px;font-size:1.1rem}
+.foot #nNext{min-width:240px}
+.slidectl{display:flex;align-items:center;gap:6px;padding:0 4px;border:1px solid var(--line);border-radius:16px;min-height:58px}
+.slidectl span{color:var(--muted);font-size:.85rem;padding:0 4px}
+.slidectl .btn{border:0;min-height:44px;width:44px}
 @media (max-width:760px){
   body{font-size:17px}
-  .main{grid-template-columns:1fr}
-  .now .note{font-size:1.25rem}
-  .foot .nav{flex:1}
-  .foot .grp{flex:1}
+  .app{gap:10px}
+  .main{grid-template-columns:1fr;grid-template-rows:minmax(0,1fr) auto}
+  .nextc{padding:10px 16px}
+  .nextc .note,.keys,#plannedChip{display:none}
+  .now{padding:14px 14px}
+  .step.cur p{font-size:1.3rem}
+  .pos b{font-size:1.6rem}
+  .chip{min-width:0;flex:1;padding:4px 8px}
+  .chip b{font-size:1.1rem}
+  .clock{width:100%}
+  .foot .grp{flex:1 1 100%}
+  .foot .grp:first-child .btn{flex:1}
+  .foot #nNext{min-width:0;flex:2!important}
+  .foot #tToggle{flex:1}
 }
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
@@ -103,7 +148,8 @@ input:focus{border-color:var(--teal)}
     <div class="top">
       <div class="pos"><b id="pos">1</b><span id="total"></span><div class="link" id="link"><span class="dot"></span><span id="linkTxt"></span></div></div>
       <div class="clock">
-        <div class="chip"><small>{{presenter-page.planned}}</small><b id="planned">0:00</b></div>
+        <div class="chip" id="plannedChip"><small>{{presenter-page.planned}}</small><b id="planned">0:00</b></div>
+        <div class="chip" id="leftChip"><small id="leftLbl">{{presenter-page.slide_left}}</small><b id="left">0:00</b></div>
         <div class="chip" id="elapsedChip"><small>{{presenter-page.elapsed}}</small><b id="elapsed">0:00</b></div>
         <div class="chip" id="deltaChip"><small id="deltaLbl">{{presenter-page.on_time}}</small><b id="delta">0:00</b></div>
       </div>
@@ -112,18 +158,35 @@ input:focus{border-color:var(--teal)}
   </div>
 
   <div class="main">
-    <section class="now" id="nowBox"><span class="lbl">{{presenter-page.now}}</span><h2 id="nowTitle"></h2><div class="note" id="nowNote"></div><p class="waiting" id="waiting">{{presenter-page.waiting}}</p></section>
-    <section class="nextc" id="nextBox"><span class="lbl">{{presenter-page.next}}</span><h3 id="nextTitle"></h3><div class="note" id="nextNote"></div></section>
+    <section class="now" id="nowBox">
+      <div class="now-head"><span class="lbl">{{presenter-page.now}}</span><div class="pips" id="pips"></div><span class="cnt" id="cnt"></span></div>
+      <h2 id="nowTitle"></h2>
+      <ol class="steps" id="steps"></ol>
+      <div class="cue" id="cue" hidden><svg class="icon"><use href="#i-next"/></svg><small>{{presenter-page.then}}</small><b id="cueTitle"></b></div>
+      <p class="waiting" id="waiting">{{presenter-page.waiting}}</p>
+    </section>
+    <section class="nextc" id="nextBox">
+      <span class="lbl">{{presenter-page.next}}</span>
+      <h3 id="nextTitle"></h3>
+      <div class="meta" id="nextMeta"></div>
+      <div class="note" id="nextNote"></div>
+      <p class="keys">{{presenter-page.keys_hint}}</p>
+    </section>
   </div>
 
   <div class="foot">
     <div class="grp">
-      <button class="btn nav" id="prev"><svg class="icon"><use href="#i-prev"/></svg>{{presenter-page.prev_btn}}</button>
-      <button class="btn primary nav" id="next">{{presenter-page.next_btn}}<svg class="icon"><use href="#i-next"/></svg></button>
+      <button class="btn nav" id="nPrev"><svg class="icon"><use href="#i-up"/></svg>{{presenter-page.note_prev}}</button>
+      <button class="btn primary nav" id="nNext">{{presenter-page.note_next}}<svg class="icon"><use href="#i-down"/></svg></button>
     </div>
     <div class="grp">
-      <button class="btn" id="tToggle"></button>
-      <button class="btn" id="tReset" aria-label="{{presenter-page.reset|text}}"><svg class="icon"><use href="#i-rotate"/></svg></button>
+      <div class="slidectl">
+        <button class="btn" id="sPrev" aria-label="{{presenter-page.prev_btn|text}}"><svg class="icon"><use href="#i-prev"/></svg></button>
+        <span>{{presenter-page.slide_ctl}}</span>
+        <button class="btn" id="sNext" aria-label="{{presenter-page.next_btn|text}}"><svg class="icon"><use href="#i-next"/></svg></button>
+      </div>
+      <button class="btn nav" id="tToggle"></button>
+      <button class="btn sq nav" id="tReset" aria-label="{{presenter-page.reset|text}}"><svg class="icon"><use href="#i-rotate"/></svg></button>
     </div>
   </div>
 </div>
@@ -131,10 +194,13 @@ input:focus{border-color:var(--teal)}
 <script>
 const D = {{DATA}};
 const $ = s => document.querySelector(s);
+const $$ = s => [...document.querySelectorAll(s)];
 const ico = id => `<svg class="icon"><use href="#${id}"/></svg>`;
 const fmt = s => { const a = Math.abs(Math.round(s)); return Math.floor(a / 60) + ':' + String(a % 60).padStart(2, '0'); };
-let sb = null, key = null, ctl = null, bc = null, cur = 0, linked = false;
+const LAST = D.slides.length - 1;
+let sb = null, key = null, ctl = null, bc = null, cur = 0, linked = false, enterAt = Date.now();
 const seen = new Set();
+const pos = {};   // موضع الملاحظة الظاهرة في كل شريحة
 
 /* ---------- القفل ---------- */
 function waitSb(){ return new Promise(r => { const t = () => window.supabase ? r() : setTimeout(t, 150); t(); }); }
@@ -161,26 +227,61 @@ $('#lockForm').onsubmit = e => { e.preventDefault(); $('#err').hidden = true; co
   if (saved) unlock(saved, true);
 })();
 
-/* ---------- العرض ---------- */
+/* ---------- الشريحة: تتبع العرض تلقائيًا ---------- */
 $('#total').textContent = '/ ' + D.slides.length;
 function render(animate){
   const s = D.slides[cur], n = D.slides[cur + 1];
+  if (pos[cur] === undefined) pos[cur] = 0;
   $('#pos').textContent = cur + 1;
   $('#nowTitle').textContent = s.title;
-  $('#nowNote').textContent = s.notes;
+  $('#steps').innerHTML = s.steps.map((x, i) => `<li class="step t-${x.k}" data-i="${i}"><span class="ty">${ico('i-' + D.types[x.k].icon)}${D.types[x.k].label}</span><p>${x.h}</p></li>`).join('');
+  $('#pips').innerHTML = s.steps.map(x => `<i class="t-${x.k}"></i>`).join('');
+  $('#cueTitle').textContent = n ? n.title : D.t.end;
   $('#nextTitle').textContent = n ? n.title : D.t.end;
-  $('#nextNote').textContent = n ? n.notes : '';
+  $('#nextMeta').innerHTML = n ? ico('i-clock') + fmt(n.dur) : '';
+  $('#nextNote').innerHTML = n ? n.steps[0].h : '';
   $('#planned').textContent = fmt(s.at);
   $('#bar').style.width = ((cur + 1) / D.slides.length * 100) + '%';
-  $('#prev').disabled = cur === 0; $('#next').disabled = cur === D.slides.length - 1;
+  $('#sPrev').disabled = cur === 0; $('#sNext').disabled = cur === LAST;
   if (animate) for (const el of [$('#nowBox'), $('#nextBox')]) { el.classList.remove('swap'); void el.offsetWidth; el.classList.add('swap'); }
-  tick();
+  $('#nowBox').scrollTop = 0;
+  paint(false); tick();
+}
+function setSlide(i){
+  i = Math.max(0, Math.min(LAST, i));
+  if (i === cur) return;
+  cur = i; enterAt = Date.now();
+  if (!t0 && cur > 0) { t0 = Date.now() - D.slides[cur].at * 1000; saveT(); }   // يبدأ المؤقّت تلقائيًا مع أول انتقال
+  render(true);
 }
 function setLinked(on){
   linked = on; $('#link').classList.toggle('on', on);
   $('#linkTxt').textContent = on ? D.t.linked : '';
   $('#waiting').hidden = on;
 }
+
+/* ---------- الملاحظات: يُظهرها المقدّم واحدة بعد أخرى ---------- */
+function paint(scroll){
+  const n = D.slides[cur].steps.length, p = pos[cur];
+  $$('#steps .step').forEach((el, i) => { el.hidden = i > p; el.classList.toggle('cur', i === p); el.classList.toggle('done', i < p); });
+  $$('#pips i').forEach((el, i) => { el.classList.toggle('on', i <= p); el.classList.toggle('cur', i === p); });
+  $('#cnt').textContent = (p + 1) + ' / ' + n;
+  $('#cue').hidden = p < n - 1;
+  $('#nPrev').disabled = p === 0; $('#nNext').disabled = p >= n - 1;
+  if (scroll) (p >= n - 1 ? $('#cue') : $('#steps .step.cur')).scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+}
+function step(d){
+  const p = Math.max(0, Math.min(D.slides[cur].steps.length - 1, pos[cur] + d));
+  if (p === pos[cur]) return;
+  pos[cur] = p; paint(true);
+}
+$('#nNext').onclick = e => { e.currentTarget.blur(); step(1); };
+$('#nPrev').onclick = e => { e.currentTarget.blur(); step(-1); };
+$('#steps').onclick = e => {
+  const el = e.target.closest?.('.step'); if (!el) return;
+  const i = Number(el.dataset.i);
+  if (i === pos[cur]) step(1); else { pos[cur] = i; paint(true); }
+};
 
 /* ---------- المؤقّت ---------- */
 let t0 = Number(localStorage.getItem('aiws_t0')) || 0, paused = Number(localStorage.getItem('aiws_paused')) || 0;
@@ -195,29 +296,26 @@ function tick(){
   if (t0 && e > end) { cls = 'late'; lbl = D.t.late; d = e - end; }
   else if (t0 && e < plan) { cls = 'early'; lbl = D.t.early; d = plan - e; }
   chip.className = 'chip ' + cls; $('#deltaLbl').textContent = lbl; $('#delta').textContent = fmt(d);
+  const left = D.slides[cur].dur - (Date.now() - enterAt) / 1000;   // الباقي من مدة الشريحة منذ دخولها
+  $('#leftChip').className = 'chip' + (left < 0 ? ' late' : '');
+  $('#leftLbl').textContent = left < 0 ? D.t.slide_over : D.t.slide_left; $('#left').textContent = fmt(left);
   $('#tToggle').innerHTML = running() ? ico('i-pause') + D.t.pause : ico('i-play') + D.t.start;
 }
-$('#tToggle').onclick = () => {
+$('#tToggle').onclick = e => {
+  e.currentTarget.blur();
   if (!t0) t0 = Date.now();
   else if (paused) { t0 += Date.now() - paused; paused = 0; }
   else paused = Date.now();
   saveT(); tick();
 };
-$('#tReset').onclick = () => { t0 = 0; paused = 0; saveT(); tick(); };
+$('#tReset').onclick = e => { e.currentTarget.blur(); t0 = 0; paused = 0; saveT(); tick(); };
 setInterval(tick, 1000);
 
 /* ---------- الربط بالعرض ---------- */
 async function sha(s){ const b = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(s)); return [...new Uint8Array(b)].map(x => x.toString(16).padStart(2, '0')).join(''); }
 function onMsg(m){
   if (!m || seen.has(m.id)) return; seen.add(m.id);
-  if (m.t === 'slide' && Number.isInteger(m.i)) {
-    setLinked(true);
-    if (m.i !== cur) {
-      cur = Math.max(0, Math.min(D.slides.length - 1, m.i));
-      if (!t0 && cur > 0) { t0 = Date.now() - D.slides[cur].at * 1000; saveT(); }   // يبدأ المؤقّت تلقائيًا مع أول انتقال
-      render(true);
-    }
-  }
+  if (m.t === 'slide' && Number.isInteger(m.i)) { setLinked(true); setSlide(m.i); }
 }
 function send(m){ m.id = Math.random().toString(36).slice(2); seen.add(m.id); try { bc?.postMessage(m); } catch (e) {} ctl?.send({ type: 'broadcast', event: 'm', payload: m }); }
 async function start(){
@@ -229,15 +327,18 @@ async function start(){
   send({ t: 'hello' });
   document.addEventListener('visibilitychange', () => { if (!document.hidden) send({ t: 'hello' }); });
 }
+/* تحكم احتياطي في شرائح العرض من هذه الصفحة */
 function go(to){
   if (linked) { send({ t: 'go', to }); return; }
-  cur = Math.max(0, Math.min(D.slides.length - 1, cur + (to === 'next' ? 1 : -1))); render(true);   // بلا عرض متصل: تصفح الملاحظات فقط
+  setSlide(cur + (to === 'next' ? 1 : -1));   // بلا عرض متصل: تصفح الملاحظات فقط
 }
-$('#next').onclick = () => go('next');
-$('#prev').onclick = () => go('prev');
+$('#sNext').onclick = e => { e.currentTarget.blur(); go('next'); };
+$('#sPrev').onclick = e => { e.currentTarget.blur(); go('prev'); };
 document.addEventListener('keydown', e => {
-  if ($('#app').hidden) return;
-  if (['ArrowLeft', 'PageDown', ' '].includes(e.key)) { e.preventDefault(); go('next'); }
+  if ($('#app').hidden || e.ctrlKey || e.metaKey || e.altKey) return;
+  if ([' ', 'ArrowDown', 'Enter'].includes(e.key)) { e.preventDefault(); step(1); }
+  else if (['ArrowUp', 'Backspace'].includes(e.key)) { e.preventDefault(); step(-1); }
+  else if (['ArrowLeft', 'PageDown'].includes(e.key)) { e.preventDefault(); go('next'); }
   else if (['ArrowRight', 'PageUp'].includes(e.key)) { e.preventDefault(); go('prev'); }
 });
 </script>
