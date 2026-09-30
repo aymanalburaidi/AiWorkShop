@@ -23,6 +23,7 @@ body{font-family:'Tajawal',system-ui,sans-serif;font-weight:400;font-size:18px;l
 h1,h2,h3,b,button{font-weight:500}
 button{font-family:inherit;cursor:pointer;touch-action:manipulation}
 [hidden]{display:none!important}
+*{scrollbar-width:thin;scrollbar-color:rgba(255,255,255,.25) transparent}
 .icon{width:1.2em;height:1.2em;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;flex:none;vertical-align:-.2em}
 .ltr{direction:ltr;unicode-bidi:isolate;display:inline-block}
 
@@ -60,7 +61,9 @@ input:focus{border-color:var(--teal)}
 .bar{height:4px;border-radius:4px;background:rgba(255,255,255,.1);overflow:hidden}
 .bar i{display:block;height:100%;width:0;background:var(--grad);transition:width .6s var(--ease)}
 .main{display:grid;grid-template-columns:2fr 1.1fr;gap:14px;min-height:0}
-.side{display:flex;flex-direction:column;gap:12px;overflow:auto;min-height:0}
+.side{display:flex;flex-direction:column;gap:12px;overflow:auto;min-height:0;scrollbar-width:thin;scrollbar-color:rgba(255,255,255,.25) transparent}
+.side>*{flex:none}   /* العمود كله يتمرر، ولا تنضغط أقسامه */
+.side .nextc{overflow:visible}
 .pane{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:12px 14px}
 .pane h3{display:flex;align-items:center;gap:8px;font-size:1rem;margin-bottom:8px}
 .badge{background:var(--red);color:#fff;border-radius:999px;padding:0 8px;font-size:.8rem;line-height:1.6}
@@ -95,8 +98,8 @@ textarea:focus{border-color:var(--teal)}
 .ann-row{display:flex;gap:6px;margin-top:6px}
 .ann-now{margin-top:8px;font-size:.88rem;color:var(--muted);white-space:pre-wrap;word-break:break-word}
 .ann-now span{color:var(--ink)}
-.flashbox{position:fixed;z-index:80;top:14px;left:50%;transform:translate(-50%,-140%);background:#fdba74;color:#1f2937;padding:10px 18px;border-radius:14px;font-weight:500;box-shadow:0 14px 30px -12px rgba(0,0,0,.5);transition:transform .35s var(--ease);max-width:90vw}
-.flashbox.on{transform:translate(-50%,0)}
+.flashbox{position:fixed;z-index:80;top:14px;left:50%;transform:translate(-50%,calc(-100% - 24px));background:#fdba74;color:#1f2937;padding:10px 18px;border-radius:14px;font-weight:500;box-shadow:0 14px 30px -12px rgba(0,0,0,.5);transition:transform .35s var(--ease),visibility .35s;max-width:90vw;visibility:hidden}
+.flashbox.on{transform:translate(-50%,0);visibility:visible}
 .now,.nextc{background:var(--panel);border:1px solid var(--line);border-radius:22px;padding:18px 22px;overflow:auto;min-height:0}
 .lbl{display:inline-flex;align-items:center;gap:8px;font-size:.82rem;color:#0f2f3e;background:var(--sand);padding:1px 12px;border-radius:999px}
 .nextc .lbl{background:rgba(255,255,255,.12);color:var(--muted);margin-bottom:8px}
@@ -217,17 +220,17 @@ textarea:focus{border-color:var(--teal)}
         <h3><svg class="icon"><use href="#i-msg"/></svg>{{presenter-page.inbox_title}}<b class="badge" id="unread" hidden>0</b></h3>
         <div class="inbox" id="inbox"></div>
       </section>
-      <section class="nextc" id="nextBox">
-        <span class="lbl">{{presenter-page.next}}</span>
-        <h3 id="nextTitle"></h3>
-        <div class="meta" id="nextMeta"></div>
-        <div class="note" id="nextNote"></div>
-      </section>
       <section class="pane">
         <h3><svg class="icon"><use href="#i-send"/></svg>{{presenter-page.announce_title}}</h3>
         <textarea id="annText" maxlength="1000" placeholder="{{presenter-page.announce_placeholder|text}}"></textarea>
         <div class="ann-row"><button class="btn primary sm" id="annSend">{{presenter-page.announce_send}}</button><button class="btn sm" id="annClear">{{presenter-page.announce_clear}}</button></div>
         <p class="ann-now" id="annNow" hidden><small>{{presenter-page.announce_current}}</small> <span></span></p>
+      </section>
+      <section class="nextc" id="nextBox">
+        <span class="lbl">{{presenter-page.next}}</span>
+        <h3 id="nextTitle"></h3>
+        <div class="meta" id="nextMeta"></div>
+        <div class="note" id="nextNote"></div>
         <p class="keys">{{presenter-page.keys_hint}}</p>
       </section>
     </aside>
@@ -381,7 +384,7 @@ function onMsg(m){
     if ('q' in m && (m.q ?? null) !== spotId) { spotId = m.q ?? null; drawInbox(); }
   }
 }
-function send(m){ m.id = Math.random().toString(36).slice(2); seen.add(m.id); try { bc?.postMessage(m); } catch (e) {} ctl?.send({ type: 'broadcast', event: 'm', payload: m }); }
+function send(m){ m.id = Math.random().toString(36).slice(2); seen.add(m.id); try { bc?.postMessage(m); } catch (e) {} if (ctl?.state === 'joined') ctl.send({ type: 'broadcast', event: 'm', payload: m }); }
 async function start(){
   render(false); setLinked(false);
   const name = 'aiws-ctl-' + (await sha(key)).slice(0, 16);

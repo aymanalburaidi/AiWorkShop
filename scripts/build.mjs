@@ -6,6 +6,8 @@ import QRCode from 'qrcode';
 const root = path.resolve(import.meta.dirname, '..');
 const read = p => fs.readFileSync(path.join(root, p), 'utf8');
 const cfg = JSON.parse(read('config.json'));
+// للبروفة المحلية: AIWS_ROOM=غرفة-تجربة AIWS_OUT=.test-build node scripts/build.mjs (لا يمس docs/)
+if (process.env.AIWS_ROOM) cfg.room = process.env.AIWS_ROOM;
 const joinUrl = new URL(cfg.joinPath, cfg.siteUrl).href;
 
 /* ---------- قراءة ملفات المحتوى ---------- */
@@ -108,7 +110,8 @@ const poll = id => ({ question: plain(get(id + '.question')), options: items(get
 const live = {
   url: cfg.supabaseUrl, key: cfg.supabaseKey, room: cfg.room, joinUrl, bucket: 'aiws-uploads',
   polls: { p1: poll('poll-open'), p2: poll('poll-close') },
-  schools: items(get('partners.schools')).map(([, name, , , key, color]) => ({ key, name: plain(name), color })),
+  // مدارس الشراكة (تظهر في الشريحة) ثم المدارس الإضافية (في الجوال واللوحة فقط)
+  schools: [...items(get('partners.schools')), ...items(get('settings.extra_schools'))].map(([, name, , , key, color]) => ({ key, name: plain(name), color })),
 };
 const deckData = {
   ...live, units,
@@ -156,7 +159,7 @@ function render(tpl, data) {
   });
 }
 
-const out = path.join(root, 'docs');
+const out = path.join(root, process.env.AIWS_OUT || 'docs');
 fs.rmSync(out, { recursive: true, force: true });
 fs.mkdirSync(path.join(out, 'assets'), { recursive: true });
 fs.mkdirSync(path.join(out, 'join'), { recursive: true });

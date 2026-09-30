@@ -5,3 +5,4 @@ secrets/
 ai-teacher-workshop.html
 resources/
 exports/
+.test-build/

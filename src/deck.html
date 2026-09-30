@@ -1058,8 +1058,8 @@ $('#prevBtn').onclick = () => go(cur - 1);
 document.addEventListener('keydown', e => {
   if (VIEW) return;
   if (e.target.closest?.('input,textarea')) return;
+  if (spot && e.key === 'Escape') { setSpot(null); Live.ctlSync(); Sync.push(); return; }   // السؤال المعروض يُغلق أولًا
   if ($('#modal').classList.contains('on')) { if (e.key === 'Escape') closeModal(); return; }
-  if (spot && e.key === 'Escape') { setSpot(null); Live.ctlSync(); Sync.push(); return; }
   if (e.code === 'KeyL') { setRoster(!$('#roster').classList.contains('open')); Sync.push(); return; }
   if (e.code === 'KeyH' && !e.ctrlKey && !e.metaKey) { Live.lowerHands(); return; }
   if (e.shiftKey && e.code === 'KeyR') { e.preventDefault(); Live.resetAll(); return; }
@@ -1237,6 +1237,7 @@ function setSpot(q){
     el.querySelector('.q').textContent = spot.b;
   }
   el.classList.toggle('on', !!spot);
+  if (spot && $('#modal').classList.contains('on')) closeModal();   // لا تبقى مشاركة مفتوحة خلف السؤال
 }
 
 /* ========== عرض المشاركة كاملة ========== */
@@ -1587,7 +1588,7 @@ const Live = (() => {
     if (!ctl && !bc) return;
     const m = { t: 'slide', i: cur, q: spot?.id ?? null, id: Math.random().toString(36).slice(2) }; seenMsg.add(m.id);
     try { bc?.postMessage(m); } catch (e) {}
-    ctl?.send({ type: 'broadcast', event: 'm', payload: m });
+    if (ctl?.state === 'joined') ctl.send({ type: 'broadcast', event: 'm', payload: m });   // قبل الانضمام تتحول المكتبة إلى REST، والانضمام نفسه يرسل الحالة
   }
   async function openCtl(){
     if (ctl || bc) return;
@@ -1598,7 +1599,7 @@ const Live = (() => {
   }
   /* --- قناة النسخ: المقدّم يرسل حالة العرض، والنسخ في صفحات المتدربات تطبّقها --- */
   let live = null;
-  function sendLive(event, payload){ if (live && key && !VIEW) live.send({ type: 'broadcast', event, payload }); }
+  function sendLive(event, payload){ if (live?.state === 'joined' && key && !VIEW) live.send({ type: 'broadcast', event, payload }); }
   function openLive(){
     if (live) return;
     live = own('aiws-live-' + D.room, { config: { broadcast: { self: false } } });

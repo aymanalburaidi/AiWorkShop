@@ -21,7 +21,7 @@ function parseMd(src) {
 const items = s => (s || '').split('\n').filter(l => /^\s*-\s+/.test(l)).map(l => l.replace(/^\s*-\s+/, '').split('|').map(x => x.trim()));
 const byId = Object.fromEntries(fs.readdirSync(path.join(root, 'content')).filter(f => f.endsWith('.md'))
   .map(f => [f.replace(/^\d+-/, '').replace(/\.md$/, ''), parseMd(read('content/' + f))]));
-const schools = items(byId.partners.schools).map(([, name, , principal, key, color]) => ({ key, name, principal, color }));
+const schools = [...items(byId.partners.schools), ...items(byId.settings.extra_schools)].map(([, name, , principal, key, color]) => ({ key, name, principal, color }));
 const polls = {
   p1: { question: byId['poll-open'].question, options: items(byId['poll-open'].options).map(([t]) => t) },
   p2: { question: byId['poll-close'].question, options: items(byId['poll-close'].options).map(([t]) => t) },
