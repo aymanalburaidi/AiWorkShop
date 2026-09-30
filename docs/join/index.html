@@ -80,6 +80,13 @@ textarea{min-height:140px;max-height:50vh;resize:vertical;line-height:1.7}
 .sent{display:grid;gap:8px;margin-top:12px}
 .sent h3{font-size:.9rem;color:var(--muted)}
 .sent #sent>div{font-size:.9rem;background:#F4F9F8;border-radius:12px;padding:8px 12px;white-space:pre-wrap;word-break:break-word;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;animation:in .35s var(--ease) both}
+/* قسم مطوي: يُفتح بالضغط على عنوانه */
+.fold>summary{list-style:none;display:flex;align-items:center;justify-content:space-between;gap:10px;min-height:44px;margin:-8px 0;cursor:pointer}
+.fold>summary::-webkit-details-marker{display:none}
+.fold>summary h2{margin:0}
+.fold>summary .chev{color:var(--muted);transition:transform .2s var(--ease)}
+.fold[open]>summary .chev{transform:rotate(-90deg)}
+.fold[open]>summary{margin-bottom:0}
 details.prompt{border:1px solid var(--line);border-radius:14px;margin-top:10px;background:#FAFCFC}
 details.prompt summary{list-style:none;padding:12px 14px;display:flex;align-items:center;gap:10px;font-weight:500}
 details.prompt summary span{flex:1}
@@ -211,10 +218,10 @@ details.prompt .btn{margin:0 14px 14px;min-height:44px;font-size:.95rem;backgrou
     <div class="sent" id="sentWrap" hidden><h3>مشاركاتك</h3><div id="sent" style="display:grid;gap:8px"></div></div>
   </section>
 
-  <section class="card">
-    <h2><svg class="icon"><use href="#i-copy"/></svg> الأوامر الجاهزة</h2>
+  <details class="card fold">
+    <summary><h2><svg class="icon"><use href="#i-copy"/></svg> الأوامر الجاهزة</h2><svg class="icon chev"><use href="#i-next"/></svg></summary>
     <div id="prompts"></div>
-  </section>
+  </details>
 
   <section class="card contact">
     <h2><svg class="icon"><use href="#i-user"/></svg> الصفحات الاجتماعية للمدرب</h2>
