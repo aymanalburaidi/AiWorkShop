@@ -614,7 +614,7 @@ body[data-slide="s-join"] #net,body[data-slide="s-close"] #net{opacity:.6}
         <h2 class="split">{{join.title}}</h2>
         <p class="lead reveal">{{join.lead}}</p>
         <ol class="join-steps">{{@steps join.steps}}</ol>
-        <div class="online reveal"><span class="dot"></span><b class="js-online">0</b> متصلة الآن</div>
+        <div class="online reveal"><span class="dot"></span><b class="js-online" data-unit="online">0</b> <span>{{@unit online}}</span></div>
       </div>
       <div>
         <div class="qr-big"><img src="assets/join-qr.svg" alt="رمز الانضمام"></div>
@@ -632,7 +632,7 @@ body[data-slide="s-join"] #net,body[data-slide="s-close"] #net{opacity:.6}
         <p class="lead reveal">{{poll-open.lead}}</p>
       </div>
       <div class="poll-wrap">
-        <div><div class="poll reveal" data-poll-list="p1"></div><div class="total reveal"><svg class="icon"><use href="#i-users"/></svg> <b data-poll-total="p1">0</b> صوت</div></div>
+        <div><div class="poll reveal" data-poll-list="p1"></div><div class="total reveal"><svg class="icon"><use href="#i-users"/></svg> <b data-poll-total="p1" data-unit="vote">0</b> <span>{{@unit vote}}</span></div></div>
         <div class="side-qr reveal"><img src="assets/join-qr.svg" alt=""><p>{{@joinurl_display}}</p></div>
       </div>
     </div>
@@ -648,7 +648,7 @@ body[data-slide="s-join"] #net,body[data-slide="s-close"] #net{opacity:.6}
           <p class="lead reveal">{{word.lead}}</p>
         </div>
         <div class="wall-meta reveal">
-          <div class="wall-count"><b id="wordCount">0</b><span>كلمة</span></div>
+          <div class="wall-count"><b id="wordCount" data-unit="word">0</b><span>{{@unit word}}</span></div>
           <div class="side-qr"><img src="assets/join-qr.svg" alt=""></div>
         </div>
       </div>
@@ -848,7 +848,7 @@ body[data-slide="s-join"] #net,body[data-slide="s-close"] #net{opacity:.6}
           <p class="lead reveal">{{wall.lead}}</p>
         </div>
         <div class="wall-meta reveal">
-          <div class="wall-count"><b id="wallCount">0</b><span>{{wall.count_label}}</span></div>
+          <div class="wall-count"><b id="wallCount" data-unit="post">0</b><span>{{@unit post}}</span></div>
           <div class="side-qr"><img src="assets/join-qr.svg" alt=""></div>
         </div>
       </div>
@@ -865,7 +865,7 @@ body[data-slide="s-join"] #net,body[data-slide="s-close"] #net{opacity:.6}
         <p class="lead reveal">{{poll-close.lead}}</p>
       </div>
       <div class="poll-wrap">
-        <div><div class="poll reveal" data-poll-list="p2"></div><div class="total reveal"><svg class="icon"><use href="#i-users"/></svg> <b data-poll-total="p2">0</b> صوت</div></div>
+        <div><div class="poll reveal" data-poll-list="p2"></div><div class="total reveal"><svg class="icon"><use href="#i-users"/></svg> <b data-poll-total="p2" data-unit="vote">0</b> <span>{{@unit vote}}</span></div></div>
         <div class="side-qr reveal"><img src="assets/join-qr.svg" alt=""><p>{{@joinurl_display}}</p></div>
       </div>
     </div>
@@ -896,7 +896,7 @@ body[data-slide="s-join"] #net,body[data-slide="s-close"] #net{opacity:.6}
     <div class="roster-head">
       <h3><svg class="icon"><use href="#i-trophy"/></svg> {{settings.roster_title}}</h3>
       <p>{{settings.roster_hint}}</p>
-      <div class="roster-sum"><b id="rosterSum">0</b> {{settings.roster_total}}</div>
+      <div class="roster-sum"><b id="rosterSum" data-unit="post">0</b> <span>{{@unit post}}</span></div>
       <div class="roster-schools" id="rosterSchools"></div>
     </div>
     <ol class="roster-list" id="rosterList"></ol>
@@ -1202,9 +1202,12 @@ const Live = (() => {
     document.querySelector(`[data-poll-list="${p}"]`).innerHTML = poll.options.map((o, i) =>
       `<div class="poll-opt" data-i="${i}"><span class="fill"></span><span class="n">${i + 1}</span><span class="lbl">${escHtml(o)}</span><span class="num">0</span></div>`).join('');
   }
+  /* لفظ المعدود حسب العدد: 2 مثنى، ومن 3 إلى 10 جمع، وما عداها مفرد (11 كلمة، 100 كلمة، 103 كلمات) */
+  function unit(k, n){ const [one, two, many] = D.units[k], m = n % 100; return n === 2 ? two : (m >= 3 && m <= 10) ? many : one; }
   function animateNum(el, to){
     if (!el) return;
     const from = Number(el.dataset.v || 0); el.dataset.v = to;
+    if (el.dataset.unit && el.nextElementSibling) el.nextElementSibling.textContent = unit(el.dataset.unit, to);
     if (reduced || from === to) { el.textContent = to; return; }
     const t0 = performance.now(), dur = 700;
     const tick = t => { const k = Math.min(1, (t - t0) / dur), e = 1 - Math.pow(1 - k, 4);
@@ -1235,7 +1238,7 @@ const Live = (() => {
     animateNum($('#rosterSum'), [...contrib.values()].reduce((a, b) => a + b, 0));
     $('#rosterSchools').innerHTML = (D.schools || []).map(sc => {
       const mine = rows.filter(r => r.sc === sc.key);
-      return `<div class="rs" style="--sc:${sc.color}"><i></i><span>${escHtml(sc.name)}</span><b>${mine.reduce((a, r) => a + r.n, 0)}</b><small>${mine.length} متدربة</small></div>`;
+      return `<div class="rs" style="--sc:${sc.color}"><i></i><span>${escHtml(sc.name)}</span><b>${mine.reduce((a, r) => a + r.n, 0)}</b><small>${mine.length} ${escHtml(unit('trainee', mine.length))}</small></div>`;
     }).join('');
     if (!rows.length) { list.innerHTML = `<li class="roster-empty">${escHtml(D.t.rosterEmpty)}</li>`; return; }
     const before = new Map([...list.children].filter(li => li.dataset.d).map(li => [li.dataset.d, li.getBoundingClientRect().top]));

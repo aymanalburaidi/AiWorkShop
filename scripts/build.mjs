@@ -59,6 +59,9 @@ function noteSteps(id) {
   });
 }
 
+/* ---------- ألفاظ المعدود: مفرد | مثنى | جمع ---------- */
+const units = Object.fromEntries(items(get('settings.units')).map(([k, ...f]) => [k, f.map(plain)]));
+
 /* ---------- المكوّنات ---------- */
 const subs =id => Object.keys(C[id]).filter(k => k.endsWith('.tab')).map(k => k.slice(0, -4));
 const R = {
@@ -91,6 +94,7 @@ const R = {
     `<div class="prompt-box reveal"><div class="prompt-head"><span>${ico(p.icon)} ${inline(p.title)}</span><button class="btn small copy-btn">${ico('copy')}<span>${esc(get('prompts.copy'))}</span></button></div>
 <div class="prompt-text">${withPh(inline(p.text))}</div></div>`).join('\n'),
   notes: id => esc(noteSteps(id).map(s => plain(s.text)).join(' • ')),
+  unit: k => esc(units[k][0]),
   include: file => read('src/' + file),
   joinurl: () => esc(joinUrl),
   // الرابط المكتوب على الشاشة: المختصر من config.json إن وُجد (يحوّل إلى صفحة المتدربات)، ورمز QR يبقى على الرابط المباشر
@@ -107,7 +111,7 @@ const live = {
   schools: items(get('partners.schools')).map(([, name, , , key, color]) => ({ key, name: plain(name), color })),
 };
 const deckData = {
-  ...live,
+  ...live, units,
   plans: Object.fromEntries(subs('plan').map(s => [s, { prompt: plain(C.plan[s + '.prompt']), answer: plain(C.plan[s + '.answer']) }])),
   quiz: Object.fromEntries(subs('quiz').map(s => [s, items(C.quiz[s + '.questions']).map(([lv, q, o, a, n]) => ({
     lv: esc(lv), q: inline(q), o: o ? o.split(';').map(x => inline(x.trim())) : null, a: a ? Number(a) - 1 : -1, n: inline(n || ''),
@@ -116,8 +120,8 @@ const deckData = {
     show: get('quiz.show_answer'), hide: get('quiz.hide_answer'), essay: get('quiz.essay_label'),
     start: get('activity.start'), pause: get('activity.pause'), minute: get('activity.minute'), copy: get('prompts.copy'), copied: get('prompts.copied'),
     simplify: get('more.simplify_button'), original: get('more.original_button'),
-    wallEmpty: get('wall.empty'), countLabel: get('wall.count_label'), readMore: get('wall.read_more'), openLink: get('wall.open_link'),
-    wordEmpty: get('word.empty'), rosterEmpty: get('settings.roster_empty'), rosterTotal: get('settings.roster_total'),
+    wallEmpty: get('wall.empty'), readMore: get('wall.read_more'), openLink: get('wall.open_link'),
+    wordEmpty: get('word.empty'), rosterEmpty: get('settings.roster_empty'),
   },
 };
 const pl = id => promptList(id).map(p => ({ title: plain(p.title), text: plain(p.text), icon: p.icon }));

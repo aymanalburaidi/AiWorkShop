@@ -78,6 +78,8 @@ fs.writeFileSync(path.join(dir, 'trainees.csv'), csv([['الاسم', 'المدر
 fs.writeFileSync(path.join(dir, 'posts.csv'), csv([['الوقت', 'الاسم', 'المدرسة', 'النوع', 'النص', 'الصورة'],
   ...posts.map(p => [p.created_at, nameOf(p.device), schoolOf(p.device)?.name || '', { share: 'مشاركة', create: 'تحدّي الإبداع', word: 'كلمة' }[p.topic], p.body, p.local_image || ''])]));
 
+// لفظ المعدود حسب العدد: 2 مثنى، ومن 3 إلى 10 جمع، وما عداها مفرد
+const unit = (n, one, two, many) => n === 2 ? two : (n % 100 >= 3 && n % 100 <= 10) ? many : one;
 const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 const linkify = s => esc(s).replace(/(https?:\/\/[^\s<]+)/g, '<a href="$1">$1</a>');
 const date = new Intl.DateTimeFormat('ar-SA-u-ca-gregory-nu-latn', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }).format(new Date());
@@ -102,10 +104,10 @@ table{width:100%;border-collapse:collapse}td,th{border-bottom:1px solid #DDE7E8;
 
 <h2>ملخص</h2>
 <div class="grid">
-<div class="box"><b>${roster.length}</b>متدربة</div>
-<div class="box"><b>${works.length}</b>عمل على جدار الإبداعات</div>
-<div class="box"><b>${works.filter(p => p.image_path).length}</b>صورة</div>
-<div class="box"><b>${votes.length + posts.length}</b>مشاركة بالمجمل</div>
+<div class="box"><b>${roster.length}</b>${unit(roster.length, 'متدربة', 'متدربتان', 'متدربات')}</div>
+<div class="box"><b>${works.length}</b>${unit(works.length, 'عمل', 'عملان', 'أعمال')} على جدار الإبداعات</div>
+<div class="box"><b>${works.filter(p => p.image_path).length}</b>${unit(works.filter(p => p.image_path).length, 'صورة', 'صورتان', 'صور')}</div>
+<div class="box"><b>${votes.length + posts.length}</b>${unit(votes.length + posts.length, 'مشاركة', 'مشاركتان', 'مشاركات')} بالمجمل</div>
 </div>
 
 <h2>المدارس</h2>
@@ -114,7 +116,7 @@ ${schools.map(s => { const r = roster.filter(x => x.school?.key === s.key); retu
 </table>
 
 <h2>نتائج الاستطلاعين</h2>
-${pollResults.map(p => `<p><b>${esc(p.question)}</b> <span class="muted">(${p.total} صوت)</span></p><table>${p.options.map((o, i) => `<tr><td style="width:45%">${esc(o)}</td><td style="width:45%"><div class="bar" style="width:${p.total ? p.counts[i] / p.total * 100 : 0}%"></div></td><td>${p.counts[i]}</td></tr>`).join('')}</table>`).join('')}
+${pollResults.map(p => `<p><b>${esc(p.question)}</b> <span class="muted">(${p.total} ${unit(p.total, 'صوت', 'صوتان', 'أصوات')})</span></p><table>${p.options.map((o, i) => `<tr><td style="width:45%">${esc(o)}</td><td style="width:45%"><div class="bar" style="width:${p.total ? p.counts[i] / p.total * 100 : 0}%"></div></td><td>${p.counts[i]}</td></tr>`).join('')}</table>`).join('')}
 
 <h2>سحابة الكلمات</h2>
 <p class="words">${[...words.entries()].sort((a, b) => b[1] - a[1]).map(([w, n]) => `<span style="font-size:${1 + Math.min(n, 6) * .25}rem">${esc(w)}${n > 1 ? ` <small class="muted">(${n})</small>` : ''}</span>`).join('') || '<span class="muted">لا كلمات</span>'}</p>
