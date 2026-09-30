@@ -175,6 +175,12 @@ h3{font-size:1.16rem;margin-bottom:4px}
 .badge{display:inline-flex;align-items:center;gap:10px;padding:8px 16px;border-radius:12px;background:rgba(7,168,105,.1);color:#067a4d;font-weight:500;margin-bottom:22px}
 .role{display:flex;align-items:center;gap:16px;background:rgba(255,255,255,.94);border:1px solid var(--line);border-radius:16px;padding:16px 18px;box-shadow:var(--shadow);margin-bottom:12px}
 .role .ic{margin:0}
+.roles{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}
+.roles .role{margin-bottom:0;padding:12px 14px;gap:12px}
+.roles .role p{font-size:1.02rem;line-height:1.6}
+.creds{display:grid;gap:6px}
+.cred{display:flex;align-items:flex-start;gap:10px;padding:6px 14px;border-radius:12px;background:rgba(255,255,255,.72);border:1px solid var(--line);font-size:.98rem;line-height:1.7}
+.cred .icon{color:var(--teal);margin-top:.28em}
 .role p{font-size:1.14rem}
 .license-wrap{perspective:1200px}
 .license{width:100%;border-radius:22px;box-shadow:0 30px 60px -24px rgba(21,68,90,.45);transform-style:preserve-3d;transition:transform .4s var(--ease-out-quart);display:block;background:#fff}
@@ -508,7 +514,7 @@ body[data-slide="s-join"] #net,body[data-slide="s-close"] #net{opacity:.6}
 .card,.goal,.tl-item,.panel,.prompt-box,.qr-card,.role,.post,.qcard,.side-qr,.chat{transition:transform .35s var(--ease-out-quart),box-shadow .35s var(--ease-out-quart);will-change:auto}
 .tilt-on{background-image:radial-gradient(420px circle at var(--px) var(--py),rgba(13,169,166,.10),transparent 60%);box-shadow:0 26px 50px -24px rgba(21,68,90,.38)!important}
 /* الأيقونات ترسم نفسها */
-.slide.active .ic .icon,.slide.active .role .icon,.slide.active .tab .icon{stroke-dasharray:80;animation:drawIcon 1.6s var(--ease-out-quart) both;animation-delay:calc(var(--i,0) * 80ms + 450ms)}
+.slide.active .ic .icon,.slide.active .role .icon,.slide.active .cred .icon,.slide.active .tab .icon{stroke-dasharray:80;animation:drawIcon 1.6s var(--ease-out-quart) both;animation-delay:calc(var(--i,0) * 80ms + 450ms)}
 @keyframes drawIcon{from{stroke-dashoffset:80}to{stroke-dashoffset:0}}
 /* وميض ضوئي عند الانتقال */
 .deck::after{content:"";position:absolute;inset:0;z-index:5;pointer-events:none;background:linear-gradient(100deg,transparent 35%,rgba(255,255,255,.55) 50%,transparent 65%);translate:120% 0;opacity:0}
@@ -589,7 +595,8 @@ body[data-slide="s-join"] #net,body[data-slide="s-close"] #net{opacity:.6}
         <span class="kicker reveal"><svg class="icon"><use href="#i-user"/></svg> {{trainer.kicker}}</span>
         <h2 class="split">{{trainer.name}}</h2>
         <div class="badge reveal"><svg class="icon"><use href="#i-award"/></svg> {{trainer.badge}}</div>
-        {{@roles trainer.roles}}
+        <div class="roles">{{@roles trainer.roles}}</div>
+        <div class="creds">{{@creds trainer.credentials}}</div>
       </div>
       <div class="license-wrap"><img class="license" id="license" src="assets/trainer-license.jpg" alt="{{trainer.license_alt|text}}"></div>
     </div>
