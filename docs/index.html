@@ -181,6 +181,10 @@ h3{font-size:1.16rem;margin-bottom:4px}
 .creds{display:grid;gap:6px}
 .cred{display:flex;align-items:flex-start;gap:10px;padding:6px 14px;border-radius:12px;background:rgba(255,255,255,.72);border:1px solid var(--line);font-size:.98rem;line-height:1.7}
 .cred .icon{color:var(--teal);margin-top:.28em}
+.cred:has(.cred-logo){align-items:center;padding-block:5px;padding-inline:6px 14px;gap:12px}
+.trainer .badge{margin-bottom:14px}
+.cred-logo{flex:none;width:96px;height:42px;background:#fff;border-radius:9px;padding:4px 8px}
+.cred-logo img{width:100%;height:100%;object-fit:contain;display:block}
 .role p{font-size:1.14rem}
 .license-wrap{perspective:1200px}
 .license{width:100%;border-radius:22px;box-shadow:0 30px 60px -24px rgba(21,68,90,.45);transform-style:preserve-3d;transition:transform .4s var(--ease-out-quart);display:block;background:#fff}
@@ -656,11 +660,11 @@ body[data-slide="s-join"] #net,body[data-slide="s-close"] #net{opacity:.6}
         <div class="badge reveal"><svg class="icon"><use href="#i-award"/></svg> مدرب معتمد من المؤسسة العامة للتدريب التقني والمهني</div>
         <div class="roles"><div class="role reveal"><span class="ic c-teal"><svg class="icon "><use href="#i-chip"/></svg></span><p>رئيس قسم التقنية بشركة يافع المستقبل للبحث والتطوير</p></div>
 <div class="role reveal"><span class="ic c-teal"><svg class="icon "><use href="#i-school"/></svg></span><p>المدير العام لمنصة يافع التعليمية</p></div></div>
-        <div class="creds"><div class="cred reveal"><svg class="icon "><use href="#i-trophy"/></svg><span>معلم خبير مايكروسوفت للتعلم الإبداعي <span class="ltr">2025-2026</span></span></div>
-<div class="cred reveal"><svg class="icon "><use href="#i-user"/></svg><span>معلم برتبة معلم متقدم</span></div>
-<div class="cred reveal"><svg class="icon "><use href="#i-grad"/></svg><span>الزمالة الوطنية في التعليم الإلكتروني</span></div>
-<div class="cred reveal"><svg class="icon "><use href="#i-award"/></svg><span>الشهادة المهنية الاحترافية في تقديم التعليم والتدريب الإلكتروني، المستوى المتقدم <span class="ltr">OTT-A</span></span></div>
-<div class="cred reveal"><svg class="icon "><use href="#i-flag"/></svg><span>شهادة محترف الأعمال المعتمد في القيادة <span class="ltr">CBP-L</span></span></div></div>
+        <div class="creds"><div class="cred reveal"><span class="cred-logo"><img src="assets/cred-miee.png" alt=""></span><span>معلم خبير مايكروسوفت للتعلم الإبداعي <span class="ltr">2025-2026</span></span></div>
+<div class="cred reveal"><span class="cred-logo"><img src="assets/moe-logo.png" alt=""></span><span>معلم برتبة معلم متقدم</span></div>
+<div class="cred reveal"><span class="cred-logo"><img src="assets/cred-seu.svg" alt=""></span><span>الزمالة الوطنية في التعليم الإلكتروني</span></div>
+<div class="cred reveal"><span class="cred-logo"><img src="assets/cred-nelc.png" alt=""></span><span>الشهادة المهنية الاحترافية في تقديم التعليم والتدريب الإلكتروني، المستوى المتقدم <span class="ltr">OTT-A</span></span></div>
+<div class="cred reveal"><span class="cred-logo"><img src="assets/cred-cbp.png" alt=""></span><span>شهادة محترف الأعمال المعتمد في القيادة <span class="ltr">CBP-L</span></span></div></div>
       </div>
       <div class="license-wrap"><img class="license" id="license" src="assets/trainer-license.jpg" alt="رخصة المدرب المعتمد"></div>
     </div>

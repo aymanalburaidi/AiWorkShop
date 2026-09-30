@@ -74,8 +74,10 @@ const R = {
   pills: ref => items(get(ref)).map(([t]) => `<span>${inline(t)}</span>`).join(''),
   roles: ref => items(get(ref)).map(([icon, t]) =>
     `<div class="role reveal"><span class="ic c-teal">${ico(icon)}</span><p>${inline(t)}</p></div>`).join('\n'),
-  creds: ref => items(get(ref)).map(([icon, t]) =>
-    `<div class="cred reveal">${ico(icon)}<span>${inline(t)}</span></div>`).join('\n'),
+  creds: ref => items(get(ref)).map(([icon, t, logo]) => {
+    if (logo && !fs.existsSync(path.join(root, 'src/assets', logo))) throw new Error(`ملف الشعار غير موجود في src/assets: ${logo}`);
+    return `<div class="cred reveal">${logo ? `<span class="cred-logo"><img src="assets/${esc(logo)}" alt=""></span>` : ico(icon)}<span>${inline(t)}</span></div>`;
+  }).join('\n'),
   schools: ref => items(get(ref)).map(([icon, school, label, name, , color], i) =>
     `<div class="school-card" style="--n:${i};--sc:${esc(color || '#07a869')}"><span class="ic">${ico(icon)}</span><h3>${inline(school)}</h3><small>${inline(label)}</small><b>${inline(name)}</b></div>`).join('\n'),
   compare: ref => items(get(ref)).map(([k, a, b]) =>
