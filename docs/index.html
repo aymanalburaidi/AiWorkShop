@@ -540,8 +540,36 @@ body[data-slide="s-join"] #net,body[data-slide="s-close"] #net{opacity:.6}
 @keyframes alertOut{to{opacity:0;transform:translateY(10px) scale(.96)}}
 .progress span{box-shadow:0 0 12px rgba(13,169,166,.6)}
 
+/* ========== تفاعل لحظي من الجوالات (يمين الشاشة): تأييد واعتراض، وأيادٍ مرفوعة ========== */
+.reacts{position:fixed;z-index:44;right:18px;bottom:180px;width:72px;height:0;pointer-events:none}
+.react{position:absolute;bottom:0;left:50%;display:grid;justify-items:center;gap:3px;animation:reactUp 3.4s cubic-bezier(.2,.7,.3,1) forwards}
+.react .rb{width:48px;height:48px;border-radius:50%;display:grid;place-items:center;background:#fff;border:2px solid currentColor;box-shadow:0 14px 28px -14px rgba(21,68,90,.5);font-size:1.35rem}
+.react small{max-width:104px;padding:0 8px;border-radius:999px;background:rgba(255,255,255,.94);color:var(--navy);font-size:.78rem;line-height:1.6;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.r-up{color:var(--green)}.r-down{color:#c0563f}
+@keyframes reactUp{0%{opacity:0;transform:translate(-50%,24px) scale(.4)}10%{opacity:1;transform:translate(-50%,0) scale(1.15)}18%{transform:translate(-50%,-8px) scale(1)}78%{opacity:1}100%{opacity:0;transform:translate(calc(-50% + var(--dx,0px)),-290px) scale(.9)}}
+.rc{position:fixed;z-index:44;right:22px;bottom:92px;display:grid;gap:2px;padding:6px 12px;border-radius:14px;background:rgba(255,255,255,.95);border:1px solid var(--line);box-shadow:var(--shadow);opacity:0;transform:translateY(8px);transition:opacity .3s,transform .3s var(--ease-out-quart);pointer-events:none}
+.rc.on{opacity:1;transform:none}
+.rc span{display:flex;align-items:center;gap:8px;direction:ltr}
+.rc b{min-width:1.4em;text-align:center;color:var(--ink);font-variant-numeric:tabular-nums}
+.rc span.bump{animation:rcBump .4s var(--ease-out-quart)}
+@keyframes rcBump{40%{transform:scale(1.25)}}
+.hands{position:fixed;z-index:44;right:18px;top:94px;display:flex;flex-direction:column;align-items:flex-start;gap:8px;pointer-events:none}
+.hands-h{display:flex;align-items:center;gap:6px;padding:2px 12px;border-radius:999px;background:#f5c451;color:#5b3d00;font-size:.9rem;box-shadow:var(--shadow)}
+.hands-h b{font-variant-numeric:tabular-nums}
+.hand{display:flex;align-items:center;padding:3px;border:0;border-radius:999px;background:rgba(255,255,255,.97);box-shadow:0 12px 26px -14px rgba(21,68,90,.5);font-family:inherit;cursor:default}
+body.presenter .hand{pointer-events:auto;cursor:pointer}
+.hand.in{animation:handIn .6s var(--ease-out-expo) both}
+@keyframes handIn{from{opacity:0;transform:translateX(30px) scale(.8)}}
+.hand .av{position:relative;flex:none;width:40px;height:40px;border-radius:50%;display:grid;place-items:center;background:var(--sc);color:#fff;font-weight:500}
+.hand .av .icon{position:absolute;bottom:-5px;left:-5px;width:22px;height:22px;padding:3px;border-radius:50%;background:#f5c451;color:#5b3d00}
+.hand.new .av .icon{animation:handWave 1.2s ease-in-out 3}
+@keyframes handWave{50%{transform:rotate(-16deg) translateY(-2px)}}
+.hand .nm{max-width:0;overflow:hidden;white-space:nowrap;color:var(--sc);font-size:.95rem;transition:max-width .45s var(--ease-out-quart),padding .45s var(--ease-out-quart)}
+.hand.new .nm,.hand:hover .nm{max-width:190px;padding-inline:8px 12px}
+
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
+  .react{animation:none!important;transform:translate(calc(-50% + var(--dx,0px)),0)}   /* بلا حركة: التفاعل يظهر ثابتًا ثم يُزال */
 }
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.112.3/dist/umd/supabase.js" defer></script>
@@ -603,6 +631,9 @@ body[data-slide="s-join"] #net,body[data-slide="s-close"] #net{opacity:.6}
     <symbol id="i-prev" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></symbol>
     <symbol id="i-down" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></symbol>
     <symbol id="i-up" viewBox="0 0 24 24"><path d="M6 15l6-6 6 6"/></symbol>
+    <symbol id="i-thumb-up" viewBox="0 0 24 24"><path d="M7 10v12"/><path d="M15 5.88 14 10h5.83a2 2 0 0 1 1.92 2.56l-2.33 8A2 2 0 0 1 17.5 22H4a2 2 0 0 1-2-2v-8a2 2 0 0 1 2-2h2.76a2 2 0 0 0 1.79-1.11L12 2a3.13 3.13 0 0 1 3 3.88Z"/></symbol>
+    <symbol id="i-thumb-down" viewBox="0 0 24 24"><path d="M17 14V2"/><path d="M9 18.12 10 14H4.17a2 2 0 0 1-1.92-2.56l2.33-8A2 2 0 0 1 6.5 2H20a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2h-2.76a2 2 0 0 0-1.79 1.11L12 22a3.13 3.13 0 0 1-3-3.88Z"/></symbol>
+    <symbol id="i-hand" viewBox="0 0 24 24"><path d="M18 11V6a2 2 0 0 0-4 0"/><path d="M14 10V4a2 2 0 0 0-4 0v2"/><path d="M10 10.5V6a2 2 0 0 0-4 0v8"/><path d="M18 8a2 2 0 1 1 4 0v6a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-5.99-2.34l-3.6-3.6a2 2 0 0 1 2.83-2.82L7 15"/></symbol>
   </defs>
 </svg>
 
@@ -670,7 +701,7 @@ body[data-slide="s-join"] #net,body[data-slide="s-close"] #net{opacity:.6}
   </section>
 
   <!-- 3: الانضمام بالجوال -->
-  <section class="slide" id="s-join" data-notes="&quot;افتحن كاميرا الجوال ووجّهنها نحو الرمز، ثم اضغطن الرابط الذي يظهر.&quot; • المطلوب في الصفحة: الاسم الثلاثي واختيار المدرسة. يُكتبان مرة واحدة ويحفظهما الجوال. • راقب عداد &quot;متصلة الآن&quot;. من تعذّر عليها المسح تكتب الرابط الظاهر تحت الرمز. • افتح لوحة المتدربات (⁦L⁩) لحظة ليرى الحضور الأسماء بلون كل مدرسة، ثم أغلقها. • تنبيه: الصفحة تبقى مفتوحة حتى نهاية الورشة، وتتغير وحدها مع كل نشاط. • حين يتصل أغلب الحضور: &quot;أول سؤال وصل إلى جوالاتكن الآن.&quot;">
+  <section class="slide" id="s-join" data-notes="&quot;افتحن كاميرا الجوال ووجّهنها نحو الرمز، ثم اضغطن الرابط الذي يظهر.&quot; • المطلوب في الصفحة: الاسم الثلاثي واختيار المدرسة. يُكتبان مرة واحدة ويحفظهما الجوال. • راقب عداد &quot;متصلة الآن&quot;. من تعذّر عليها المسح تكتب الرابط الظاهر تحت الرمز. • افتح لوحة المتدربات (⁦L⁩) لحظة ليرى الحضور الأسماء بلون كل مدرسة، ثم أغلقها. • تنبيه: الصفحة تبقى مفتوحة حتى نهاية الورشة، وتتغير وحدها مع كل نشاط. • عرّف بالأزرار الثلاثة الثابتة أسفل صفحة الجوال: تأييد، واعتراض، ورفع اليد. &quot;استخدمنها في أي لحظة، وأنا أراها هنا مباشرة.&quot; • &quot;جرّبن الآن: ضغطة تأييد من الجميع.&quot; الضغطات تطفو يمين الشاشة باسم صاحبتها، والعدّاد تحتها. • حين يتصل أغلب الحضور: &quot;أول سؤال وصل إلى جوالاتكن الآن.&quot;">
     <div class="slide-inner join">
       <div>
         <span class="kicker reveal"><svg class="icon"><use href="#i-phone"/></svg> المشاركة من الجوال</span>
@@ -886,7 +917,7 @@ body[data-slide="s-join"] #net,body[data-slide="s-close"] #net{opacity:.6}
   </section>
 
   <!-- 14: النشاط التطبيقي (الجوالات: صندوق المشاركة) -->
-  <section class="slide" id="s-activity" data-mode="share" data-notes="المطلوب: خطة درس مختصرة، أو 5 أسئلة متدرجة بمفتاح إجابة، لدرس حقيقي من دروس الأسبوع القادم. • الطريقة: أي أداة محادثة ذكية متاحة، ثم نسخ أمر جاهز من قسم &quot;الأوامر الجاهزة&quot; أسفل صفحة الجوال (يُفتح بالضغط على عنوانه) وملء ما بين الأقواس، ثم طلب تعديل واحد على الأقل. • الإرسال من صفحة الجوال نفسها، والنتيجة الطويلة تُلصق كاملة. • اضغط &quot;بدء&quot; لتشغيل المؤقت، وابقَ على هذه الشريحة ليبقى ظاهرًا. • تجوّل بين الحضور. المتعثرة تحتاج غالبًا إلى ملء ثلاثة أقواس: المادة، والصف، والموضوع. • كل مشاركة تصل تظهر في تنبيه أسفل الشاشة باسم صاحبتها. اذكر أول اسمين بصوت مسموع. • قبل نهاية المؤقت بدقيقة: &quot;دقيقة أخيرة. أرسلن ما وصلتن إليه حتى لو لم يكتمل.&quot; • &quot;ومن لم ترسل بعد، فالأوامر أمامها الآن.&quot;">
+  <section class="slide" id="s-activity" data-mode="share" data-notes="المطلوب: خطة درس مختصرة، أو 5 أسئلة متدرجة بمفتاح إجابة، لدرس حقيقي من دروس الأسبوع القادم. • الطريقة: أي أداة محادثة ذكية متاحة، ثم نسخ أمر جاهز من قسم &quot;الأوامر الجاهزة&quot; (فُتح الآن أعلى صفحة الجوال) وملء ما بين الأقواس، ثم طلب تعديل واحد على الأقل. • الإرسال من صفحة الجوال نفسها، والنتيجة الطويلة تُلصق كاملة. • اضغط &quot;بدء&quot; لتشغيل المؤقت، وابقَ على هذه الشريحة ليبقى ظاهرًا. • تجوّل بين الحضور. المتعثرة تحتاج غالبًا إلى ملء ثلاثة أقواس: المادة، والصف، والموضوع. • كل مشاركة تصل تظهر في تنبيه أسفل الشاشة باسم صاحبتها. اذكر أول اسمين بصوت مسموع. • يد مرفوعة أعلى يمين الشاشة تعني متدربة تحتاج مساعدة. اذهب إليها، ثم اضغط اسمها لإنزال يدها (أو ⁦H⁩ لإنزال كل الأيدي). • قبل نهاية المؤقت بدقيقة: &quot;دقيقة أخيرة. أرسلن ما وصلتن إليه حتى لو لم يكتمل.&quot; • &quot;ومن لم ترسل بعد، فالأوامر أمامها الآن.&quot;">
     <div class="slide-inner activity">
       <div>
         <span class="kicker reveal"><svg class="icon"><use href="#i-pen"/></svg> دورك الآن</span>
@@ -922,7 +953,7 @@ body[data-slide="s-join"] #net,body[data-slide="s-close"] #net{opacity:.6}
   </section>
 
   <!-- 16: تحدّي الإبداع (الجوالات: رفع صورة أو رابط) -->
-  <section class="slide" id="s-challenge" data-mode="create" data-notes="مساران، ويكفي واحد: صورة توضيحية لدرس، أو صفحة تفاعلية للمراجعة. • مسار الصورة: لصق الأمر في أداة تنشئ الصور، ثم حفظ الصورة في الجوال ورفعها من صفحة المشاركة. • مسار الصفحة: لصق الأمر في أداة تنشئ صفحات (مثل ميزة Canvas)، ثم نسخ رابط المشاركة ولصقه. • الأمران في الجوال بزر نسخ، والجوال فتح الآن خانة رفع الصورة والرابط. • اضغط &quot;بدء&quot; لتشغيل المؤقت. • أول مشاركة تصل يظهر تنبيهها أسفل الشاشة. اذكر اسم صاحبتها لتحفيز البقية. • إن فشل رفع صورة: لقطة شاشة لها ثم رفع اللقطة، أو لصق رابط الصورة. • قبل النهاية بدقيقة: &quot;ارفعن ما عندكن الآن.&quot; • &quot;لنرَ ماذا صنعتن.&quot;">
+  <section class="slide" id="s-challenge" data-mode="create" data-notes="مساران، ويكفي واحد: صورة توضيحية لدرس، أو صفحة تفاعلية للمراجعة. • مسار الصورة: لصق الأمر في أداة تنشئ الصور، ثم حفظ الصورة في الجوال ورفعها من صفحة المشاركة. • مسار الصفحة: لصق الأمر في أداة تنشئ صفحات (مثل ميزة Canvas)، ثم نسخ رابط المشاركة ولصقه. • الأمران ظاهران الآن أعلى صفحة الجوال بزر نسخ، وتحتهما خانة رفع الصورة والرابط. • اضغط &quot;بدء&quot; لتشغيل المؤقت. • أول مشاركة تصل يظهر تنبيهها أسفل الشاشة. اذكر اسم صاحبتها لتحفيز البقية. • إن فشل رفع صورة: لقطة شاشة لها ثم رفع اللقطة، أو لصق رابط الصورة. • قبل النهاية بدقيقة: &quot;ارفعن ما عندكن الآن.&quot; • &quot;لنرَ ماذا صنعتن.&quot;">
     <div class="slide-inner">
       <div class="challenge-head">
         <div>
@@ -1022,11 +1053,16 @@ body[data-slide="s-join"] #net,body[data-slide="s-close"] #net{opacity:.6}
   <button class="btn primary" id="nextBtn">التالي<svg class="icon"><use href="#i-next"/></svg></button>
 </footer>
 
+<!-- تفاعل لحظي من الجوالات -->
+<aside class="hands" id="hands" aria-label="أيادٍ مرفوعة"></aside>
+<div class="rc" id="rc" aria-hidden="true"><span class="r-up"><svg class="icon"><use href="#i-thumb-up"/></svg><b id="rcUp">0</b></span><span class="r-down"><svg class="icon"><use href="#i-thumb-down"/></svg><b id="rcDown">0</b></span></div>
+<div class="reacts" id="reacts" aria-hidden="true"></div>
+
 <aside class="notes" id="notes" aria-live="polite"></aside>
 <div class="toast" id="toast"></div>
 
 <script>
-const D = {"url":"https://dqedhfwaquqaddbtfvtx.supabase.co","key":"sb_publishable_zROcySsWThanD_me0Dq8dw_tGAHzGKk","room":"hs7-ai","joinUrl":"https://aymanalburaidi.github.io/AiWorkShop/join/","bucket":"aiws-uploads","polls":{"p1":{"question":"ما المهمة التي تأخذ أكثر وقتك كل أسبوع؟","options":["تحضير الدروس وتخطيطها","إعداد الأسئلة والاختبارات","التصحيح وكتابة التغذية الراجعة","تكييف المحتوى لمستويات الطالبات"]},"p2":{"question":"ما أول استخدام للتجربة هذا الأسبوع؟","options":["تخطيط درس","إعداد اختبار قصير","كتابة تغذية راجعة","تبسيط نص لطالباتي"]}},"schools":[{"key":"p16","name":"الابتدائية السادسة عشر","color":"#7258a4"},{"key":"s7","name":"الثانوية السابعة","color":"#0a8f8c"}],"units":{"word":["كلمة","كلمتان","كلمات"],"post":["مشاركة","مشاركتان","مشاركات"],"vote":["صوت","صوتان","أصوات"],"online":["متصلة الآن","متصلتان الآن","متصلات الآن"],"trainee":["متدربة","متدربتان","متدربات"]},"plans":{"chem":{"prompt":"أنت معلم كيمياء خبير في المرحلة الثانوية. أعدّ خطة درس \"المول\" لطالبات ثاني ثانوي، مدة الحصة 45 دقيقة، تتضمّن أهدافًا قابلة للقياس، وتهيئة من واقع الطالبة، ونشاطًا تعاونيًا، وتقويمًا ختاميًا.","answer":"خطة درس: المول، ثاني ثانوي (45 دقيقة)\n\nالأهداف: في نهاية الدرس تستطيع الطالبة أن:\n• تعرّف المول وعدد أفوجادرو.\n• تحوّل بين عدد المولات وعدد الجسيمات.\n• تحسب الكتلة المولية لمركّب بسيط.\n\n١. التهيئة (5 د): كم حبة أرز في كيس وزنه كيلوجرام؟ ولماذا يبيعه التاجر بالوزن لا بالعدد؟\n٢. الشرح (15 د): المول وحدة عدّ مثل \"الدرزن\"، والمول الواحد = ⁦6.02×10²³⁩ جسيم، مع مثالين محلولين.\n٣. نشاط تعاوني (15 د): بطاقات تحويل في مجموعات رباعية، وتعرض كل مجموعة حلًّا واحدًا.\n٤. التقويم الختامي (7 د): بطاقة خروج من ثلاثة أسئلة قصيرة.\n٥. الواجب (3 د): حساب الكتلة المولية لثلاث مواد من مطبخ البيت (الماء، الملح، السكر)."},"sci":{"prompt":"أنت معلم علوم خبير في المرحلة الابتدائية. أعدّ خطة درس \"حالات المادة\" لطالبات الصف الرابع الابتدائي، مدة الحصة 45 دقيقة، بلغة بسيطة وأنشطة حسية، تتضمّن أهدافًا قابلة للقياس، وتهيئة من واقع الطالبة، ونشاطًا تعاونيًا، وتقويمًا ختاميًا.","answer":"خطة درس: حالات المادة، رابع ابتدائي (45 دقيقة)\n\nالأهداف: في نهاية الدرس تستطيع الطالبة أن:\n• تسمّي حالات المادة الثلاث: صلبة وسائلة وغازية.\n• تذكر مثالين لكل حالة من البيت أو الفصل.\n• تصف ما يحدث للماء عند التسخين والتبريد.\n\n١. التهيئة (5 د): مكعب ثلج في كأس أمام الطالبات: ماذا سيحدث له بعد قليل؟\n٢. الشرح (12 د): صور وأشياء حقيقية (حجر، ماء، بالون)، ولكل حالة كلمة مفتاحية: شكل ثابت، يأخذ شكل الإناء، ينتشر.\n٣. نشاط تعاوني (15 د): \"سلال المادة\": بطاقات مصورة لأشياء من البيت تفرزها المجموعات في ثلاث سلال.\n٤. التقويم الختامي (8 د): ثلاثة أسئلة مصورة قصيرة.\n٥. الواجب (5 د): رسم ثلاثة أشياء من المطبخ وتصنيفها حسب حالتها."},"math":{"prompt":"أنت معلم رياضيات خبير في المرحلة الثانوية. أعدّ خطة درس \"حل المعادلات التربيعية بالتحليل\" لطالبات أول ثانوي، مدة الحصة 45 دقيقة، تتضمّن أهدافًا قابلة للقياس، وتهيئة من واقع الطالبة، ونشاطًا تعاونيًا، وتقويمًا ختاميًا.","answer":"خطة درس: حل المعادلات التربيعية بالتحليل، أول ثانوي (45 دقيقة)\n\nالأهداف: في نهاية الدرس تستطيع الطالبة أن:\n• تحلّل ثلاثية الحدود على الصورة ⁦x² + bx + c⁩.\n• تحل المعادلة التربيعية باستعمال خاصية الضرب الصفري.\n• تتحقق من صحة الحل بالتعويض.\n\n١. التهيئة (5 د): حديقة مستطيلة مساحتها 24 م²، وطولها يزيد على عرضها بمقدار 2 م. فما بُعداها؟\n٢. الشرح (15 د): خاصية الضرب الصفري، ومثالان: ⁦x² − 5x + 6 = 0⁩ و ⁦x² − 9 = 0⁩.\n٣. نشاط تعاوني (15 د): \"سباق التحليل\": بطاقات معادلات تحلّها المجموعات وتتحقق منها بالتعويض.\n٤. التقويم الختامي (7 د): ثلاث معادلات متدرجة الصعوبة.\n٥. الواجب (3 د): صياغة مسألة حياتية تقود إلى معادلة تربيعية، ثم حلّها."},"lang":{"prompt":"أنت معلم لغتي خبير في المرحلة الابتدائية. أعدّ خطة درس \"التاء المربوطة والتاء المفتوحة\" لطالبات الصف الثالث الابتدائي، مدة الحصة 45 دقيقة، بلغة بسيطة وأنشطة حركية، تتضمّن أهدافًا قابلة للقياس، وتهيئة من واقع الطالبة، ونشاطًا تعاونيًا، وتقويمًا ختاميًا.","answer":"خطة درس: التاء المربوطة والتاء المفتوحة، ثالث ابتدائي (45 دقيقة)\n\nالأهداف: في نهاية الدرس تستطيع الطالبة أن:\n• تميّز التاء المربوطة (ـة) من التاء المفتوحة (ـت).\n• تقرأ كلمات تنتهي بالتاءين قراءة صحيحة عند الوقف.\n• تكتب كلمات بالتاء المناسبة.\n\n١. التهيئة (5 د): بطاقتان \"شجرة\" و\"بيت\": كيف ننطق آخر كل كلمة عند الوقف؟\n٢. الشرح (12 د): التاء المربوطة تُنطق هاءً عند الوقف (شجرهْ)، والمفتوحة تبقى تاءً (بيتْ).\n٣. نشاط تعاوني (15 د): \"صيد الكلمات\": كل مجموعة تبحث في قصة قصيرة عن كلمات بالتاءين وتلصقها في لوحتين.\n٤. التقويم الختامي (8 د): إكمال خمس كلمات بالتاء المناسبة.\n٥. الواجب (5 د): كتابة ثلاث كلمات من البيت لكل نوع."},"ar":{"prompt":"أنت معلم لغة عربية خبير في المرحلة الثانوية. أعدّ خطة درس \"الاستفهام وأغراضه البلاغية\" لطالبات ثالث ثانوي، مدة الحصة 45 دقيقة، تتضمّن أهدافًا قابلة للقياس، وتهيئة من واقع الطالبة، ونشاطًا تعاونيًا، وتقويمًا ختاميًا.","answer":"خطة درس: الاستفهام وأغراضه البلاغية، ثالث ثانوي (45 دقيقة)\n\nالأهداف: في نهاية الدرس تستطيع الطالبة أن:\n• تميّز الاستفهام الحقيقي من الاستفهام البلاغي.\n• تحدّد الغرض البلاغي للاستفهام في سياقه.\n• توظّف الاستفهام البلاغي في كتابتها.\n\n١. التهيئة (5 د): عبارة حوارية: \"أتنام والاختبار غدًا؟\" هل ينتظر السائل جوابًا؟\n٢. الشرح (15 د): أدوات الاستفهام، ثم أغراضه البلاغية (النفي، التعجب، التوبيخ، التمنّي) بشواهد من النصوص المقررة.\n٣. نشاط تعاوني (15 د): تستخرج كل مجموعة شواهد من نص، وتحدّد أغراضها البلاغية.\n٤. التقويم الختامي (7 د): ثلاث جمل لتحديد الغرض البلاغي.\n٥. الواجب (3 د): كتابة فقرة قصيرة توظّف غرضين بلاغيين للاستفهام."}},"quiz":{"chem":[{"lv":"تطبيق","q":"الكتلة المولية لثاني أكسيد الكربون \u003cspan class=\"ltr\">CO₂\u003c/span> (علمًا أن \u003cspan class=\"ltr\">C = 12 , O = 16\u003c/span>) تساوي:","o":["\u003cspan class=\"ltr\">28 g/mol\u003c/span>","\u003cspan class=\"ltr\">44 g/mol\u003c/span>","\u003cspan class=\"ltr\">32 g/mol\u003c/span>","\u003cspan class=\"ltr\">60 g/mol\u003c/span>"],"a":1,"n":"البديل 28 يكشف حساب ذرة أكسجين واحدة بدل ذرتين."},{"lv":"تطبيق","q":"كم مولًا في \u003cspan class=\"ltr\">88 g\u003c/span> من \u003cspan class=\"ltr\">CO₂\u003c/span>؟","o":["\u003cspan class=\"ltr\">0.5 mol\u003c/span>","\u003cspan class=\"ltr\">1 mol\u003c/span>","\u003cspan class=\"ltr\">2 mol\u003c/span>","\u003cspan class=\"ltr\">4 mol\u003c/span>"],"a":2,"n":"\u003cspan class=\"ltr\">88 ÷ 44 = 2 mol\u003c/span>. البديل 0.5 يكشف القسمة بالعكس."},{"lv":"تفكير عليا","q":"لماذا يستخدم الكيميائيون المول بدلًا من عدّ الذرات مباشرة؟","o":null,"a":-1,"n":"إجابة نموذجية: الذرات بالغة الصغر وأعدادها هائلة، والمول يربط العدد بكتلة نقيسها بالميزان."}],"sci":[{"lv":"تذكّر","q":"أيّ مما يلي مادة سائلة؟","o":["الرمل","الحليب","الملح","الخشب"],"a":1,"n":"الرمل ينساب مثل السائل لكنه حبيبات صلبة، لذلك يكشف البديل خطأً شائعًا."},{"lv":"فهم","q":"ماذا يحدث لمكعب الثلج إذا تُرك في الشمس؟","o":["يتبخر مباشرة","ينصهر ويصبح ماءً","يزداد حجمه","يبقى كما هو"],"a":1,"n":"البديل (يتبخر مباشرة) يكشف الخلط بين الانصهار والتبخر."},{"lv":"تفكير عليا","q":"لماذا نضع الماء في الثلاجة ليصبح ثلجًا، ولا نضعه في الفرن؟","o":null,"a":-1,"n":"إجابة نموذجية: التبريد يحوّل الماء السائل إلى صلب، والتسخين يحوّله إلى بخار."}],"math":[{"lv":"تطبيق","q":"حلّا المعادلة \u003cspan class=\"ltr\">x² − 5x + 6 = 0\u003c/span> هما:","o":["2 و 3","\u003cspan class=\"ltr\">−2\u003c/span> و \u003cspan class=\"ltr\">−3\u003c/span>","1 و 6","\u003cspan class=\"ltr\">−1\u003c/span> و 6"],"a":0,"n":"البديل (\u003cspan class=\"ltr\">−2\u003c/span> و \u003cspan class=\"ltr\">−3\u003c/span>) يكشف خطأ الإشارة عند تطبيق خاصية الضرب الصفري."},{"lv":"فهم","q":"تحليل المقدار \u003cspan class=\"ltr\">x² − 9\u003c/span> هو:","o":["\u003cspan class=\"ltr\">(x − 3)²\u003c/span>","\u003cspan class=\"ltr\">(x − 3)(x + 3)\u003c/span>","\u003cspan class=\"ltr\">(x − 9)(x + 1)\u003c/span>","\u003cspan class=\"ltr\">x(x − 9)\u003c/span>"],"a":1,"n":"فرق بين مربعين. البديل \u003cspan class=\"ltr\">(x − 3)²\u003c/span> يكشف الخلط بين الصيغتين."},{"lv":"تفكير عليا","q":"اكتب معادلة تربيعية جذراها 4 و \u003cspan class=\"ltr\">−1\u003c/span>.","o":null,"a":-1,"n":"إجابة نموذجية: \u003cspan class=\"ltr\">(x − 4)(x + 1) = 0\u003c/span> أي \u003cspan class=\"ltr\">x² − 3x − 4 = 0\u003c/span>"}],"lang":[{"lv":"تذكّر","q":"الكلمة المكتوبة بالتاء المربوطة هي:","o":["بنت","شجرة","بيت","صوت"],"a":1,"n":"التاء المربوطة تُنطق هاءً عند الوقف: شجرهْ."},{"lv":"تطبيق","q":"أكمل الكلمة: الطالبـ.. تحب القراءة.","o":["ـت","ـة","ـه","ـات"],"a":1,"n":"البديل (ـه) يكشف الخلط بين الهاء والتاء المربوطة، لأن كلتيهما تُنطق هاءً عند الوقف."},{"lv":"تفكير عليا","q":"اكتب ثلاث كلمات تنتهي بتاء مفتوحة.","o":null,"a":-1,"n":"مثال: بيت، صوت، زيت."}],"ar":[{"lv":"فهم","q":"الغرض البلاغي من الاستفهام في قوله تعالى: ﴿هَلْ جَزَاءُ الْإِحْسَانِ إِلَّا الْإِحْسَانُ﴾ هو:","o":["النفي","التمنّي","التعجب","التشويق"],"a":0,"n":"&quot;هل&quot; هنا بمعنى &quot;ما&quot;: ما جزاء الإحسان إلا الإحسان."},{"lv":"تطبيق","q":"في قولنا: &quot;أتُهمل واجبك وأنت قادر عليه؟&quot; الغرض من الاستفهام:","o":["استفهام حقيقي","التوبيخ","التمنّي","التسوية"],"a":1,"n":"المتكلم لا ينتظر جوابًا؛ هو يلوم على تقصير وقع."},{"lv":"تفكير عليا","q":"اكتب جملة استفهامية غرضها البلاغي التمنّي.","o":null,"a":-1,"n":"مثال: &quot;هل إلى عودة أيام الطفولة من سبيل؟&quot;"}]},"t":{"show":"إظهار الإجابة","hide":"إخفاء الإجابة","essay":"سؤال مقالي قصير","start":"بدء","pause":"إيقاف","minute":"دقيقة","copy":"نسخ","copied":"تم","simplify":"النص المبسّط","original":"النص الأصلي","wallEmpty":"لم تصل مشاركات بعد. أول مشاركة من الجوال تظهر هنا مباشرة.","readMore":"قراءة كاملة","openLink":"افتح الرابط","wordEmpty":"الكلمات تظهر هنا فور إرسالها.","rosterEmpty":"تظهر أسماء المتدربات هنا بعد انضمامهن من الجوال."}};
+const D = {"url":"https://dqedhfwaquqaddbtfvtx.supabase.co","key":"sb_publishable_zROcySsWThanD_me0Dq8dw_tGAHzGKk","room":"hs7-ai","joinUrl":"https://aymanalburaidi.github.io/AiWorkShop/join/","bucket":"aiws-uploads","polls":{"p1":{"question":"ما المهمة التي تأخذ أكثر وقتك كل أسبوع؟","options":["تحضير الدروس وتخطيطها","إعداد الأسئلة والاختبارات","التصحيح وكتابة التغذية الراجعة","تكييف المحتوى لمستويات الطالبات"]},"p2":{"question":"ما أول استخدام للتجربة هذا الأسبوع؟","options":["تخطيط درس","إعداد اختبار قصير","كتابة تغذية راجعة","تبسيط نص لطالباتي"]}},"schools":[{"key":"p16","name":"الابتدائية السادسة عشر","color":"#7258a4"},{"key":"s7","name":"الثانوية السابعة","color":"#0a8f8c"}],"units":{"word":["كلمة","كلمتان","كلمات"],"post":["مشاركة","مشاركتان","مشاركات"],"vote":["صوت","صوتان","أصوات"],"online":["متصلة الآن","متصلتان الآن","متصلات الآن"],"trainee":["متدربة","متدربتان","متدربات"]},"plans":{"chem":{"prompt":"أنت معلم كيمياء خبير في المرحلة الثانوية. أعدّ خطة درس \"المول\" لطالبات ثاني ثانوي، مدة الحصة 45 دقيقة، تتضمّن أهدافًا قابلة للقياس، وتهيئة من واقع الطالبة، ونشاطًا تعاونيًا، وتقويمًا ختاميًا.","answer":"خطة درس: المول، ثاني ثانوي (45 دقيقة)\n\nالأهداف: في نهاية الدرس تستطيع الطالبة أن:\n• تعرّف المول وعدد أفوجادرو.\n• تحوّل بين عدد المولات وعدد الجسيمات.\n• تحسب الكتلة المولية لمركّب بسيط.\n\n١. التهيئة (5 د): كم حبة أرز في كيس وزنه كيلوجرام؟ ولماذا يبيعه التاجر بالوزن لا بالعدد؟\n٢. الشرح (15 د): المول وحدة عدّ مثل \"الدرزن\"، والمول الواحد = ⁦6.02×10²³⁩ جسيم، مع مثالين محلولين.\n٣. نشاط تعاوني (15 د): بطاقات تحويل في مجموعات رباعية، وتعرض كل مجموعة حلًّا واحدًا.\n٤. التقويم الختامي (7 د): بطاقة خروج من ثلاثة أسئلة قصيرة.\n٥. الواجب (3 د): حساب الكتلة المولية لثلاث مواد من مطبخ البيت (الماء، الملح، السكر)."},"sci":{"prompt":"أنت معلم علوم خبير في المرحلة الابتدائية. أعدّ خطة درس \"حالات المادة\" لطالبات الصف الرابع الابتدائي، مدة الحصة 45 دقيقة، بلغة بسيطة وأنشطة حسية، تتضمّن أهدافًا قابلة للقياس، وتهيئة من واقع الطالبة، ونشاطًا تعاونيًا، وتقويمًا ختاميًا.","answer":"خطة درس: حالات المادة، رابع ابتدائي (45 دقيقة)\n\nالأهداف: في نهاية الدرس تستطيع الطالبة أن:\n• تسمّي حالات المادة الثلاث: صلبة وسائلة وغازية.\n• تذكر مثالين لكل حالة من البيت أو الفصل.\n• تصف ما يحدث للماء عند التسخين والتبريد.\n\n١. التهيئة (5 د): مكعب ثلج في كأس أمام الطالبات: ماذا سيحدث له بعد قليل؟\n٢. الشرح (12 د): صور وأشياء حقيقية (حجر، ماء، بالون)، ولكل حالة كلمة مفتاحية: شكل ثابت، يأخذ شكل الإناء، ينتشر.\n٣. نشاط تعاوني (15 د): \"سلال المادة\": بطاقات مصورة لأشياء من البيت تفرزها المجموعات في ثلاث سلال.\n٤. التقويم الختامي (8 د): ثلاثة أسئلة مصورة قصيرة.\n٥. الواجب (5 د): رسم ثلاثة أشياء من المطبخ وتصنيفها حسب حالتها."},"math":{"prompt":"أنت معلم رياضيات خبير في المرحلة الثانوية. أعدّ خطة درس \"حل المعادلات التربيعية بالتحليل\" لطالبات أول ثانوي، مدة الحصة 45 دقيقة، تتضمّن أهدافًا قابلة للقياس، وتهيئة من واقع الطالبة، ونشاطًا تعاونيًا، وتقويمًا ختاميًا.","answer":"خطة درس: حل المعادلات التربيعية بالتحليل، أول ثانوي (45 دقيقة)\n\nالأهداف: في نهاية الدرس تستطيع الطالبة أن:\n• تحلّل ثلاثية الحدود على الصورة ⁦x² + bx + c⁩.\n• تحل المعادلة التربيعية باستعمال خاصية الضرب الصفري.\n• تتحقق من صحة الحل بالتعويض.\n\n١. التهيئة (5 د): حديقة مستطيلة مساحتها 24 م²، وطولها يزيد على عرضها بمقدار 2 م. فما بُعداها؟\n٢. الشرح (15 د): خاصية الضرب الصفري، ومثالان: ⁦x² − 5x + 6 = 0⁩ و ⁦x² − 9 = 0⁩.\n٣. نشاط تعاوني (15 د): \"سباق التحليل\": بطاقات معادلات تحلّها المجموعات وتتحقق منها بالتعويض.\n٤. التقويم الختامي (7 د): ثلاث معادلات متدرجة الصعوبة.\n٥. الواجب (3 د): صياغة مسألة حياتية تقود إلى معادلة تربيعية، ثم حلّها."},"lang":{"prompt":"أنت معلم لغتي خبير في المرحلة الابتدائية. أعدّ خطة درس \"التاء المربوطة والتاء المفتوحة\" لطالبات الصف الثالث الابتدائي، مدة الحصة 45 دقيقة، بلغة بسيطة وأنشطة حركية، تتضمّن أهدافًا قابلة للقياس، وتهيئة من واقع الطالبة، ونشاطًا تعاونيًا، وتقويمًا ختاميًا.","answer":"خطة درس: التاء المربوطة والتاء المفتوحة، ثالث ابتدائي (45 دقيقة)\n\nالأهداف: في نهاية الدرس تستطيع الطالبة أن:\n• تميّز التاء المربوطة (ـة) من التاء المفتوحة (ـت).\n• تقرأ كلمات تنتهي بالتاءين قراءة صحيحة عند الوقف.\n• تكتب كلمات بالتاء المناسبة.\n\n١. التهيئة (5 د): بطاقتان \"شجرة\" و\"بيت\": كيف ننطق آخر كل كلمة عند الوقف؟\n٢. الشرح (12 د): التاء المربوطة تُنطق هاءً عند الوقف (شجرهْ)، والمفتوحة تبقى تاءً (بيتْ).\n٣. نشاط تعاوني (15 د): \"صيد الكلمات\": كل مجموعة تبحث في قصة قصيرة عن كلمات بالتاءين وتلصقها في لوحتين.\n٤. التقويم الختامي (8 د): إكمال خمس كلمات بالتاء المناسبة.\n٥. الواجب (5 د): كتابة ثلاث كلمات من البيت لكل نوع."},"ar":{"prompt":"أنت معلم لغة عربية خبير في المرحلة الثانوية. أعدّ خطة درس \"الاستفهام وأغراضه البلاغية\" لطالبات ثالث ثانوي، مدة الحصة 45 دقيقة، تتضمّن أهدافًا قابلة للقياس، وتهيئة من واقع الطالبة، ونشاطًا تعاونيًا، وتقويمًا ختاميًا.","answer":"خطة درس: الاستفهام وأغراضه البلاغية، ثالث ثانوي (45 دقيقة)\n\nالأهداف: في نهاية الدرس تستطيع الطالبة أن:\n• تميّز الاستفهام الحقيقي من الاستفهام البلاغي.\n• تحدّد الغرض البلاغي للاستفهام في سياقه.\n• توظّف الاستفهام البلاغي في كتابتها.\n\n١. التهيئة (5 د): عبارة حوارية: \"أتنام والاختبار غدًا؟\" هل ينتظر السائل جوابًا؟\n٢. الشرح (15 د): أدوات الاستفهام، ثم أغراضه البلاغية (النفي، التعجب، التوبيخ، التمنّي) بشواهد من النصوص المقررة.\n٣. نشاط تعاوني (15 د): تستخرج كل مجموعة شواهد من نص، وتحدّد أغراضها البلاغية.\n٤. التقويم الختامي (7 د): ثلاث جمل لتحديد الغرض البلاغي.\n٥. الواجب (3 د): كتابة فقرة قصيرة توظّف غرضين بلاغيين للاستفهام."}},"quiz":{"chem":[{"lv":"تطبيق","q":"الكتلة المولية لثاني أكسيد الكربون \u003cspan class=\"ltr\">CO₂\u003c/span> (علمًا أن \u003cspan class=\"ltr\">C = 12 , O = 16\u003c/span>) تساوي:","o":["\u003cspan class=\"ltr\">28 g/mol\u003c/span>","\u003cspan class=\"ltr\">44 g/mol\u003c/span>","\u003cspan class=\"ltr\">32 g/mol\u003c/span>","\u003cspan class=\"ltr\">60 g/mol\u003c/span>"],"a":1,"n":"البديل 28 يكشف حساب ذرة أكسجين واحدة بدل ذرتين."},{"lv":"تطبيق","q":"كم مولًا في \u003cspan class=\"ltr\">88 g\u003c/span> من \u003cspan class=\"ltr\">CO₂\u003c/span>؟","o":["\u003cspan class=\"ltr\">0.5 mol\u003c/span>","\u003cspan class=\"ltr\">1 mol\u003c/span>","\u003cspan class=\"ltr\">2 mol\u003c/span>","\u003cspan class=\"ltr\">4 mol\u003c/span>"],"a":2,"n":"\u003cspan class=\"ltr\">88 ÷ 44 = 2 mol\u003c/span>. البديل 0.5 يكشف القسمة بالعكس."},{"lv":"تفكير عليا","q":"لماذا يستخدم الكيميائيون المول بدلًا من عدّ الذرات مباشرة؟","o":null,"a":-1,"n":"إجابة نموذجية: الذرات بالغة الصغر وأعدادها هائلة، والمول يربط العدد بكتلة نقيسها بالميزان."}],"sci":[{"lv":"تذكّر","q":"أيّ مما يلي مادة سائلة؟","o":["الرمل","الحليب","الملح","الخشب"],"a":1,"n":"الرمل ينساب مثل السائل لكنه حبيبات صلبة، لذلك يكشف البديل خطأً شائعًا."},{"lv":"فهم","q":"ماذا يحدث لمكعب الثلج إذا تُرك في الشمس؟","o":["يتبخر مباشرة","ينصهر ويصبح ماءً","يزداد حجمه","يبقى كما هو"],"a":1,"n":"البديل (يتبخر مباشرة) يكشف الخلط بين الانصهار والتبخر."},{"lv":"تفكير عليا","q":"لماذا نضع الماء في الثلاجة ليصبح ثلجًا، ولا نضعه في الفرن؟","o":null,"a":-1,"n":"إجابة نموذجية: التبريد يحوّل الماء السائل إلى صلب، والتسخين يحوّله إلى بخار."}],"math":[{"lv":"تطبيق","q":"حلّا المعادلة \u003cspan class=\"ltr\">x² − 5x + 6 = 0\u003c/span> هما:","o":["2 و 3","\u003cspan class=\"ltr\">−2\u003c/span> و \u003cspan class=\"ltr\">−3\u003c/span>","1 و 6","\u003cspan class=\"ltr\">−1\u003c/span> و 6"],"a":0,"n":"البديل (\u003cspan class=\"ltr\">−2\u003c/span> و \u003cspan class=\"ltr\">−3\u003c/span>) يكشف خطأ الإشارة عند تطبيق خاصية الضرب الصفري."},{"lv":"فهم","q":"تحليل المقدار \u003cspan class=\"ltr\">x² − 9\u003c/span> هو:","o":["\u003cspan class=\"ltr\">(x − 3)²\u003c/span>","\u003cspan class=\"ltr\">(x − 3)(x + 3)\u003c/span>","\u003cspan class=\"ltr\">(x − 9)(x + 1)\u003c/span>","\u003cspan class=\"ltr\">x(x − 9)\u003c/span>"],"a":1,"n":"فرق بين مربعين. البديل \u003cspan class=\"ltr\">(x − 3)²\u003c/span> يكشف الخلط بين الصيغتين."},{"lv":"تفكير عليا","q":"اكتب معادلة تربيعية جذراها 4 و \u003cspan class=\"ltr\">−1\u003c/span>.","o":null,"a":-1,"n":"إجابة نموذجية: \u003cspan class=\"ltr\">(x − 4)(x + 1) = 0\u003c/span> أي \u003cspan class=\"ltr\">x² − 3x − 4 = 0\u003c/span>"}],"lang":[{"lv":"تذكّر","q":"الكلمة المكتوبة بالتاء المربوطة هي:","o":["بنت","شجرة","بيت","صوت"],"a":1,"n":"التاء المربوطة تُنطق هاءً عند الوقف: شجرهْ."},{"lv":"تطبيق","q":"أكمل الكلمة: الطالبـ.. تحب القراءة.","o":["ـت","ـة","ـه","ـات"],"a":1,"n":"البديل (ـه) يكشف الخلط بين الهاء والتاء المربوطة، لأن كلتيهما تُنطق هاءً عند الوقف."},{"lv":"تفكير عليا","q":"اكتب ثلاث كلمات تنتهي بتاء مفتوحة.","o":null,"a":-1,"n":"مثال: بيت، صوت، زيت."}],"ar":[{"lv":"فهم","q":"الغرض البلاغي من الاستفهام في قوله تعالى: ﴿هَلْ جَزَاءُ الْإِحْسَانِ إِلَّا الْإِحْسَانُ﴾ هو:","o":["النفي","التمنّي","التعجب","التشويق"],"a":0,"n":"&quot;هل&quot; هنا بمعنى &quot;ما&quot;: ما جزاء الإحسان إلا الإحسان."},{"lv":"تطبيق","q":"في قولنا: &quot;أتُهمل واجبك وأنت قادر عليه؟&quot; الغرض من الاستفهام:","o":["استفهام حقيقي","التوبيخ","التمنّي","التسوية"],"a":1,"n":"المتكلم لا ينتظر جوابًا؛ هو يلوم على تقصير وقع."},{"lv":"تفكير عليا","q":"اكتب جملة استفهامية غرضها البلاغي التمنّي.","o":null,"a":-1,"n":"مثال: &quot;هل إلى عودة أيام الطفولة من سبيل؟&quot;"}]},"t":{"show":"إظهار الإجابة","hide":"إخفاء الإجابة","essay":"سؤال مقالي قصير","start":"بدء","pause":"إيقاف","minute":"دقيقة","copy":"نسخ","copied":"تم","simplify":"النص المبسّط","original":"النص الأصلي","wallEmpty":"لم تصل مشاركات بعد. أول مشاركة من الجوال تظهر هنا مباشرة.","readMore":"قراءة كاملة","openLink":"افتح الرابط","wordEmpty":"الكلمات تظهر هنا فور إرسالها.","rosterEmpty":"تظهر أسماء المتدربات هنا بعد انضمامهن من الجوال.","handAlert":"رفعت يدها","handLower":"الضغط ينزل اليد","handsLowered":"أُنزلت كل الأيدي"}};
 const $ = s => document.querySelector(s);
 const $$ = s => [...document.querySelectorAll(s)];
 const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -1107,6 +1143,7 @@ document.addEventListener('keydown', e => {
   if (e.target.closest?.('input,textarea')) return;
   if ($('#modal').classList.contains('on')) { if (e.key === 'Escape') closeModal(); return; }
   if (e.code === 'KeyL') { $('#roster').classList.toggle('open'); return; }
+  if (e.code === 'KeyH' && !e.ctrlKey && !e.metaKey) { Live.lowerHands(); return; }
   if (e.shiftKey && e.code === 'KeyR') { e.preventDefault(); Live.resetAll(); return; }
   if (['ArrowLeft','PageDown'].includes(e.key) || e.code === 'Space'){ e.preventDefault(); go(cur + 1); }
   else if (['ArrowRight','PageUp'].includes(e.key)){ e.preventDefault(); go(cur - 1); }
@@ -1325,6 +1362,47 @@ const Live = (() => {
     animateNum(document.querySelector(`[data-poll-total="${p}"]`), tot);
   }
 
+  /* --- تفاعل لحظي: تأييد واعتراض (بثّ عابر لا يُحفظ)، وأيادٍ مرفوعة (من حالة حضور الجوال) --- */
+  let room = null, hands = new Map(), rcSlide = '', handsT = null;
+  const rc = { up: 0, down: 0 }, lastReact = new Map(), handSeen = new Map(), handDrawn = new Set();
+  const shortName = n => (n || '').trim().split(/\s+/).slice(0, 2).join(' ');
+  function drawRc(k){
+    $('#rcUp').textContent = rc.up; $('#rcDown').textContent = rc.down;
+    $('#rc').classList.toggle('on', rc.up + rc.down > 0);
+    if (k) { const el = $('#rc .r-' + k); el.classList.remove('bump'); void el.offsetWidth; el.classList.add('bump'); }
+  }
+  function onReact(p){
+    if (!p || (p.k !== 'up' && p.k !== 'down') || typeof p.d !== 'string') return;
+    const now = Date.now(); if (now - (lastReact.get(p.d) || 0) < 400) return; lastReact.set(p.d, now);
+    rc[p.k]++; drawRc(p.k);
+    Motion.react(p.k, shortName(people.get(p.d)?.name || String(p.n || '').slice(0, 60)).split(' ')[0], colorOf(p.d));
+  }
+  function syncHands(st){
+    const next = new Map();
+    Object.entries(st).forEach(([d, metas]) => { const m = metas.find(x => x.hand); if (m) next.set(d, { name: people.get(d)?.name || String(m.name || '').slice(0, 80), t: Number(m.ht) || 0 }); });
+    for (const [d, h] of next) if (!hands.has(d)) { handSeen.set(d, Date.now()); if (ready) Motion.notify(h.name, D.t.handAlert, 'i-hand', colorOf(d)); }
+    for (const d of hands.keys()) if (!next.has(d)) { handSeen.delete(d); handDrawn.delete(d); }
+    hands = next; drawHands();
+  }
+  function drawHands(){
+    const box = $('#hands'), rows = [...hands].sort((a, b) => a[1].t - b[1].t), now = Date.now();
+    const isNew = d => now - (handSeen.get(d) || 0) < 7000;
+    box.innerHTML = rows.length ? `<div class="hands-h">${ico('i-hand')}<b>${rows.length}</b></div>` : '';
+    rows.forEach(([d, h]) => {
+      const b = document.createElement('button'); b.className = 'hand' + (isNew(d) ? ' new' : '') + (handDrawn.has(d) ? '' : ' in'); handDrawn.add(d);
+      b.style.setProperty('--sc', colorOf(d) || 'var(--navy)');
+      b.innerHTML = `<span class="av">${ico('i-hand')}</span><span class="nm"></span>`;
+      b.querySelector('.av').prepend(initial(h.name)); b.querySelector('.nm').textContent = shortName(h.name);
+      b.title = h.name + ' · ' + D.t.handLower;
+      b.onclick = () => lowerHand(d);
+      box.append(b);
+    });
+    clearTimeout(handsT); if (rows.some(([d]) => isNew(d))) handsT = setTimeout(drawHands, 7100);
+  }
+  // المقدّم ينزل يد متدربة بالضغط عليها، أو كل الأيدي بمفتاح H
+  function lowerHand(d){ if (key && room) room.send({ type: 'broadcast', event: 'lower', payload: { d } }); }
+  function lowerHands(){ if (!key || !room || !hands.size) return; lowerHand('*'); toast(D.t.handsLowered); }
+
   /* --- لوحة المتدربات --- */
   function bump(device, n){ contrib.set(device, Math.max(0, (contrib.get(device) || 0) + n)); }
   let rosterT = null, rosterBump = null;
@@ -1495,8 +1573,9 @@ const Live = (() => {
       online.clear();
       Object.entries(st).forEach(([k, metas]) => { if (metas[0]?.role === 'phone') online.add(k); });
       $$('.js-online').forEach(el => animateNum(el, online.size));
-      scheduleRoster();
-    }).subscribe();
+      scheduleRoster(); syncHands(st);
+    }).on('broadcast', { event: 'react' }, ({ payload }) => onReact(payload)).subscribe();
+    room = presence;
     initKey();
   }
 
@@ -1540,6 +1619,7 @@ const Live = (() => {
   }
   let lastState = '';
   function slideChanged(s){
+    if (rcSlide !== s.id) { rcSlide = s.id; rc.up = rc.down = 0; drawRc(); }   // عدّاد التأييد والاعتراض لكل شريحة
     sendSlide();
     if (!sb || !key) return;
     const poll = s.dataset.poll, mode = poll ? 'poll' : (s.dataset.mode || null);
@@ -1560,7 +1640,7 @@ const Live = (() => {
     toast('صُفّرت الغرفة');
     setTimeout(() => location.reload(), 900);
   }
-  return { connect, slideChanged, askKey, resetAll };
+  return { connect, slideChanged, askKey, resetAll, lowerHands };
 })();
 
 /* ========== الحركة: شبكة عصبية، ضوء المؤشر، ميلان البطاقات، تنبيهات حية ========== */
@@ -1641,7 +1721,19 @@ const Motion = (() => {
     while (stack.children.length > 3) stack.lastChild.remove();
     setTimeout(() => { el.classList.add('out'); setTimeout(() => el.remove(), 400); }, 4200);
   }
-  return { slideChanged, notify };
+  // تأييد أو اعتراض يطفو يمين الشاشة باسم صاحبته
+  const reacts = $('#reacts');
+  function react(k, name, color){
+    const el = document.createElement('div'); el.className = 'react r-' + k;
+    el.innerHTML = `<span class="rb">${ico(k === 'up' ? 'i-thumb-up' : 'i-thumb-down')}</span><small></small>`;
+    const s = el.querySelector('small');
+    if (name) { s.textContent = name; if (color) s.style.color = color; } else s.remove();
+    el.style.setProperty('--dx', Math.round(Math.random() * 40 - 20) + 'px');
+    reacts.append(el);
+    while (reacts.children.length > 14) reacts.firstChild.remove();
+    setTimeout(() => el.remove(), 3500);
+  }
+  return { slideChanged, notify, react };
 })();
 
 /* ========== أحداث دخول الشرائح ========== */

@@ -122,12 +122,14 @@ const deckData = {
     simplify: get('more.simplify_button'), original: get('more.original_button'),
     wallEmpty: get('wall.empty'), readMore: get('wall.read_more'), openLink: get('wall.open_link'),
     wordEmpty: get('word.empty'), rosterEmpty: get('settings.roster_empty'),
+    handAlert: get('settings.hand_alert'), handLower: get('settings.hand_lower'), handsLowered: get('settings.hands_lowered'),
   },
 };
-const pl = id => promptList(id).map(p => ({ title: plain(p.title), text: plain(p.text), icon: p.icon }));
+// g: النشاط الذي يخصّه الأمر (share للنشاط التطبيقي، create لتحدّي الإبداع)؛ تُفتح أوامره تلقائيًا في الجوال
+const pl = (id, g) => promptList(id).map(p => ({ title: plain(p.title), text: plain(p.text), icon: p.icon, g }));
 const joinData = {
   ...live,
-  prompts: [...pl('prompts'), ...pl('challenge')],
+  prompts: [...pl('prompts', 'share'), ...pl('challenge', 'create')],
   t: {
     ...Object.fromEntries(Object.entries(C['join-page']).map(([k, v]) => [k, plain(v)])),
     word_title: plain(get('word.phone_title')), word_question: plain(get('word.question')),

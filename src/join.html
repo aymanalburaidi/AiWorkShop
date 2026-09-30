@@ -23,7 +23,7 @@
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
 body{font-family:'Tajawal',system-ui,-apple-system,sans-serif;font-weight:400;font-size:17px;line-height:1.7;background:var(--bg);color:var(--ink);min-height:100dvh;
-  padding:calc(env(safe-area-inset-top) + 12px) calc(env(safe-area-inset-right) + 16px) calc(env(safe-area-inset-bottom) + 24px) calc(env(safe-area-inset-left) + 16px)}
+  padding:calc(env(safe-area-inset-top) + 12px) calc(env(safe-area-inset-right) + 16px) calc(env(safe-area-inset-bottom) + 104px) calc(env(safe-area-inset-left) + 16px)}
 h1,h2,h3,b,button{font-weight:500}
 button{font-family:inherit;touch-action:manipulation;cursor:pointer}
 [hidden]{display:none!important}
@@ -98,6 +98,20 @@ details.prompt p{padding:0 14px 12px;white-space:pre-wrap;font-size:.95rem;line-
 details.prompt .btn{margin:0 14px 14px;min-height:44px;font-size:.95rem;background:var(--teal)}
 .contact .btn{width:100%;background:var(--grad)}
 .site-foot{text-align:center;color:var(--muted);font-size:.82rem;padding:6px 0 0}
+/* شريط التفاعل اللحظي: ظاهر دائمًا أسفل الصفحة */
+.rbar{position:fixed;z-index:50;left:0;right:0;bottom:0;display:flex;justify-content:center;gap:8px;padding:8px calc(env(safe-area-inset-right) + 12px) calc(env(safe-area-inset-bottom) + 8px) calc(env(safe-area-inset-left) + 12px);background:rgba(255,255,255,.92);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);border-top:1px solid var(--line)}
+.rbtn{position:relative;flex:1;max-width:180px;min-height:58px;display:grid;justify-items:center;align-content:center;gap:1px;border-radius:16px;border:1.5px solid var(--line);background:#fff;color:var(--ink);font-size:.84rem;line-height:1.4;transition:transform .12s var(--ease),background .2s,border-color .2s,color .2s}
+.rbtn .icon{width:26px;height:26px}
+.rbtn:active{transform:scale(.94)}
+.rbtn.up>.icon{color:var(--green)} .rbtn.down>.icon{color:#c0563f} .rbtn.hand>.icon{color:#b0811a}
+.rbtn.pop{animation:pop .4s var(--ease)}
+@keyframes pop{35%{transform:scale(1.12)}}
+.rbtn .fly{position:absolute;top:0;left:50%;pointer-events:none;animation:fly .9s ease-out forwards}
+.rbtn.up .fly{color:var(--green)} .rbtn.down .fly{color:#c0563f}
+@keyframes fly{from{opacity:1;transform:translate(-50%,0) scale(1)}to{opacity:0;transform:translate(-50%,-84px) scale(1.7)}}
+.rbtn.hand[aria-pressed="true"]{background:var(--navy);border-color:var(--navy);color:#fff}
+.rbtn.hand[aria-pressed="true"]>.icon{color:#f5c451;animation:wave 1.4s ease-in-out infinite}
+@keyframes wave{50%{transform:rotate(-14deg) translateY(-2px)}}
 /* نافذة الاسم */
 .sheet{position:fixed;inset:0;z-index:60;background:rgba(10,30,40,.55);backdrop-filter:blur(6px);display:flex;align-items:flex-end;justify-content:center;padding:16px;padding-bottom:calc(env(safe-area-inset-bottom) + 16px)}
 .sheet-card{width:100%;max-width:520px;background:#fff;border-radius:24px;padding:22px 20px;box-shadow:0 30px 60px -20px rgba(0,0,0,.4);animation:up .45s var(--ease) both}
@@ -160,7 +174,7 @@ details.prompt .btn{margin:0 14px 14px;min-height:44px;font-size:.95rem;backgrou
     <div class="sent" id="sentWrap" hidden><h3>{{join-page.sent_title}}</h3><div id="sent" style="display:grid;gap:8px"></div></div>
   </section>
 
-  <details class="card fold">
+  <details class="card fold" id="promptsCard">
     <summary><h2><svg class="icon"><use href="#i-copy"/></svg> {{join-page.prompts_title}}</h2><svg class="icon chev"><use href="#i-next"/></svg></summary>
     <div id="prompts"></div>
   </details>
@@ -172,6 +186,13 @@ details.prompt .btn{margin:0 14px 14px;min-height:44px;font-size:.95rem;backgrou
 
   <p class="site-foot">{{settings.footer_title}}</p>
 </div>
+
+<!-- تفاعل لحظي يظهر على شاشة العرض فورًا -->
+<nav class="rbar" aria-label="{{join-page.react_label|text}}">
+  <button class="rbtn up" id="rUp"><svg class="icon"><use href="#i-thumb-up"/></svg><span>{{join-page.react_up}}</span></button>
+  <button class="rbtn down" id="rDown"><svg class="icon"><use href="#i-thumb-down"/></svg><span>{{join-page.react_down}}</span></button>
+  <button class="rbtn hand" id="rHand" aria-pressed="false"><svg class="icon"><use href="#i-hand"/></svg><span id="rHandTxt">{{join-page.hand_raise}}</span></button>
+</nav>
 
 <!-- الاسم الثلاثي: يُطلب مرة واحدة -->
 <div class="sheet" id="sheet" hidden>
@@ -241,7 +262,7 @@ $('#nameForm').onsubmit = e => {
 async function register(){
   if (!sb || !name) return;
   await sb.rpc('aiws_join', { p_room: D.room, p_device: device, p_name: name, p_school: school || null });
-  if (presence) presence.track({ role: 'phone', name, school });
+  track();
 }
 showName();
 if (!validName(name) || !SCHOOLS[school]) openSheet();
@@ -330,8 +351,13 @@ function renderState(){
   slot.innerHTML = '';
   if (state.mode === 'poll' && D.polls[state.poll_key]) renderPoll(slot, state.poll_key);
   else if (state.mode === 'word') renderWord(slot);
+  const fold = $('#promptsCard'), g = create ? 'create' : state.mode === 'share' ? 'share' : '';
+  const few = D.prompts.filter(p => p.g === g).length <= 2;
+  document.querySelectorAll('details.prompt').forEach((el, i) => { el.hidden = !!g && D.prompts[i].g !== g; el.open = !!g && few && !el.hidden; });
+  if (g) $('#shareCard').before(fold); else $('.contact').before(fold);
+  fold.open = !!g;
   if (state.mode === 'poll' || state.mode === 'word') slot.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  else if (create || state.mode === 'share') $('#shareCard').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  else if (g) fold.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 function renderPoll(slot, p){
   const poll = D.polls[p], voted = store.get('voted', {})[p];
@@ -365,13 +391,39 @@ function renderWord(slot){
   };
 }
 
+/* ---------- تفاعل لحظي: تأييد واعتراض (بثّ عابر)، ورفع اليد (يبقى حتى إنزالها) ---------- */
+let live = false, hand = false, handAt = 0, lastReact = 0;
+function track(){ if (presence && live) presence.track({ role: 'phone', name, school, ...(hand ? { hand: true, ht: handAt } : {}) }); }
+function setHand(on, quiet){
+  if (hand === on) return;
+  hand = on; handAt = on ? Date.now() : 0;
+  $('#rHand').setAttribute('aria-pressed', on); $('#rHandTxt').textContent = on ? D.t.hand_lower : D.t.hand_raise;
+  track();
+  if (!quiet) toast(on ? D.t.hand_up_toast : D.t.hand_down_toast);
+}
+function canReact(){
+  if (!name) { openSheet(); return false; }
+  if (!presence || !live) { toast(D.t.error_net, true); return false; }
+  return true;
+}
+function react(k, btn){
+  if (!canReact()) return;
+  const now = Date.now(); if (now - lastReact < 700) return; lastReact = now;
+  presence.send({ type: 'broadcast', event: 'react', payload: { k, d: device, n: name } });
+  btn.classList.remove('pop'); void btn.offsetWidth; btn.classList.add('pop');
+  const f = document.createElement('span'); f.className = 'fly'; f.innerHTML = ico(k === 'up' ? 'i-thumb-up' : 'i-thumb-down'); btn.append(f); setTimeout(() => f.remove(), 900);
+}
+$('#rUp').onclick = e => react('up', e.currentTarget);
+$('#rDown').onclick = e => react('down', e.currentTarget);
+$('#rHand').onclick = () => { if (canReact()) setHand(!hand); };
+
 /* ---------- الاتصال ---------- */
 function setStatus(on){ $('#status').classList.toggle('on', on); $('#statusTxt').textContent = on ? D.t.online : D.t.offline; }
 // إذا صفّر المقدّم الغرفة: نمسح علامات التصويت والمشاركات المحفوظة، ونعيد تسجيل الاسم
 function applyState(s){
   const known = store.get('epoch', null);
   if (s.epoch && known !== s.epoch) {
-    if (known !== null) { store.set('voted', {}); store.set('sent', []); renderSent(); $('#liveSlot').dataset.sig = ''; register(); }
+    if (known !== null) { store.set('voted', {}); store.set('sent', []); renderSent(); $('#liveSlot').dataset.sig = ''; setHand(false, true); register(); }
     store.set('epoch', s.epoch);
   }
   state = s; renderState();
@@ -389,7 +441,9 @@ function connect(){
     .on('postgres_changes', { event: '*', schema: 'public', table: 'aiws_state', filter: 'room=eq.' + D.room }, ({ new: s }) => { if (s && s.mode) applyState(s); })
     .subscribe(st => setStatus(st === 'SUBSCRIBED'));
   presence = sb.channel('aiws-room-' + D.room, { config: { presence: { key: device } } });
-  presence.subscribe(st => { if (st === 'SUBSCRIBED') presence.track({ role: 'phone', name }); });
+  // المقدّم ينزل اليد من شاشة العرض
+  presence.on('broadcast', { event: 'lower' }, ({ payload }) => { if (payload && (payload.d === device || payload.d === '*')) setHand(false); })
+    .subscribe(st => { live = st === 'SUBSCRIBED'; if (live) track(); });
   // iPhone يوقف الاتصال عند قفل الشاشة؛ نحدّث الحالة عند العودة ودوريًا
   document.addEventListener('visibilitychange', () => { if (!document.hidden) fetchState(); });
   setInterval(fetchState, 15000);
