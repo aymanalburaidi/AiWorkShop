@@ -1393,7 +1393,7 @@ const Live = (() => {
     const k = localStorage.getItem('aiws_key');
     if (!k) return;
     const { data } = await sb.rpc('aiws_verify', { p_room: D.room, p_secret: k });
-    if (data === true) { key = k; document.body.classList.add('presenter'); $('#liveDot').classList.add('pres'); slideChanged(slides[cur]); }
+    if (data === true) { key = k; document.body.classList.add('presenter'); $('#liveDot').classList.add('pres'); await openCtl(); slideChanged(slides[cur]); }
     else localStorage.removeItem('aiws_key');
   }
   async function askKey(){
@@ -1403,8 +1403,31 @@ const Live = (() => {
     await initKey();
     toast(key ? 'فُعّل وضع المقدّم' : 'المفتاح غير صحيح');
   }
+  /* --- قناة صفحة ملاحظات المقدّم: اسمها مشتق من المفتاح، فلا يصلها إلا من يملكه --- */
+  let ctl = null, bc = null;
+  const seenMsg = new Set();
+  async function sha(t){ const b = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(t)); return [...new Uint8Array(b)].map(x => x.toString(16).padStart(2, '0')).join(''); }
+  function onCtl(m){
+    if (!m || seenMsg.has(m.id)) return; seenMsg.add(m.id);
+    if (m.t === 'hello') sendSlide();
+    else if (m.t === 'go') { if (m.to === 'next') go(cur + 1); else if (m.to === 'prev') go(cur - 1); }
+  }
+  function sendSlide(){
+    if (!ctl && !bc) return;
+    const m = { t: 'slide', i: cur, id: Math.random().toString(36).slice(2) }; seenMsg.add(m.id);
+    try { bc?.postMessage(m); } catch (e) {}
+    ctl?.send({ type: 'broadcast', event: 'm', payload: m });
+  }
+  async function openCtl(){
+    if (ctl || bc) return;
+    const name = 'aiws-ctl-' + (await sha(key)).slice(0, 16);
+    try { bc = new BroadcastChannel(name); bc.onmessage = e => onCtl(e.data); } catch (e) {}
+    ctl = sb.channel(name, { config: { broadcast: { self: false } } });
+    ctl.on('broadcast', { event: 'm' }, ({ payload }) => onCtl(payload)).subscribe(st => { if (st === 'SUBSCRIBED') sendSlide(); });
+  }
   let lastState = '';
   function slideChanged(s){
+    sendSlide();
     if (!sb || !key) return;
     const poll = s.dataset.poll, mode = poll ? 'poll' : (s.dataset.mode || null);
     if (!mode) return;

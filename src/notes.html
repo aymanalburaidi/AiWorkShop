@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<meta name="theme-color" content="#0f2f3e">
+<title>{{presenter-page.page_title|text}}</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0f2f3e; --panel:#15445a; --ink:#EAF3F4; --muted:#9DB7C0; --line:rgba(255,255,255,.12);
+  --green:#07a869; --teal:#0da9a6; --blue:#3d7eb9; --sand:#c1b489; --red:#e06a5e;
+  --grad:linear-gradient(115deg,#07a869 0%,#0da9a6 50%,#3d7eb9 100%);
+  --ease:cubic-bezier(.165,.84,.44,1);
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%}
+body{font-family:'Tajawal',system-ui,sans-serif;font-weight:400;font-size:18px;line-height:1.8;background:var(--bg);color:var(--ink);
+  padding:calc(env(safe-area-inset-top) + 14px) calc(env(safe-area-inset-right) + 18px) calc(env(safe-area-inset-bottom) + 14px) calc(env(safe-area-inset-left) + 18px)}
+h1,h2,h3,b,button{font-weight:500}
+button{font-family:inherit;cursor:pointer;touch-action:manipulation}
+[hidden]{display:none!important}
+.icon{width:1.2em;height:1.2em;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;flex:none;vertical-align:-.2em}
+
+/* القفل */
+.lock{min-height:calc(100dvh - 40px);display:grid;place-items:center}
+.lock-card{width:min(420px,100%);background:var(--panel);border:1px solid var(--line);border-radius:24px;padding:28px 24px;text-align:center;animation:in .5s var(--ease) both}
+@keyframes in{from{opacity:0;transform:translateY(14px)}}
+.lock-card .badge{width:64px;height:64px;border-radius:20px;display:grid;place-items:center;margin:0 auto 14px;background:var(--grad);font-size:1.6rem}
+.lock-card h1{font-size:1.4rem}
+.lock-card p{color:var(--muted);font-size:.95rem;margin:6px 0 16px}
+input{width:100%;font-family:inherit;font-size:17px;color:var(--ink);background:rgba(255,255,255,.06);border:1.5px solid var(--line);border-radius:14px;padding:12px 14px;outline:none;text-align:center;direction:ltr}
+input:focus{border-color:var(--teal)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:48px;padding:0 20px;border-radius:14px;border:1px solid var(--line);background:rgba(255,255,255,.06);color:var(--ink);font-size:1rem;transition:transform .12s var(--ease),background .15s}
+.btn:active{transform:scale(.97)}
+.btn.primary{background:var(--grad);border:0;color:#fff}
+.btn.full{width:100%;margin-top:12px}
+.btn:disabled{opacity:.4}
+.err{color:var(--red);font-size:.9rem;margin-top:10px}
+
+/* اللوحة */
+.app{max-width:1100px;margin:0 auto;min-height:calc(100dvh - 40px);display:grid;grid-template-rows:auto 1fr auto;gap:14px}
+.top{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.pos{display:flex;align-items:baseline;gap:10px}
+.pos b{font-size:2.2rem;line-height:1;font-variant-numeric:tabular-nums}
+.pos span{color:var(--muted)}
+.link{display:flex;align-items:center;gap:8px;font-size:.88rem;color:var(--muted)}
+.link .dot{width:9px;height:9px;border-radius:50%;background:#6d8793}
+.link.on .dot{background:#34d399;box-shadow:0 0 0 4px rgba(52,211,153,.2)}
+.clock{display:flex;gap:10px;flex-wrap:wrap}
+.chip{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:6px 14px;text-align:center;min-width:110px}
+.chip small{display:block;color:var(--muted);font-size:.74rem;line-height:1.3}
+.chip b{font-size:1.35rem;font-variant-numeric:tabular-nums;direction:ltr;display:block;line-height:1.4}
+.chip.late b{color:var(--red)} .chip.early b{color:#5eead4} .chip.ok b{color:#86efac}
+.bar{height:4px;border-radius:4px;background:rgba(255,255,255,.1);overflow:hidden}
+.bar i{display:block;height:100%;width:0;background:var(--grad);transition:width .6s var(--ease)}
+.main{display:grid;grid-template-columns:1.7fr 1fr;gap:14px;min-height:0}
+.now,.nextc{background:var(--panel);border:1px solid var(--line);border-radius:22px;padding:20px 22px;overflow:auto}
+.lbl{display:inline-flex;align-items:center;gap:8px;font-size:.82rem;color:#0f2f3e;background:var(--sand);padding:1px 12px;border-radius:999px;margin-bottom:8px}
+.nextc .lbl{background:rgba(255,255,255,.12);color:var(--muted)}
+.now h2{font-size:1.7rem;line-height:1.5;margin-bottom:10px}
+.now .note{font-size:1.5rem;line-height:1.9;font-weight:300;white-space:pre-wrap}
+.nextc h3{font-size:1.15rem;line-height:1.6;margin-bottom:6px}
+.nextc .note{color:var(--muted);font-size:1rem;white-space:pre-wrap}
+.swap{animation:swap .45s var(--ease) both}
+@keyframes swap{from{opacity:0;transform:translateY(10px)}}
+.foot{display:flex;gap:10px;justify-content:space-between;flex-wrap:wrap}
+.foot .grp{display:flex;gap:8px}
+.foot .nav{min-width:120px;min-height:56px;font-size:1.1rem}
+.waiting{color:var(--muted);font-size:.95rem;margin-top:8px}
+@media (max-width:760px){
+  body{font-size:17px}
+  .main{grid-template-columns:1fr}
+  .now .note{font-size:1.25rem}
+  .foot .nav{flex:1}
+  .foot .grp{flex:1}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+<script src="{{cfg.supabaseJs}}" defer></script>
+</head>
+<body>
+{{@include icons.svg}}
+
+<!-- القفل -->
+<div class="lock" id="lock">
+  <form class="lock-card" id="lockForm">
+    <div class="badge"><svg class="icon"><use href="#i-lock"/></svg></div>
+    <h1>{{presenter-page.lock_title}}</h1>
+    <p>{{presenter-page.lock_hint}}</p>
+    <input id="pw" type="password" autocomplete="current-password" placeholder="{{presenter-page.password_placeholder|text}}">
+    <button class="btn primary full" id="unlockBtn" type="submit">{{presenter-page.unlock}}</button>
+    <div class="err" id="err" hidden>{{presenter-page.wrong}}</div>
+  </form>
+</div>
+
+<!-- اللوحة -->
+<div class="app" id="app" hidden>
+  <div>
+    <div class="top">
+      <div class="pos"><b id="pos">1</b><span id="total"></span><div class="link" id="link"><span class="dot"></span><span id="linkTxt"></span></div></div>
+      <div class="clock">
+        <div class="chip"><small>{{presenter-page.planned}}</small><b id="planned">0:00</b></div>
+        <div class="chip" id="elapsedChip"><small>{{presenter-page.elapsed}}</small><b id="elapsed">0:00</b></div>
+        <div class="chip" id="deltaChip"><small id="deltaLbl">{{presenter-page.on_time}}</small><b id="delta">0:00</b></div>
+      </div>
+    </div>
+    <div class="bar" style="margin-top:12px"><i id="bar"></i></div>
+  </div>
+
+  <div class="main">
+    <section class="now" id="nowBox"><span class="lbl">{{presenter-page.now}}</span><h2 id="nowTitle"></h2><div class="note" id="nowNote"></div><p class="waiting" id="waiting">{{presenter-page.waiting}}</p></section>
+    <section class="nextc" id="nextBox"><span class="lbl">{{presenter-page.next}}</span><h3 id="nextTitle"></h3><div class="note" id="nextNote"></div></section>
+  </div>
+
+  <div class="foot">
+    <div class="grp">
+      <button class="btn nav" id="prev"><svg class="icon"><use href="#i-prev"/></svg>{{presenter-page.prev_btn}}</button>
+      <button class="btn primary nav" id="next">{{presenter-page.next_btn}}<svg class="icon"><use href="#i-next"/></svg></button>
+    </div>
+    <div class="grp">
+      <button class="btn" id="tToggle"></button>
+      <button class="btn" id="tReset" aria-label="{{presenter-page.reset|text}}"><svg class="icon"><use href="#i-rotate"/></svg></button>
+    </div>
+  </div>
+</div>
+
+<script>
+const D = {{DATA}};
+const $ = s => document.querySelector(s);
+const ico = id => `<svg class="icon"><use href="#${id}"/></svg>`;
+const fmt = s => { const a = Math.abs(Math.round(s)); return Math.floor(a / 60) + ':' + String(a % 60).padStart(2, '0'); };
+let sb = null, key = null, ctl = null, bc = null, cur = 0, linked = false;
+const seen = new Set();
+
+/* ---------- القفل ---------- */
+function waitSb(){ return new Promise(r => { const t = () => window.supabase ? r() : setTimeout(t, 150); t(); }); }
+async function tryKey(k){
+  await waitSb();
+  sb = sb || window.supabase.createClient(D.url, D.key, { auth: { persistSession: false } });
+  const { data } = await sb.rpc('aiws_verify', { p_room: D.room, p_secret: k });
+  return data === true;
+}
+async function unlock(k, silent){
+  const btn = $('#unlockBtn'); btn.disabled = true; btn.textContent = D.t.checking;
+  const ok = await tryKey(k).catch(() => false);
+  btn.disabled = false; btn.textContent = D.t.unlock;
+  if (!ok) { if (silent) localStorage.removeItem('aiws_key'); else $('#err').hidden = false; return; }
+  key = k; localStorage.setItem('aiws_key', k);
+  $('#lock').hidden = true; $('#app').hidden = false;
+  start();
+}
+$('#lockForm').onsubmit = e => { e.preventDefault(); $('#err').hidden = true; const v = $('#pw').value.trim(); if (v) unlock(v); };
+(function boot(){
+  const q = new URLSearchParams(location.search);
+  if (q.get('k')) { const k = q.get('k'); q.delete('k'); history.replaceState(null, '', location.pathname); unlock(k, true); return; }
+  const saved = localStorage.getItem('aiws_key');
+  if (saved) unlock(saved, true);
+})();
+
+/* ---------- العرض ---------- */
+$('#total').textContent = '/ ' + D.slides.length;
+function render(animate){
+  const s = D.slides[cur], n = D.slides[cur + 1];
+  $('#pos').textContent = cur + 1;
+  $('#nowTitle').textContent = s.title;
+  $('#nowNote').textContent = s.notes;
+  $('#nextTitle').textContent = n ? n.title : D.t.end;
+  $('#nextNote').textContent = n ? n.notes : '';
+  $('#planned').textContent = fmt(s.at);
+  $('#bar').style.width = ((cur + 1) / D.slides.length * 100) + '%';
+  $('#prev').disabled = cur === 0; $('#next').disabled = cur === D.slides.length - 1;
+  if (animate) for (const el of [$('#nowBox'), $('#nextBox')]) { el.classList.remove('swap'); void el.offsetWidth; el.classList.add('swap'); }
+  tick();
+}
+function setLinked(on){
+  linked = on; $('#link').classList.toggle('on', on);
+  $('#linkTxt').textContent = on ? D.t.linked : '';
+  $('#waiting').hidden = on;
+}
+
+/* ---------- المؤقّت ---------- */
+let t0 = Number(localStorage.getItem('aiws_t0')) || 0, paused = Number(localStorage.getItem('aiws_paused')) || 0;
+const running = () => t0 > 0 && !paused;
+const elapsed = () => !t0 ? 0 : ((paused || Date.now()) - t0) / 1000;
+function saveT(){ localStorage.setItem('aiws_t0', t0); localStorage.setItem('aiws_paused', paused); }
+function tick(){
+  const e = elapsed(), plan = D.slides[cur].at, end = plan + D.slides[cur].dur;
+  $('#elapsed').textContent = fmt(e);
+  const chip = $('#deltaChip');
+  let cls = 'ok', lbl = D.t.on_time, d = 0;
+  if (t0 && e > end) { cls = 'late'; lbl = D.t.late; d = e - end; }
+  else if (t0 && e < plan) { cls = 'early'; lbl = D.t.early; d = plan - e; }
+  chip.className = 'chip ' + cls; $('#deltaLbl').textContent = lbl; $('#delta').textContent = fmt(d);
+  $('#tToggle').innerHTML = running() ? ico('i-pause') + D.t.pause : ico('i-play') + D.t.start;
+}
+$('#tToggle').onclick = () => {
+  if (!t0) t0 = Date.now();
+  else if (paused) { t0 += Date.now() - paused; paused = 0; }
+  else paused = Date.now();
+  saveT(); tick();
+};
+$('#tReset').onclick = () => { t0 = 0; paused = 0; saveT(); tick(); };
+setInterval(tick, 1000);
+
+/* ---------- الربط بالعرض ---------- */
+async function sha(s){ const b = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(s)); return [...new Uint8Array(b)].map(x => x.toString(16).padStart(2, '0')).join(''); }
+function onMsg(m){
+  if (!m || seen.has(m.id)) return; seen.add(m.id);
+  if (m.t === 'slide' && Number.isInteger(m.i)) {
+    setLinked(true);
+    if (m.i !== cur) {
+      cur = Math.max(0, Math.min(D.slides.length - 1, m.i));
+      if (!t0 && cur > 0) { t0 = Date.now() - D.slides[cur].at * 1000; saveT(); }   // يبدأ المؤقّت تلقائيًا مع أول انتقال
+      render(true);
+    }
+  }
+}
+function send(m){ m.id = Math.random().toString(36).slice(2); seen.add(m.id); try { bc?.postMessage(m); } catch (e) {} ctl?.send({ type: 'broadcast', event: 'm', payload: m }); }
+async function start(){
+  render(false); setLinked(false);
+  const name = 'aiws-ctl-' + (await sha(key)).slice(0, 16);
+  try { bc = new BroadcastChannel(name); bc.onmessage = e => onMsg(e.data); } catch (e) {}
+  ctl = sb.channel(name, { config: { broadcast: { self: false } } });
+  ctl.on('broadcast', { event: 'm' }, ({ payload }) => onMsg(payload)).subscribe(st => { if (st === 'SUBSCRIBED') send({ t: 'hello' }); });
+  send({ t: 'hello' });
+  document.addEventListener('visibilitychange', () => { if (!document.hidden) send({ t: 'hello' }); });
+}
+function go(to){
+  if (linked) { send({ t: 'go', to }); return; }
+  cur = Math.max(0, Math.min(D.slides.length - 1, cur + (to === 'next' ? 1 : -1))); render(true);   // بلا عرض متصل: تصفح الملاحظات فقط
+}
+$('#next').onclick = () => go('next');
+$('#prev').onclick = () => go('prev');
+document.addEventListener('keydown', e => {
+  if ($('#app').hidden) return;
+  if (['ArrowLeft', 'PageDown', ' '].includes(e.key)) { e.preventDefault(); go('next'); }
+  else if (['ArrowRight', 'PageUp'].includes(e.key)) { e.preventDefault(); go('prev'); }
+});
+</script>
+</body>
+</html>

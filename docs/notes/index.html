@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<meta name="theme-color" content="#0f2f3e">
+<title>ملاحظات المقدّم</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0f2f3e; --panel:#15445a; --ink:#EAF3F4; --muted:#9DB7C0; --line:rgba(255,255,255,.12);
+  --green:#07a869; --teal:#0da9a6; --blue:#3d7eb9; --sand:#c1b489; --red:#e06a5e;
+  --grad:linear-gradient(115deg,#07a869 0%,#0da9a6 50%,#3d7eb9 100%);
+  --ease:cubic-bezier(.165,.84,.44,1);
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%}
+body{font-family:'Tajawal',system-ui,sans-serif;font-weight:400;font-size:18px;line-height:1.8;background:var(--bg);color:var(--ink);
+  padding:calc(env(safe-area-inset-top) + 14px) calc(env(safe-area-inset-right) + 18px) calc(env(safe-area-inset-bottom) + 14px) calc(env(safe-area-inset-left) + 18px)}
+h1,h2,h3,b,button{font-weight:500}
+button{font-family:inherit;cursor:pointer;touch-action:manipulation}
+[hidden]{display:none!important}
+.icon{width:1.2em;height:1.2em;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;flex:none;vertical-align:-.2em}
+
+/* القفل */
+.lock{min-height:calc(100dvh - 40px);display:grid;place-items:center}
+.lock-card{width:min(420px,100%);background:var(--panel);border:1px solid var(--line);border-radius:24px;padding:28px 24px;text-align:center;animation:in .5s var(--ease) both}
+@keyframes in{from{opacity:0;transform:translateY(14px)}}
+.lock-card .badge{width:64px;height:64px;border-radius:20px;display:grid;place-items:center;margin:0 auto 14px;background:var(--grad);font-size:1.6rem}
+.lock-card h1{font-size:1.4rem}
+.lock-card p{color:var(--muted);font-size:.95rem;margin:6px 0 16px}
+input{width:100%;font-family:inherit;font-size:17px;color:var(--ink);background:rgba(255,255,255,.06);border:1.5px solid var(--line);border-radius:14px;padding:12px 14px;outline:none;text-align:center;direction:ltr}
+input:focus{border-color:var(--teal)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:48px;padding:0 20px;border-radius:14px;border:1px solid var(--line);background:rgba(255,255,255,.06);color:var(--ink);font-size:1rem;transition:transform .12s var(--ease),background .15s}
+.btn:active{transform:scale(.97)}
+.btn.primary{background:var(--grad);border:0;color:#fff}
+.btn.full{width:100%;margin-top:12px}
+.btn:disabled{opacity:.4}
+.err{color:var(--red);font-size:.9rem;margin-top:10px}
+
+/* اللوحة */
+.app{max-width:1100px;margin:0 auto;min-height:calc(100dvh - 40px);display:grid;grid-template-rows:auto 1fr auto;gap:14px}
+.top{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.pos{display:flex;align-items:baseline;gap:10px}
+.pos b{font-size:2.2rem;line-height:1;font-variant-numeric:tabular-nums}
+.pos span{color:var(--muted)}
+.link{display:flex;align-items:center;gap:8px;font-size:.88rem;color:var(--muted)}
+.link .dot{width:9px;height:9px;border-radius:50%;background:#6d8793}
+.link.on .dot{background:#34d399;box-shadow:0 0 0 4px rgba(52,211,153,.2)}
+.clock{display:flex;gap:10px;flex-wrap:wrap}
+.chip{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:6px 14px;text-align:center;min-width:110px}
+.chip small{display:block;color:var(--muted);font-size:.74rem;line-height:1.3}
+.chip b{font-size:1.35rem;font-variant-numeric:tabular-nums;direction:ltr;display:block;line-height:1.4}
+.chip.late b{color:var(--red)} .chip.early b{color:#5eead4} .chip.ok b{color:#86efac}
+.bar{height:4px;border-radius:4px;background:rgba(255,255,255,.1);overflow:hidden}
+.bar i{display:block;height:100%;width:0;background:var(--grad);transition:width .6s var(--ease)}
+.main{display:grid;grid-template-columns:1.7fr 1fr;gap:14px;min-height:0}
+.now,.nextc{background:var(--panel);border:1px solid var(--line);border-radius:22px;padding:20px 22px;overflow:auto}
+.lbl{display:inline-flex;align-items:center;gap:8px;font-size:.82rem;color:#0f2f3e;background:var(--sand);padding:1px 12px;border-radius:999px;margin-bottom:8px}
+.nextc .lbl{background:rgba(255,255,255,.12);color:var(--muted)}
+.now h2{font-size:1.7rem;line-height:1.5;margin-bottom:10px}
+.now .note{font-size:1.5rem;line-height:1.9;font-weight:300;white-space:pre-wrap}
+.nextc h3{font-size:1.15rem;line-height:1.6;margin-bottom:6px}
+.nextc .note{color:var(--muted);font-size:1rem;white-space:pre-wrap}
+.swap{animation:swap .45s var(--ease) both}
+@keyframes swap{from{opacity:0;transform:translateY(10px)}}
+.foot{display:flex;gap:10px;justify-content:space-between;flex-wrap:wrap}
+.foot .grp{display:flex;gap:8px}
+.foot .nav{min-width:120px;min-height:56px;font-size:1.1rem}
+.waiting{color:var(--muted);font-size:.95rem;margin-top:8px}
+@media (max-width:760px){
+  body{font-size:17px}
+  .main{grid-template-columns:1fr}
+  .now .note{font-size:1.25rem}
+  .foot .nav{flex:1}
+  .foot .grp{flex:1}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.112.3/dist/umd/supabase.js" defer></script>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <linearGradient id="tg" x1="0" x2="1"><stop offset="0" stop-color="#07a869"/><stop offset="1" stop-color="#3d7eb9"/></linearGradient>
+    <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
+    <symbol id="i-layers" viewBox="0 0 24 24"><path d="M12 3 3 8l9 5 9-5-9-5z"/><path d="m3 13 9 5 9-5"/></symbol>
+    <symbol id="i-chart" viewBox="0 0 24 24"><path d="M4 20V11M10 20V5M16 20v-6M21 20H3"/></symbol>
+    <symbol id="i-users" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.5"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6"/><path d="M16 4.6a3.5 3.5 0 0 1 0 6.8M21 20c0-2.6-1.6-4.8-4-5.6"/></symbol>
+    <symbol id="i-target" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1"/></symbol>
+    <symbol id="i-calendar" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M3 10h18M8 3v4M16 3v4"/></symbol>
+    <symbol id="i-spark" viewBox="0 0 24 24"><path d="M11 3l1.9 5.1L18 10l-5.1 1.9L11 17l-1.9-5.1L4 10l5.1-1.9z"/><path d="M19 15l.8 2.2L22 18l-2.2.8L19 21l-.8-2.2L16 18l2.2-.8z"/></symbol>
+    <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 3l8 3v6c0 4.5-3.4 8.3-8 9-4.6-.7-8-4.5-8-9V6z"/><path d="m9 12 2 2 4-4"/></symbol>
+    <symbol id="i-lock" viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="10" rx="2.5"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></symbol>
+    <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></symbol>
+    <symbol id="i-book" viewBox="0 0 24 24"><path d="M3 5h6a3 3 0 0 1 3 3v12a2 2 0 0 0-2-2H3zM21 5h-6a3 3 0 0 0-3 3v12a2 2 0 0 1 2-2h7z"/></symbol>
+    <symbol id="i-pen" viewBox="0 0 24 24"><path d="M4 20h4L19 9l-4-4L4 16z"/><path d="m13.5 6.5 4 4"/></symbol>
+    <symbol id="i-msg" viewBox="0 0 24 24"><path d="M4 5h16v11H9l-5 4z"/><path d="M8 9h8M8 12h5"/></symbol>
+    <symbol id="i-refresh" viewBox="0 0 24 24"><path d="M20 12a8 8 0 1 1-2.3-5.7"/><path d="M20 4v5h-5"/></symbol>
+    <symbol id="i-clipboard" viewBox="0 0 24 24"><rect x="5" y="4" width="14" height="17" rx="2.5"/><rect x="9" y="2.5" width="6" height="3.5" rx="1"/><path d="M9 11h6M9 15h4"/></symbol>
+    <symbol id="i-copy" viewBox="0 0 24 24"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12 5 5 9-10"/></symbol>
+    <symbol id="i-check-circle" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="m8 12 3 3 5-6"/></symbol>
+    <symbol id="i-x-circle" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="m9 9 6 6M15 9l-6 6"/></symbol>
+    <symbol id="i-eye-off" viewBox="0 0 24 24"><path d="M3 3l18 18"/><path d="M10.6 5.1A9.8 9.8 0 0 1 12 5c5 0 9 5 9 7a9.3 9.3 0 0 1-2.3 3.2M6.3 6.3C4.3 7.7 3 10.3 3 12c0 2 4 7 9 7a9 9 0 0 0 4.2-1"/><path d="M9.9 9.9a3 3 0 0 0 4.2 4.2"/></symbol>
+    <symbol id="i-flask" viewBox="0 0 24 24"><path d="M9 3h6M10 3v6l-5.5 9.5A1.7 1.7 0 0 0 6 21h12a1.7 1.7 0 0 0 1.5-2.5L14 9V3"/><path d="M7.5 15h9"/></symbol>
+    <symbol id="i-sigma" viewBox="0 0 24 24"><path d="M18 5H6l6 7-6 7h12"/></symbol>
+    <symbol id="i-feather" viewBox="0 0 24 24"><path d="M20 4c-7 0-12 5-12 12v4"/><path d="M8 16c5 0 9-2 11-7M8 12h6"/></symbol>
+    <symbol id="i-play" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></symbol>
+    <symbol id="i-pause" viewBox="0 0 24 24"><path d="M9 5v14M15 5v14"/></symbol>
+    <symbol id="i-rotate" viewBox="0 0 24 24"><path d="M4 12a8 8 0 1 0 2.3-5.7"/><path d="M4 4v5h5"/></symbol>
+    <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+    <symbol id="i-max" viewBox="0 0 24 24"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></symbol>
+    <symbol id="i-bulb" viewBox="0 0 24 24"><path d="M9 18h6M10 21h4"/><path d="M12 3a6 6 0 0 0-3.5 10.9c.6.5 1 1.2 1 2.1h5c0-.9.4-1.6 1-2.1A6 6 0 0 0 12 3z"/></symbol>
+    <symbol id="i-flag" viewBox="0 0 24 24"><path d="M5 21V4M5 4h12l-2.5 4L17 12H5"/></symbol>
+    <symbol id="i-alert" viewBox="0 0 24 24"><path d="M12 4l9 16H3z"/><path d="M12 10v4M12 17h.01"/></symbol>
+    <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M17 7 7 17M16 17H7V8"/></symbol>
+    <symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-8 8-8s8 3.6 8 8"/></symbol>
+    <symbol id="i-grad" viewBox="0 0 24 24"><path d="M2 9l10-5 10 5-10 5z"/><path d="M6 11v5c0 1.5 2.7 3 6 3s6-1.5 6-3v-5M22 9v5"/></symbol>
+    <symbol id="i-award" viewBox="0 0 24 24"><circle cx="12" cy="9" r="6"/><path d="M8.5 14 7 22l5-3 5 3-1.5-8"/></symbol>
+    <symbol id="i-qr" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><path d="M14 14h3v3h-3zM20 14v.01M14 20h.01M17 20h4v-3"/></symbol>
+    <symbol id="i-school" viewBox="0 0 24 24"><path d="M3 21h18M5 21V10l7-5 7 5v11"/><path d="M10 21v-5h4v5"/></symbol>
+    <symbol id="i-mic" viewBox="0 0 24 24"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></symbol>
+    <symbol id="i-vote" viewBox="0 0 24 24"><path d="M9 12l2 2 4-4"/><rect x="4" y="4" width="16" height="16" rx="3"/></symbol>
+    <symbol id="i-chip" viewBox="0 0 24 24"><rect x="6" y="6" width="12" height="12" rx="2"/><path d="M9 2v4M15 2v4M9 18v4M15 18v4M2 9h4M2 15h4M18 9h4M18 15h4"/><rect x="10" y="10" width="4" height="4"/></symbol>
+    <symbol id="i-phone" viewBox="0 0 24 24"><rect x="6" y="2.5" width="12" height="19" rx="3"/><path d="M11 18h2"/></symbol>
+    <symbol id="i-send" viewBox="0 0 24 24"><path d="M21 3 10 14"/><path d="M21 3 14 21l-4-7-7-4z"/></symbol>
+    <symbol id="i-wifi" viewBox="0 0 24 24"><path d="M2 8.5a15 15 0 0 1 20 0M5 12a10 10 0 0 1 14 0M8.5 15.5a5 5 0 0 1 7 0"/><path d="M12 19h.01"/></symbol>
+    <symbol id="i-image" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="3"/><circle cx="9" cy="10" r="2"/><path d="m21 16-5-5-9 9"/></symbol>
+    <symbol id="i-layout" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="3"/><path d="M3 9h18M9 9v11"/></symbol>
+    <symbol id="i-link" viewBox="0 0 24 24"><path d="M10 14a4.5 4.5 0 0 0 6.4 0l3-3a4.5 4.5 0 0 0-6.4-6.4l-1 1"/><path d="M14 10a4.5 4.5 0 0 0-6.4 0l-3 3a4.5 4.5 0 0 0 6.4 6.4l1-1"/></symbol>
+    <symbol id="i-x" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></symbol>
+    <symbol id="i-cloud" viewBox="0 0 24 24"><path d="M7 18h10a4 4 0 0 0 .6-8A6 6 0 0 0 6 9.5 4.3 4.3 0 0 0 7 18z"/></symbol>
+    <symbol id="i-trophy" viewBox="0 0 24 24"><path d="M8 4h8v5a4 4 0 0 1-8 0z"/><path d="M8 6H5a3 3 0 0 0 3 4M16 6h3a3 3 0 0 1-3 4M12 13v4M8 21h8M9 17h6"/></symbol>
+    <symbol id="i-next" viewBox="0 0 24 24"><path d="M15 6l-6 6 6 6"/></symbol>
+    <symbol id="i-prev" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></symbol>
+  </defs>
+</svg>
+
+
+<!-- القفل -->
+<div class="lock" id="lock">
+  <form class="lock-card" id="lockForm">
+    <div class="badge"><svg class="icon"><use href="#i-lock"/></svg></div>
+    <h1>ملاحظات المقدّم</h1>
+    <p>هذه الصفحة لمقدّم ورشة العمل. أدخل كلمة السر لفتحها.</p>
+    <input id="pw" type="password" autocomplete="current-password" placeholder="كلمة السر">
+    <button class="btn primary full" id="unlockBtn" type="submit">فتح</button>
+    <div class="err" id="err" hidden>كلمة السر غير صحيحة.</div>
+  </form>
+</div>
+
+<!-- اللوحة -->
+<div class="app" id="app" hidden>
+  <div>
+    <div class="top">
+      <div class="pos"><b id="pos">1</b><span id="total"></span><div class="link" id="link"><span class="dot"></span><span id="linkTxt"></span></div></div>
+      <div class="clock">
+        <div class="chip"><small>الموعد المخطط للشريحة</small><b id="planned">0:00</b></div>
+        <div class="chip" id="elapsedChip"><small>الوقت المنقضي</small><b id="elapsed">0:00</b></div>
+        <div class="chip" id="deltaChip"><small id="deltaLbl">في الوقت</small><b id="delta">0:00</b></div>
+      </div>
+    </div>
+    <div class="bar" style="margin-top:12px"><i id="bar"></i></div>
+  </div>
+
+  <div class="main">
+    <section class="now" id="nowBox"><span class="lbl">الشريحة الحالية</span><h2 id="nowTitle"></h2><div class="note" id="nowNote"></div><p class="waiting" id="waiting">بانتظار العرض. افتح العرض بوضع المقدّم على شاشة العرض.</p></section>
+    <section class="nextc" id="nextBox"><span class="lbl">التالية</span><h3 id="nextTitle"></h3><div class="note" id="nextNote"></div></section>
+  </div>
+
+  <div class="foot">
+    <div class="grp">
+      <button class="btn nav" id="prev"><svg class="icon"><use href="#i-prev"/></svg>السابق</button>
+      <button class="btn primary nav" id="next">التالي<svg class="icon"><use href="#i-next"/></svg></button>
+    </div>
+    <div class="grp">
+      <button class="btn" id="tToggle"></button>
+      <button class="btn" id="tReset" aria-label="تصفير المؤقت"><svg class="icon"><use href="#i-rotate"/></svg></button>
+    </div>
+  </div>
+</div>
+
+<script>
+const D = {"url":"https://dqedhfwaquqaddbtfvtx.supabase.co","key":"sb_publishable_zROcySsWThanD_me0Dq8dw_tGAHzGKk","room":"hs7-ai","slides":[{"id":"s-title","title":"الذكاء الاصطناعي في خدمة المعلم والمعلمة","notes":"رحّب بالحضور، ثم انتقل إلى شريحة الشراكة.","at":0,"dur":30},{"id":"s-partners","title":"هذا اللقاء يُقدَّم بناءً على الشراكة المجتمعية لشركة يافع المستقبل للبحث والتطوير مع:","notes":"اشكر المدرستين ومديرتيهما على الاستضافة والتنسيق، ثم انتقل إلى التعريف بمقدّم ورشة العمل.","at":30,"dur":30},{"id":"s-trainer","title":"أيمن صالح البريدي","notes":"عرّف بنفسك في دقيقة واحدة.","at":60,"dur":60},{"id":"s-join","title":"رمز الانضمام بكاميرا الجوال","notes":"انتظر حتى يظهر عداد المتصلات، ثم انتقل إلى الاستطلاع.","at":120,"dur":90},{"id":"s-poll1","title":"ما المهمة التي تأخذ أكثر وقتك كل أسبوع؟","notes":"علّق على الخيار الأعلى: هذه المهمة التي سنختصر وقتها اليوم.","at":210,"dur":90},{"id":"s-word","title":"ما أول كلمة تخطر ببالك عند سماع \"الذكاء الاصطناعي في التعليم\"؟","notes":"علّق على الكلمات الأكبر، واربطها بما ستقدّمه ورشة العمل.","at":300,"dur":60},{"id":"s-why","title":"ماذا يقدّم لك الذكاء الاصطناعي في عملك اليومي؟","notes":"الأداة تختصر المهام المتكررة، والمعلمة تبقى صاحبة القرار.","at":360,"dur":90},{"id":"s-goals","title":"بنهاية ورشة العمل","notes":"اقرأ الأهداف بسرعة، وأشر إلى أن الهدف الرابع يتحقق في النشاط التطبيقي.","at":450,"dur":30},{"id":"s-agenda","title":"40 دقيقة، نصفها تطبيق ومشاركة من الجوال","notes":"خطة الاختصار إلى 30 دقيقة في WORKSHOP-GUIDE.md.","at":480,"dur":30},{"id":"s-formula","title":"معادلة الأمر الفعّال","notes":"اضغط كل عنصر ليظهر موضعه في المثال، ثم قارن الأمرين.","at":510,"dur":120},{"id":"s-stage","title":"الأمر نفسه، ومرحلتان مختلفتان","notes":"الأمر نفسه تغيّر فيه الصف فقط. اقرأ سطرًا من كل عمود، ثم مرّ على جدول الفروق.","at":630,"dur":150},{"id":"s-plan","title":"خطة درس في أقل من دقيقة","notes":"اختر المادة الأقرب للحضور. نبّه إلى أن الناتج مسودة تراجعها المعلمة وتعدّلها.","at":780,"dur":150},{"id":"s-quiz","title":"أسئلة متدرجة ببدائل تكشف الخطأ الشائع","notes":"اطلب من الحضور الإجابة قبل إظهار الحل، وركّز على البدائل المبنية على الأخطاء الشائعة.","at":930,"dur":120},{"id":"s-more","title":"التغذية الراجعة وتبسيط النص","notes":"مثالان سريعان. اضغط زر التبديل لإظهار النص المبسّط.","at":1050,"dur":90},{"id":"s-ethics","title":"أربع قواعد قبل البدء","notes":"لا بيانات طالبات، ولا اعتماد على المخرج دون مراجعة.","at":1140,"dur":60},{"id":"s-activity","title":"نشاط تطبيقي: منتجك الأول","notes":"شغّل المؤقت وساعد المتعثرات. بعده انتقل إلى جدار المشاركات.","at":1200,"dur":390},{"id":"s-prompts","title":"أوامر جاهزة","notes":"الأوامر نفسها موجودة في صفحة الجوال بزر نسخ، فلا حاجة لكتابتها.","at":1590,"dur":30},{"id":"s-challenge","title":"صورة أو صفحة بالذكاء الاصطناعي، إلى جدار الإبداعات","notes":"شغّل المؤقت. من تنتهي أولًا تظهر صورتها في الجدار مباشرة، فاعرضها لتحفيز البقية.","at":1620,"dur":420},{"id":"s-wall","title":"إبداعات المتدربات","notes":"اضغط أي بطاقة لعرضها كاملة. زر الإخفاء يظهر عند تمرير المؤشر على البطاقة.","at":2040,"dur":180},{"id":"s-poll2","title":"ما أول استخدام للتجربة هذا الأسبوع؟","notes":"علّق على النتيجة، ثم انتقل إلى الخاتمة.","at":2220,"dur":90},{"id":"s-close","title":"الخاتمة","notes":"اختم بدعوة الحضور إلى تجربة أمر واحد هذا الأسبوع، ثم اعرض رمز التواصل.","at":2310,"dur":90}],"t":{"page_title":"ملاحظات المقدّم","lock_title":"ملاحظات المقدّم","lock_hint":"هذه الصفحة لمقدّم ورشة العمل. أدخل كلمة السر لفتحها.","password_placeholder":"كلمة السر","unlock":"فتح","wrong":"كلمة السر غير صحيحة.","checking":"جارٍ التحقق","now":"الشريحة الحالية","next":"التالية","end":"نهاية العرض","elapsed":"الوقت المنقضي","planned":"الموعد المخطط للشريحة","on_time":"في الوقت","late":"متأخر","early":"متقدم","start":"بدء المؤقت","pause":"إيقاف","reset":"تصفير المؤقت","prev_btn":"السابق","next_btn":"التالي","linked":"متصل بالعرض","waiting":"بانتظار العرض. افتح العرض بوضع المقدّم على شاشة العرض."}};
+const $ = s => document.querySelector(s);
+const ico = id => `<svg class="icon"><use href="#${id}"/></svg>`;
+const fmt = s => { const a = Math.abs(Math.round(s)); return Math.floor(a / 60) + ':' + String(a % 60).padStart(2, '0'); };
+let sb = null, key = null, ctl = null, bc = null, cur = 0, linked = false;
+const seen = new Set();
+
+/* ---------- القفل ---------- */
+function waitSb(){ return new Promise(r => { const t = () => window.supabase ? r() : setTimeout(t, 150); t(); }); }
+async function tryKey(k){
+  await waitSb();
+  sb = sb || window.supabase.createClient(D.url, D.key, { auth: { persistSession: false } });
+  const { data } = await sb.rpc('aiws_verify', { p_room: D.room, p_secret: k });
+  return data === true;
+}
+async function unlock(k, silent){
+  const btn = $('#unlockBtn'); btn.disabled = true; btn.textContent = D.t.checking;
+  const ok = await tryKey(k).catch(() => false);
+  btn.disabled = false; btn.textContent = D.t.unlock;
+  if (!ok) { if (silent) localStorage.removeItem('aiws_key'); else $('#err').hidden = false; return; }
+  key = k; localStorage.setItem('aiws_key', k);
+  $('#lock').hidden = true; $('#app').hidden = false;
+  start();
+}
+$('#lockForm').onsubmit = e => { e.preventDefault(); $('#err').hidden = true; const v = $('#pw').value.trim(); if (v) unlock(v); };
+(function boot(){
+  const q = new URLSearchParams(location.search);
+  if (q.get('k')) { const k = q.get('k'); q.delete('k'); history.replaceState(null, '', location.pathname); unlock(k, true); return; }
+  const saved = localStorage.getItem('aiws_key');
+  if (saved) unlock(saved, true);
+})();
+
+/* ---------- العرض ---------- */
+$('#total').textContent = '/ ' + D.slides.length;
+function render(animate){
+  const s = D.slides[cur], n = D.slides[cur + 1];
+  $('#pos').textContent = cur + 1;
+  $('#nowTitle').textContent = s.title;
+  $('#nowNote').textContent = s.notes;
+  $('#nextTitle').textContent = n ? n.title : D.t.end;
+  $('#nextNote').textContent = n ? n.notes : '';
+  $('#planned').textContent = fmt(s.at);
+  $('#bar').style.width = ((cur + 1) / D.slides.length * 100) + '%';
+  $('#prev').disabled = cur === 0; $('#next').disabled = cur === D.slides.length - 1;
+  if (animate) for (const el of [$('#nowBox'), $('#nextBox')]) { el.classList.remove('swap'); void el.offsetWidth; el.classList.add('swap'); }
+  tick();
+}
+function setLinked(on){
+  linked = on; $('#link').classList.toggle('on', on);
+  $('#linkTxt').textContent = on ? D.t.linked : '';
+  $('#waiting').hidden = on;
+}
+
+/* ---------- المؤقّت ---------- */
+let t0 = Number(localStorage.getItem('aiws_t0')) || 0, paused = Number(localStorage.getItem('aiws_paused')) || 0;
+const running = () => t0 > 0 && !paused;
+const elapsed = () => !t0 ? 0 : ((paused || Date.now()) - t0) / 1000;
+function saveT(){ localStorage.setItem('aiws_t0', t0); localStorage.setItem('aiws_paused', paused); }
+function tick(){
+  const e = elapsed(), plan = D.slides[cur].at, end = plan + D.slides[cur].dur;
+  $('#elapsed').textContent = fmt(e);
+  const chip = $('#deltaChip');
+  let cls = 'ok', lbl = D.t.on_time, d = 0;
+  if (t0 && e > end) { cls = 'late'; lbl = D.t.late; d = e - end; }
+  else if (t0 && e < plan) { cls = 'early'; lbl = D.t.early; d = plan - e; }
+  chip.className = 'chip ' + cls; $('#deltaLbl').textContent = lbl; $('#delta').textContent = fmt(d);
+  $('#tToggle').innerHTML = running() ? ico('i-pause') + D.t.pause : ico('i-play') + D.t.start;
+}
+$('#tToggle').onclick = () => {
+  if (!t0) t0 = Date.now();
+  else if (paused) { t0 += Date.now() - paused; paused = 0; }
+  else paused = Date.now();
+  saveT(); tick();
+};
+$('#tReset').onclick = () => { t0 = 0; paused = 0; saveT(); tick(); };
+setInterval(tick, 1000);
+
+/* ---------- الربط بالعرض ---------- */
+async function sha(s){ const b = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(s)); return [...new Uint8Array(b)].map(x => x.toString(16).padStart(2, '0')).join(''); }
+function onMsg(m){
+  if (!m || seen.has(m.id)) return; seen.add(m.id);
+  if (m.t === 'slide' && Number.isInteger(m.i)) {
+    setLinked(true);
+    if (m.i !== cur) {
+      cur = Math.max(0, Math.min(D.slides.length - 1, m.i));
+      if (!t0 && cur > 0) { t0 = Date.now() - D.slides[cur].at * 1000; saveT(); }   // يبدأ المؤقّت تلقائيًا مع أول انتقال
+      render(true);
+    }
+  }
+}
+function send(m){ m.id = Math.random().toString(36).slice(2); seen.add(m.id); try { bc?.postMessage(m); } catch (e) {} ctl?.send({ type: 'broadcast', event: 'm', payload: m }); }
+async function start(){
+  render(false); setLinked(false);
+  const name = 'aiws-ctl-' + (await sha(key)).slice(0, 16);
+  try { bc = new BroadcastChannel(name); bc.onmessage = e => onMsg(e.data); } catch (e) {}
+  ctl = sb.channel(name, { config: { broadcast: { self: false } } });
+  ctl.on('broadcast', { event: 'm' }, ({ payload }) => onMsg(payload)).subscribe(st => { if (st === 'SUBSCRIBED') send({ t: 'hello' }); });
+  send({ t: 'hello' });
+  document.addEventListener('visibilitychange', () => { if (!document.hidden) send({ t: 'hello' }); });
+}
+function go(to){
+  if (linked) { send({ t: 'go', to }); return; }
+  cur = Math.max(0, Math.min(D.slides.length - 1, cur + (to === 'next' ? 1 : -1))); render(true);   // بلا عرض متصل: تصفح الملاحظات فقط
+}
+$('#next').onclick = () => go('next');
+$('#prev').onclick = () => go('prev');
+document.addEventListener('keydown', e => {
+  if ($('#app').hidden) return;
+  if (['ArrowLeft', 'PageDown', ' '].includes(e.key)) { e.preventDefault(); go('next'); }
+  else if (['ArrowRight', 'PageUp'].includes(e.key)) { e.preventDefault(); go('prev'); }
+});
+</script>
+</body>
+</html>

@@ -138,9 +138,26 @@ fs.mkdirSync(path.join(out, 'join'), { recursive: true });
 for (const f of fs.readdirSync(path.join(root, 'src/assets'))) fs.copyFileSync(path.join(root, 'src/assets', f), path.join(out, 'assets', f));
 fs.writeFileSync(path.join(out, 'assets/join-qr.svg'),
   await QRCode.toString(joinUrl, { type: 'svg', errorCorrectionLevel: 'M', margin: 1, color: { dark: '#15445a', light: '#ffffff' } }));
-fs.writeFileSync(path.join(out, 'index.html'), render(read('src/deck.html'), deckData));
+const deckHtml = render(read('src/deck.html'), deckData);
+fs.writeFileSync(path.join(out, 'index.html'), deckHtml);
+
+/* ---------- صفحة ملاحظات المقدّم: الشرائح بترتيبها من العرض نفسه ---------- */
+const strip = h => h.replace(/<br\s*\/?>/g, ' ').replace(/<[^>]+>/g, '').replace(/&quot;/g, '"').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&amp;/g, '&').replace(/\s+/g, ' ').trim();
+const sched = Object.fromEntries(items(get('presenter-page.schedule')).map(([id, t]) => { const [m, sec] = t.split(':').map(Number); return [id, m * 60 + (sec || 0)]; }));
+let at = 0;
+const slideList = [...deckHtml.matchAll(/<section class="slide" id="([^"]+)"[^>]*data-notes="([^"]*)"[^>]*>([\s\S]*?)<\/section>/g)].map(m => {
+  const t = m[3].match(/class="[^"]*\bsplit\b[^"]*">([\s\S]*?)<\/(?:h1|h2|p)>/) || m[3].match(/class="kicker[^"]*">([\s\S]*?)<\/span>/);
+  if (sched[m[1]] === undefined) console.warn('⚠ لا مدة للشريحة في presenter-page.schedule:', m[1]);
+  const dur = sched[m[1]] ?? 60, o = { id: m[1], title: t ? strip(t[1]) : m[1], notes: strip(m[2]), at, dur };
+  at += dur; return o;
+});
+const notesData = { url: cfg.supabaseUrl, key: cfg.supabaseKey, room: cfg.room, slides: slideList,
+  t: Object.fromEntries(Object.entries(C['presenter-page']).filter(([k]) => k !== 'schedule').map(([k, v]) => [k, plain(v)])) };
+fs.mkdirSync(path.join(out, 'notes'), { recursive: true });
+fs.writeFileSync(path.join(out, 'notes/index.html'), render(read('src/notes.html'), notesData));
 fs.writeFileSync(path.join(out, 'join/index.html'), render(read('src/join.html'), joinData));
 fs.writeFileSync(path.join(out, '.nojekyll'), '');
 console.log('✓ تم البناء في docs/');
 console.log('  العرض:', cfg.siteUrl);
 console.log('  رابط المتدربات:', joinUrl);
+console.log('  ملاحظات المقدّم:', new URL('notes/', cfg.siteUrl).href, `(${slideList.length} شريحة، ${Math.round(at / 60)} دقيقة)`);
