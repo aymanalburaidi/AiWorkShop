@@ -582,7 +582,7 @@ body.presenter .hand{pointer-events:auto;cursor:pointer}
 /* ========== نسخة المشاهدة داخل صفحة المتدربة (?view): لا تحكم فيها ========== */
 body.viewer{pointer-events:none;user-select:none;-webkit-user-select:none}
 body.viewer #prevBtn,body.viewer #nextBtn,body.viewer #fsBtn,body.viewer .post .hide{visibility:hidden}
-body.viewer .toast{display:none}
+body.viewer .toast,body.viewer .roster-tab{display:none}   /* زر لوحة المتدربات للمقدّم وحده؛ اللوحة نفسها تُفتح إن فتحها */
 
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
