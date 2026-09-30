@@ -98,6 +98,16 @@ details.prompt p{padding:0 14px 12px;white-space:pre-wrap;font-size:.95rem;line-
 details.prompt .btn{margin:0 14px 14px;min-height:44px;font-size:.95rem;background:var(--teal)}
 .contact .btn{width:100%;background:var(--grad)}
 .site-foot{text-align:center;color:var(--muted);font-size:.82rem;padding:6px 0 0}
+/* العرض المباشر: نسخة حية من شاشة المقدّم، تُرسم بمقاس 1536×864 ثم تُصغّر (أصغر مقاس تتسع له كل الشرائح) */
+.stage{position:sticky;top:calc(env(safe-area-inset-top) + 6px);z-index:30;background:#fff;border:1px solid var(--line);border-radius:18px;box-shadow:0 14px 30px -18px rgba(21,68,90,.45);overflow:hidden}
+.stage-box{position:relative;aspect-ratio:16/9;background:#EEF4F4;overflow:hidden}
+.stage-box iframe{position:absolute;top:0;left:0;width:1536px;height:864px;border:0;transform-origin:0 0;pointer-events:none}
+.stage-bar{display:flex;align-items:center;gap:8px;padding:5px 10px;font-size:.8rem;color:var(--muted)}
+.stage-live{display:inline-flex;align-items:center;gap:6px;color:var(--ink);font-weight:500}
+.stage-live i{width:8px;height:8px;border-radius:50%;background:#e5484d;animation:blink 1.4s infinite}
+.stage-hint{flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.stage-bar button{border:0;background:#EEF4F4;color:var(--ink);border-radius:999px;padding:0 12px;min-height:32px;font-size:.8rem;font-family:inherit}
+body:not(.watch) .stage-hint,body:not(.watch) .stage-live i{display:none}
 /* شريط التفاعل اللحظي: ظاهر دائمًا أسفل الصفحة */
 .rbar{position:fixed;z-index:50;left:0;right:0;bottom:0;display:flex;justify-content:center;gap:8px;padding:8px calc(env(safe-area-inset-right) + 12px) calc(env(safe-area-inset-bottom) + 8px) calc(env(safe-area-inset-left) + 12px);background:rgba(255,255,255,.92);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);border-top:1px solid var(--line)}
 .rbtn{position:relative;flex:1;max-width:180px;min-height:58px;display:grid;justify-items:center;align-content:center;gap:1px;border-radius:16px;border:1.5px solid var(--line);background:#fff;color:var(--ink);font-size:.84rem;line-height:1.4;transition:transform .12s var(--ease),background .2s,border-color .2s,color .2s}
@@ -130,6 +140,27 @@ details.prompt .btn{margin:0 14px 14px;min-height:44px;font-size:.95rem;backgrou
 .toast{position:fixed;z-index:70;top:calc(env(safe-area-inset-top) + 12px);right:16px;left:16px;max-width:528px;margin:0 auto;background:var(--green);color:#fff;padding:12px 16px;border-radius:14px;box-shadow:0 12px 30px -10px rgba(0,0,0,.35);transform:translateY(-160%);transition:transform .3s var(--ease);text-align:center}
 .toast.err{background:#b42318}
 .toast.on{transform:none}
+/* الجوال أفقيًا: العرض يملأ الشاشة، والأزرار عمود شفاف على طرفها، والتصويت فوق العرض */
+@media (orientation:landscape) and (max-height:560px){
+  body.watch{padding:0;overflow:hidden;background:#0b2230}
+  body.watch .wrap>*:not(.stage):not(#liveSlot){display:none!important}
+  body.watch .stage{position:fixed;inset:0;z-index:40;display:grid;place-items:center;border:0;border-radius:0;box-shadow:none;background:#0b2230}
+  body.watch .stage-box{width:min(100vw,calc(100dvh * 16 / 9));border-radius:0}
+  body.watch .stage-bar{display:none}
+  body.watch #liveSlot{position:fixed;z-index:48;left:calc(env(safe-area-inset-left) + 78px);bottom:10px;width:min(340px,44vw);max-height:calc(100dvh - 20px);overflow:auto}
+  body.watch #liveSlot .card{padding:12px;background:rgba(255,255,255,.94)}
+  /* الأسئلة والخيارات ظاهرة على الشريحة نفسها، فيكفي هنا أرقام الخيارات */
+  body.watch #liveSlot h2{display:none}
+  body.watch #liveSlot .pulse{margin-bottom:6px}
+  body.watch #liveSlot .opts{grid-template-columns:repeat(auto-fit,minmax(52px,1fr));gap:8px}
+  body.watch #liveSlot .opt{min-height:48px;justify-content:center;padding:4px}
+  body.watch #liveSlot .opt>span:not(.n){display:none}
+  body.watch #liveSlot .done-msg{margin-top:6px;font-size:.85rem}
+  body.watch .rbar{left:calc(env(safe-area-inset-left) + 10px);right:auto;top:50%;bottom:auto;transform:translateY(-50%);flex-direction:column;gap:10px;padding:0;background:none;border:0;-webkit-backdrop-filter:none;backdrop-filter:none}
+  body.watch .rbtn{flex:none;width:56px;min-height:56px;opacity:.5;background:rgba(255,255,255,.3);border-color:rgba(255,255,255,.4);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
+  body.watch .rbtn span{display:none}
+  body.watch .rbtn:active,body.watch .rbtn.pop,body.watch .rbtn.hand[aria-pressed="true"]{opacity:.95}
+}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.112.3/dist/umd/supabase.js" defer></script>
@@ -203,6 +234,12 @@ details.prompt .btn{margin:0 14px 14px;min-height:44px;font-size:.95rem;backgrou
     <img class="yafea" src="../assets/yafea-logo.png" alt="يافع المستقبل">
   </header>
 
+  <!-- العرض المباشر: يتبع شريحة المقدّم ونقراته، والصوت من زوم -->
+  <section class="stage" id="stage">
+    <div class="stage-box" id="stageBox"><iframe id="stageFrame" title="العرض المباشر" tabindex="-1"></iframe></div>
+    <div class="stage-bar"><span class="stage-live"><i></i>العرض المباشر</span><span class="stage-hint">تدوير الجوال يكبّر العرض</span><button type="button" id="stageToggle"></button></div>
+  </section>
+
   <section class="hero">
     <small>ورشة عمل</small>
     <h1>الذكاء الاصطناعي في خدمة المعلم والمعلمة</h1>
@@ -271,7 +308,7 @@ details.prompt .btn{margin:0 14px 14px;min-height:44px;font-size:.95rem;backgrou
 <div class="toast" id="toast"></div>
 
 <script>
-const D = {"url":"https://dqedhfwaquqaddbtfvtx.supabase.co","key":"sb_publishable_zROcySsWThanD_me0Dq8dw_tGAHzGKk","room":"hs7-ai","joinUrl":"https://aymanalburaidi.github.io/AiWorkShop/join/","bucket":"aiws-uploads","polls":{"p1":{"question":"ما المهمة التي تأخذ أكثر وقتك كل أسبوع؟","options":["تحضير الدروس وتخطيطها","إعداد الأسئلة والاختبارات","التصحيح وكتابة التغذية الراجعة","تكييف المحتوى لمستويات الطالبات"]},"p2":{"question":"ما أول استخدام للتجربة هذا الأسبوع؟","options":["تخطيط درس","إعداد اختبار قصير","كتابة تغذية راجعة","تبسيط نص لطالباتي"]}},"schools":[{"key":"p16","name":"الابتدائية السادسة عشر","color":"#7258a4"},{"key":"s7","name":"الثانوية السابعة","color":"#0a8f8c"}],"prompts":[{"title":"تخطيط درس","text":"أنت معلم [اسم المادة] خبير في [المرحلة: الابتدائية أو الثانوية]، أعدّ خطة درس لموضوع [اسم الموضوع] لطالبات [الصف]، مدة الحصة [45] دقيقة، تتضمّن: 3 أهداف قابلة للقياس، وتهيئة من واقع الطالبة، وخطوات الشرح، ونشاطًا تعاونيًا، وتقويمًا ختاميًا من 3 أسئلة، وواجبًا قصيرًا، واعرضها في جدول مع زمن كل مرحلة.","icon":"clipboard","g":"share"},{"title":"اختبار قصير","text":"أعدّ اختبارًا قصيرًا في موضوع [اسم الموضوع] لمادة [اسم المادة]، [الصف]، من [5] أسئلة اختيار من متعدد وسؤالين مقاليين قصيرين، بمستويات متدرجة (تذكّر، فهم، تطبيق، تفكير عليا)، واجعل البدائل الخاطئة من أخطاء الطالبات الشائعة، وأضف مفتاح الإجابة مع تعليل مختصر لكل إجابة.","icon":"chart","g":"share"},{"title":"تغذية راجعة","text":"هذه إجابة طالبة (دون اسمها) عن السؤال: [نص السؤال]، والإجابة: [إجابة الطالبة]، فاكتب لها تغذية راجعة في 3 أسطر: نقطة قوة، وخطأ واحد مع توضيحه، وخطوة عملية للتحسين، بلغة مشجعة تناسب طالبة [الصف].","icon":"msg","g":"share"},{"title":"تبسيط نص","text":"بسّط الفقرة الآتية لطالبة في [الصف] تجد صعوبة في مادة [اسم المادة]، مع الحفاظ على الدقة العلمية، واستخدم جملًا قصيرة ومثالًا من الحياة اليومية، ثم أضف سؤالين للتحقق من الفهم، وهذه هي الفقرة: [الصق النص هنا]","icon":"refresh","g":"share"},{"title":"صورة توضيحية لدرسك","text":"ارسم صورة توضيحية ملونة بأسلوب رسوم تعليمية مبسطة لطالبات [الصف]، تشرح مفهوم [اسم المفهوم] في مادة [اسم المادة]، وأضف عناصر بصرية تساعد على الفهم، واجعل الخلفية بسيطة، ولا تضع نصوصًا طويلة داخل الصورة.","icon":"image","g":"create"},{"title":"صفحة تفاعلية لطالباتك","text":"أنشئ صفحة ويب تفاعلية باللغة العربية (من اليمين إلى اليسار) لمراجعة درس [اسم الدرس] في مادة [اسم المادة] لطالبات [الصف]، تحتوي على [8] بطاقات تنقلب عند الضغط لتظهر الإجابة، واختبار قصير من [5] أسئلة يعرض الدرجة في النهاية، واجعل التصميم بألوان هادئة ومناسبًا للجوال.","icon":"layout","g":"create"}],"t":{"page_title":"المشاركة في ورشة العمل","name_title":"أهلًا بك في ورشة العمل","name_text":"الاسم الثلاثي والمدرسة مرة واحدة فقط ويحفظهما الجوال، ويظهران مع المشاركات على الشاشة.","name_placeholder":"مثال: نورة عبدالله الشمري","name_error":"الاسم الثلاثي كاملًا مطلوب (ثلاث كلمات على الأقل).","school_label":"المدرسة","school_error":"اختيار المدرسة مطلوب.","name_button":"دخول","hello":"مرحبًا","change_name":"تعديل","welcome_title":"الصفحة مفتوحة طوال ورشة العمل","welcome_text":"عندما يبدأ التصويت أو نشاط جديد يظهر هنا تلقائيًا.","poll_now":"تصويت الآن","poll_done":"سجّلنا صوتك، والنتيجة على الشاشة الآن.","share_title":"مشاركة جديدة","share_hint":"الأمر المجرَّب أو النتيجة كاملة مهما طالت، وتظهر المشاركة على الشاشة أمام الجميع.","create_title":"تحدّي الإبداع: رفع العمل","create_hint":"صورة من صنعك أو رابط صفحتك، مع وصف قصير.","share_placeholder":"النص أو الرابط هنا","attach_image":"إرفاق صورة","remove_image":"حذف الصورة","share_button":"إرسال","sending":"جارٍ الإرسال","react_label":"تفاعل سريع مع مقدّم ورشة العمل","react_up":"تأييد","react_down":"اعتراض","hand_raise":"رفع اليد","hand_lower":"إنزال اليد","hand_up_toast":"اليد مرفوعة، والاسم ظاهر على الشاشة.","hand_down_toast":"أُنزلت اليد.","share_sent":"وصلت مشاركتك، وتظهر الآن على الشاشة.","share_privacy":"بدون أسماء الطالبات أو بياناتهن.","sent_title":"مشاركاتك","prompts_title":"الأوامر الجاهزة","contact_title":"الصفحات الاجتماعية للمدرب","contact_button":"حسابات التواصل","error_rate":"مشاركات متتالية كثيرة، والإرسال متاح مجددًا بعد دقيقة.","error_net":"تعذّر الإرسال بسبب ضعف الاتصال بالإنترنت، والمحاولة ممكنة بعد لحظات.","error_image":"تعذّر رفع الصورة، والمحاولة ممكنة بصورة أخرى.","offline":"الاتصال ضعيف، نعيد المحاولة تلقائيًا","online":"متصل بالعرض","word_title":"بكلمة واحدة","word_question":"ما أول كلمة تخطر ببالك عند سماع \"الذكاء الاصطناعي في التعليم\"؟","word_placeholder":"كلمة أو كلمتان","word_button":"إرسال","word_sent":"وصلت الكلمة، ويمكن إرسال كلمة أخرى."},"copy":"نسخ","copied":"تم"};
+const D = {"url":"https://dqedhfwaquqaddbtfvtx.supabase.co","key":"sb_publishable_zROcySsWThanD_me0Dq8dw_tGAHzGKk","room":"hs7-ai","joinUrl":"https://aymanalburaidi.github.io/AiWorkShop/join/","bucket":"aiws-uploads","polls":{"p1":{"question":"ما المهمة التي تأخذ أكثر وقتك كل أسبوع؟","options":["تحضير الدروس وتخطيطها","إعداد الأسئلة والاختبارات","التصحيح وكتابة التغذية الراجعة","تكييف المحتوى لمستويات الطالبات"]},"p2":{"question":"ما أول استخدام للتجربة هذا الأسبوع؟","options":["تخطيط درس","إعداد اختبار قصير","كتابة تغذية راجعة","تبسيط نص لطالباتي"]}},"schools":[{"key":"p16","name":"الابتدائية السادسة عشر","color":"#7258a4"},{"key":"s7","name":"الثانوية السابعة","color":"#0a8f8c"}],"prompts":[{"title":"تخطيط درس","text":"أنت معلم [اسم المادة] خبير في [المرحلة: الابتدائية أو الثانوية]، أعدّ خطة درس لموضوع [اسم الموضوع] لطالبات [الصف]، مدة الحصة [45] دقيقة، تتضمّن: 3 أهداف قابلة للقياس، وتهيئة من واقع الطالبة، وخطوات الشرح، ونشاطًا تعاونيًا، وتقويمًا ختاميًا من 3 أسئلة، وواجبًا قصيرًا، واعرضها في جدول مع زمن كل مرحلة.","icon":"clipboard","g":"share"},{"title":"اختبار قصير","text":"أعدّ اختبارًا قصيرًا في موضوع [اسم الموضوع] لمادة [اسم المادة]، [الصف]، من [5] أسئلة اختيار من متعدد وسؤالين مقاليين قصيرين، بمستويات متدرجة (تذكّر، فهم، تطبيق، تفكير عليا)، واجعل البدائل الخاطئة من أخطاء الطالبات الشائعة، وأضف مفتاح الإجابة مع تعليل مختصر لكل إجابة.","icon":"chart","g":"share"},{"title":"تغذية راجعة","text":"هذه إجابة طالبة (دون اسمها) عن السؤال: [نص السؤال]، والإجابة: [إجابة الطالبة]، فاكتب لها تغذية راجعة في 3 أسطر: نقطة قوة، وخطأ واحد مع توضيحه، وخطوة عملية للتحسين، بلغة مشجعة تناسب طالبة [الصف].","icon":"msg","g":"share"},{"title":"تبسيط نص","text":"بسّط الفقرة الآتية لطالبة في [الصف] تجد صعوبة في مادة [اسم المادة]، مع الحفاظ على الدقة العلمية، واستخدم جملًا قصيرة ومثالًا من الحياة اليومية، ثم أضف سؤالين للتحقق من الفهم، وهذه هي الفقرة: [الصق النص هنا]","icon":"refresh","g":"share"},{"title":"صورة توضيحية لدرسك","text":"ارسم صورة توضيحية ملونة بأسلوب رسوم تعليمية مبسطة لطالبات [الصف]، تشرح مفهوم [اسم المفهوم] في مادة [اسم المادة]، وأضف عناصر بصرية تساعد على الفهم، واجعل الخلفية بسيطة، ولا تضع نصوصًا طويلة داخل الصورة.","icon":"image","g":"create"},{"title":"صفحة تفاعلية لطالباتك","text":"أنشئ صفحة ويب تفاعلية باللغة العربية (من اليمين إلى اليسار) لمراجعة درس [اسم الدرس] في مادة [اسم المادة] لطالبات [الصف]، تحتوي على [8] بطاقات تنقلب عند الضغط لتظهر الإجابة، واختبار قصير من [5] أسئلة يعرض الدرجة في النهاية، واجعل التصميم بألوان هادئة ومناسبًا للجوال.","icon":"layout","g":"create"}],"t":{"page_title":"المشاركة في ورشة العمل","name_title":"أهلًا بك في ورشة العمل","name_text":"الاسم الثلاثي والمدرسة مرة واحدة فقط ويحفظهما الجوال، ويظهران مع المشاركات على الشاشة.","name_placeholder":"مثال: نورة عبدالله الشمري","name_error":"الاسم الثلاثي كاملًا مطلوب (ثلاث كلمات على الأقل).","school_label":"المدرسة","school_error":"اختيار المدرسة مطلوب.","name_button":"دخول","hello":"مرحبًا","change_name":"تعديل","welcome_title":"الصفحة مفتوحة طوال ورشة العمل","welcome_text":"عندما يبدأ التصويت أو نشاط جديد يظهر هنا تلقائيًا.","poll_now":"تصويت الآن","poll_done":"سجّلنا صوتك، والنتيجة على الشاشة الآن.","share_title":"مشاركة جديدة","share_hint":"الأمر المجرَّب أو النتيجة كاملة مهما طالت، وتظهر المشاركة على الشاشة أمام الجميع.","create_title":"تحدّي الإبداع: رفع العمل","create_hint":"صورة من صنعك أو رابط صفحتك، مع وصف قصير.","share_placeholder":"النص أو الرابط هنا","attach_image":"إرفاق صورة","remove_image":"حذف الصورة","share_button":"إرسال","sending":"جارٍ الإرسال","stage_title":"العرض المباشر","stage_hint":"تدوير الجوال يكبّر العرض","stage_hide":"إخفاء","stage_show":"إظهار العرض","react_label":"تفاعل سريع مع مقدّم ورشة العمل","react_up":"تأييد","react_down":"اعتراض","hand_raise":"رفع اليد","hand_lower":"إنزال اليد","hand_up_toast":"اليد مرفوعة، والاسم ظاهر على الشاشة.","hand_down_toast":"أُنزلت اليد.","share_sent":"وصلت مشاركتك، وتظهر الآن على الشاشة.","share_privacy":"بدون أسماء الطالبات أو بياناتهن.","sent_title":"مشاركاتك","prompts_title":"الأوامر الجاهزة","contact_title":"الصفحات الاجتماعية للمدرب","contact_button":"حسابات التواصل","error_rate":"مشاركات متتالية كثيرة، والإرسال متاح مجددًا بعد دقيقة.","error_net":"تعذّر الإرسال بسبب ضعف الاتصال بالإنترنت، والمحاولة ممكنة بعد لحظات.","error_image":"تعذّر رفع الصورة، والمحاولة ممكنة بصورة أخرى.","offline":"الاتصال ضعيف، نعيد المحاولة تلقائيًا","online":"متصل بالعرض","word_title":"بكلمة واحدة","word_question":"ما أول كلمة تخطر ببالك عند سماع \"الذكاء الاصطناعي في التعليم\"؟","word_placeholder":"كلمة أو كلمتان","word_button":"إرسال","word_sent":"وصلت الكلمة، ويمكن إرسال كلمة أخرى."},"copy":"نسخ","copied":"تم"};
 const $ = s => document.querySelector(s);
 const ico = id => `<svg class="icon"><use href="#${id}"/></svg>`;
 const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
@@ -468,15 +505,46 @@ function canReact(){
   return true;
 }
 function react(k, btn){
-  if (!canReact()) return;
+  if (!name) { openSheet(); return; }
+  if (!sb) { toast(D.t.error_net, true); return; }
   const now = Date.now(); if (now - lastReact < 700) return; lastReact = now;
-  presence.send({ type: 'broadcast', event: 'react', payload: { k, d: device, n: name } });
+  // عبر واجهة البث مباشرة إلى قناة لا تشترك فيها الجوالات، فلا تصل كل ضغطة إلى كل جوال
+  fetch(D.url + '/realtime/v1/api/broadcast', { method: 'POST', keepalive: true,
+    headers: { apikey: D.key, Authorization: 'Bearer ' + D.key, 'Content-Type': 'application/json' },
+    body: JSON.stringify({ messages: [{ topic: 'aiws-react-' + D.room, event: 'react', payload: { k, d: device, n: name } }] }) })
+    .then(r => { if (!r.ok) toast(D.t.error_net, true); }, () => toast(D.t.error_net, true));
   btn.classList.remove('pop'); void btn.offsetWidth; btn.classList.add('pop');
   const f = document.createElement('span'); f.className = 'fly'; f.innerHTML = ico(k === 'up' ? 'i-thumb-up' : 'i-thumb-down'); btn.append(f); setTimeout(() => f.remove(), 900);
 }
 $('#rUp').onclick = e => react('up', e.currentTarget);
 $('#rDown').onclick = e => react('down', e.currentTarget);
 $('#rHand').onclick = () => { if (canReact()) setHand(!hand); };
+
+/* ---------- العرض المباشر ---------- */
+window.AIWS = { get sb(){ return sb; } };   // تستعمله النسخة المضمَّنة بدل فتح اتصال ثانٍ
+const frame = $('#stageFrame'), stageBox = $('#stageBox'), FRAME_SRC = '../?view=1';
+let watching = store.get('watch', true), wake = null;
+const fit = () => { frame.style.transform = 'scale(' + (stageBox.clientWidth / 1536) + ')'; };
+if (window.ResizeObserver) new ResizeObserver(fit).observe(stageBox); else addEventListener('resize', fit);
+// الشاشة تبقى مضاءة أثناء المشاهدة
+async function keepAwake(){
+  if (!watching) { if (wake) { wake.release().catch(() => {}); wake = null; } return; }
+  if (wake || document.hidden || !navigator.wakeLock) return;
+  try { wake = await navigator.wakeLock.request('screen'); wake.addEventListener('release', () => { wake = null; }); } catch (e) {}
+}
+function setWatch(on){
+  watching = on; store.set('watch', on);
+  document.body.classList.toggle('watch', on);
+  stageBox.hidden = !on;
+  $('#stageToggle').textContent = on ? D.t.stage_hide : D.t.stage_show;
+  if (on) { if (!frame.src.endsWith(FRAME_SRC.slice(2))) frame.src = FRAME_SRC; fit(); }
+  else frame.src = 'about:blank';   // إيقاف النسخة يوفّر البطارية
+  keepAwake();
+}
+$('#stageToggle').onclick = () => setWatch(!watching);
+document.addEventListener('visibilitychange', keepAwake);
+document.addEventListener('pointerdown', keepAwake, { passive: true });
+setWatch(watching);
 
 /* ---------- الاتصال ---------- */
 function setStatus(on){ $('#status').classList.toggle('on', on); $('#statusTxt').textContent = on ? D.t.online : D.t.offline; }
@@ -511,7 +579,7 @@ function connect(){
 }
 setStatus(false);
 renderState();
-window.addEventListener('load', connect);
+connect();   // يعيد المحاولة حتى تتحمّل مكتبة Supabase
 </script>
 </body>
 </html>

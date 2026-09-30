@@ -567,6 +567,11 @@ body.presenter .hand{pointer-events:auto;cursor:pointer}
 .hand .nm{max-width:0;overflow:hidden;white-space:nowrap;color:var(--sc);font-size:.95rem;transition:max-width .45s var(--ease-out-quart),padding .45s var(--ease-out-quart)}
 .hand.new .nm,.hand:hover .nm{max-width:190px;padding-inline:8px 12px}
 
+/* ========== نسخة المشاهدة داخل صفحة المتدربة (?view): لا تحكم فيها ========== */
+body.viewer{pointer-events:none;user-select:none;-webkit-user-select:none}
+body.viewer #prevBtn,body.viewer #nextBtn,body.viewer #fsBtn,body.viewer .post .hide{visibility:hidden}
+body.viewer .toast{display:none}
+
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
   .react{animation:none!important;transform:translate(calc(-50% + var(--dx,0px)),0)}   /* بلا حركة: التفاعل يظهر ثابتًا ثم يُزال */
@@ -701,7 +706,7 @@ body.presenter .hand{pointer-events:auto;cursor:pointer}
   </section>
 
   <!-- 3: الانضمام بالجوال -->
-  <section class="slide" id="s-join" data-notes="&quot;افتحن كاميرا الجوال ووجّهنها نحو الرمز، ثم اضغطن الرابط الذي يظهر.&quot; • المطلوب في الصفحة: الاسم الثلاثي واختيار المدرسة، مرة واحدة ثم يحفظهما الجوال. • راقب عداد &quot;متصلة الآن&quot;، ومن تعذّر عليها المسح تكتب الرابط الظاهر تحت الرمز. • افتح لوحة المتدربات (⁦L⁩) لحظة ليرى الحضور الأسماء بلون كل مدرسة، ثم أغلقها. • تنبيه: الصفحة تبقى مفتوحة حتى نهاية الورشة، وتتغير وحدها مع كل نشاط. • عرّف بالأزرار الثلاثة الثابتة أسفل صفحة الجوال: تأييد، واعتراض، ورفع اليد، وقل: &quot;استخدمنها في أي لحظة، وأنا أراها هنا مباشرة.&quot; • &quot;جرّبن الآن: ضغطة تأييد من الجميع&quot;، فتطفو الضغطات يمين الشاشة باسم صاحبتها والعدّاد تحتها. • حين يتصل أغلب الحضور: &quot;أول سؤال وصل إلى جوالاتكن الآن.&quot;">
+  <section class="slide" id="s-join" data-notes="&quot;افتحن كاميرا الجوال ووجّهنها نحو الرمز، ثم اضغطن الرابط الذي يظهر.&quot; • المطلوب في الصفحة: الاسم الثلاثي واختيار المدرسة، مرة واحدة ثم يحفظهما الجوال. • راقب عداد &quot;متصلة الآن&quot;، ومن تعذّر عليها المسح تكتب الرابط الظاهر تحت الرمز. • افتح لوحة المتدربات (⁦L⁩) لحظة ليرى الحضور الأسماء بلون كل مدرسة، ثم أغلقها. • تنبيه: الصفحة تبقى مفتوحة حتى نهاية الورشة، وتتغير وحدها مع كل نشاط. • الشرائح نفسها ظاهرة أعلى صفحة الجوال، والصوت يبقى من زوم، و&quot;تدوير الجوال أفقيًا يكبّر العرض.&quot; • عرّف بالأزرار الثلاثة الثابتة أسفل صفحة الجوال: تأييد، واعتراض، ورفع اليد، وقل: &quot;استخدمنها في أي لحظة، وأنا أراها هنا مباشرة.&quot; • &quot;جرّبن الآن: ضغطة تأييد من الجميع&quot;، فتطفو الضغطات يمين الشاشة باسم صاحبتها والعدّاد تحتها. • حين يتصل أغلب الحضور: &quot;أول سؤال وصل إلى جوالاتكن الآن.&quot;">
     <div class="slide-inner join">
       <div>
         <span class="kicker reveal"><svg class="icon"><use href="#i-phone"/></svg> المشاركة من الجوال</span>
@@ -1068,6 +1073,9 @@ const $$ = s => [...document.querySelectorAll(s)];
 const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
 const ico = id => `<svg class="icon"><use href="#${id}"/></svg>`;
 const escHtml = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+// ?view: نسخة للمشاهدة داخل صفحة المتدربة، تتبع شريحة المقدّم ونقراته ولا تتحكم في شيء
+const VIEW = new URLSearchParams(location.search).has('view');
+if (VIEW) document.body.classList.add('viewer');
 
 /* ========== التاريخ الميلادي والهجري من المتصفح ========== */
 (function(){
@@ -1140,9 +1148,10 @@ function enter(){
 $('#nextBtn').onclick = () => go(cur + 1);
 $('#prevBtn').onclick = () => go(cur - 1);
 document.addEventListener('keydown', e => {
+  if (VIEW) return;
   if (e.target.closest?.('input,textarea')) return;
   if ($('#modal').classList.contains('on')) { if (e.key === 'Escape') closeModal(); return; }
-  if (e.code === 'KeyL') { $('#roster').classList.toggle('open'); return; }
+  if (e.code === 'KeyL') { setRoster(!$('#roster').classList.contains('open')); Sync.push(); return; }
   if (e.code === 'KeyH' && !e.ctrlKey && !e.metaKey) { Live.lowerHands(); return; }
   if (e.shiftKey && e.code === 'KeyR') { e.preventDefault(); Live.resetAll(); return; }
   if (['ArrowLeft','PageDown'].includes(e.key) || e.code === 'Space'){ e.preventDefault(); go(cur + 1); }
@@ -1167,12 +1176,11 @@ lic.parentElement.addEventListener('mousemove', e => {
 lic.parentElement.addEventListener('mouseleave', () => lic.style.transform = '');
 
 /* ========== معادلة الأمر ========== */
-$$('.fchip').forEach(c => c.onclick = () => {
-  const k = c.dataset.k, on = !c.classList.contains('on');
-  $$('.fchip').forEach(x => x.classList.remove('on'));
-  $$('.seg').forEach(x => x.classList.remove('hl'));
-  if (on){ c.classList.add('on'); $$('.seg[data-k="' + k + '"]').forEach(x => x.classList.add('hl')); }
-});
+function setChip(k){
+  $$('.fchip').forEach(x => x.classList.toggle('on', x.dataset.k === k));
+  $$('.seg').forEach(x => x.classList.toggle('hl', !!k && x.dataset.k === k));
+}
+$$('.fchip').forEach(c => c.onclick = () => { setChip(c.classList.contains('on') ? '' : c.dataset.k); Sync.push(); });
 
 /* ========== محاكاة الكتابة ========== */
 let planSub = Object.keys(D.plans)[0], typeToken = 0;
@@ -1196,11 +1204,10 @@ function runPlan(){
     step();
   }, 900);
 }
-$$('#planTabs .tab').forEach(b => b.onclick = () => {
-  $$('#planTabs .tab').forEach(x => x.classList.toggle('on', x === b));
-  planSub = b.dataset.sub; runPlan();
-});
-$('#planReplay').onclick = runPlan;
+let planRuns = 0;   // يزيد مع كل تشغيل يطلبه المقدّم، فتعيد النسخ الكتابة معه
+function setPlan(sub, run = true){ $$('#planTabs .tab').forEach(x => x.classList.toggle('on', x.dataset.sub === sub)); planSub = sub; if (run) runPlan(); }
+$$('#planTabs .tab').forEach(b => b.onclick = () => { planRuns++; setPlan(b.dataset.sub); Sync.push(); });
+$('#planReplay').onclick = () => { planRuns++; runPlan(); Sync.push(); };
 
 /* ========== بطاقات الأسئلة ========== */
 let quizSub = Object.keys(D.quiz)[0];
@@ -1216,22 +1223,21 @@ function renderQuiz(){
   $$('.show-ans').forEach(b => b.onclick = () => {
     const c = b.closest('.qcard'); c.classList.toggle('shown');
     b.textContent = c.classList.contains('shown') ? D.t.hide : D.t.show;
+    Sync.push();
   });
 }
-$$('#quizTabs .tab').forEach(b => b.onclick = () => {
-  $$('#quizTabs .tab').forEach(x => x.classList.toggle('on', x === b));
-  quizSub = b.dataset.sub; renderQuiz();
-});
+function setQuiz(sub){ $$('#quizTabs .tab').forEach(x => x.classList.toggle('on', x.dataset.sub === sub)); quizSub = sub; renderQuiz(); }
+function setAns(list){ $$('#quizGrid .qcard').forEach((c, i) => { const on = list.includes(i); c.classList.toggle('shown', on); c.querySelector('.show-ans').textContent = on ? D.t.hide : D.t.show; }); }
+$$('#quizTabs .tab').forEach(b => b.onclick = () => { setQuiz(b.dataset.sub); Sync.push(); });
 renderQuiz();
 
 /* ========== قبل/بعد التبسيط ========== */
-$('#flipBtn').onclick = () => {
-  const f = $('#flip'); f.classList.toggle('on');
-  $('#flipBtn').textContent = f.classList.contains('on') ? D.t.original : D.t.simplify;
-};
+function setFlip(on){ $('#flip').classList.toggle('on', on); $('#flipBtn').textContent = on ? D.t.original : D.t.simplify; }
+$('#flipBtn').onclick = () => { setFlip(!$('#flip').classList.contains('on')); Sync.push(); };
 
 /* ========== المؤقّتات ========== */
 const RING = 2 * Math.PI * 88;
+const timers = [];
 $$('.timer[data-minutes]').forEach(el => {
   const secs = (Number(el.dataset.minutes) || 8) * 60;
   el.innerHTML = `<div class="timer-wrap"><svg class="ring-svg" viewBox="0 0 200 200" aria-hidden="true"><circle class="track" cx="100" cy="100" r="88" fill="none" stroke-width="10"/><circle class="arc" cx="100" cy="100" r="88" fill="none" stroke-width="10"/></svg><div class="time"></div></div>
@@ -1246,14 +1252,15 @@ $$('.timer[data-minutes]').forEach(el => {
   };
   const setBtn = run => startBtn.innerHTML = run ? ico('i-pause') + '<span>' + escHtml(D.t.pause) + '</span>' : ico('i-play') + '<span>' + escHtml(D.t.start) + '</span>';
   const stop = () => { clearInterval(iv); iv = null; setBtn(false); };
-  startBtn.onclick = () => {
-    if (iv) { stop(); return; }
-    if (left === 0) return;
-    setBtn(true);
-    iv = setInterval(() => { left--; draw(); if (left === 0) { stop(); confetti(90); } }, 1000);
-  };
-  el.querySelector('.t-plus').onclick = () => { left += 60; total = Math.max(total, left); draw(); };
-  el.querySelector('.t-reset').onclick = () => { stop(); total = left = secs; draw(); };
+  const run = () => { if (iv || left === 0) return; setBtn(true); iv = setInterval(() => { left--; draw(); if (left === 0) { stop(); confetti(90); } }, 1000); };
+  startBtn.onclick = () => { if (iv) stop(); else run(); Sync.push(); };
+  el.querySelector('.t-plus').onclick = () => { left += 60; total = Math.max(total, left); draw(); Sync.push(); };
+  el.querySelector('.t-reset').onclick = () => { stop(); total = left = secs; draw(); Sync.push(); };
+  timers.push({
+    state: () => ({ l: left, t: total, r: iv ? 1 : 0 }),
+    // في النسخة: يعدّ محليًا ويصحّح نفسه إن ابتعد عن مؤقت المقدّم أكثر من ثانية
+    apply(s){ if (!s) return; total = s.t; if (!s.r) { stop(); left = s.l; } else { if (Math.abs(left - s.l) > 1) left = s.l; run(); } draw(); },
+  });
   setBtn(false); draw();
 });
 
@@ -1309,7 +1316,9 @@ const colorOf = device => SCHOOLS[schoolOf(device)]?.color || '';
 const initial = name => (name || '').replace(/^(أ\.|أ|د\.)\s*/, '').trim().charAt(0) || '•';
 
 /* ========== عرض المشاركة كاملة ========== */
+let modalId = null;
 function openModal(p){
+  modalId = p.id ?? null;
   const b = $('#modalBody'); b.innerHTML = '';
   if (p.image_path) { const im = document.createElement('img'); im.src = imgUrl(p.image_path); im.alt = ''; b.append(im); }
   const who = document.createElement('div'); who.className = 'who';
@@ -1321,11 +1330,13 @@ function openModal(p){
   if (p.body) { const full = document.createElement('div'); full.className = 'full'; full.append(textWithLinks(p.body)); b.append(full); }
   b.scrollTop = 0;
   $('#modal').classList.add('on');
+  Sync.push();
 }
-function closeModal(){ $('#modal').classList.remove('on'); }
+function closeModal(){ $('#modal').classList.remove('on'); modalId = null; Sync.push(); }
 $('#modal').addEventListener('click', e => { if (e.target.id === 'modal') closeModal(); });
 $('#modalX').onclick = closeModal;
-$('#rosterTab').onclick = () => $('#roster').classList.toggle('open');
+function setRoster(on){ $('#roster').classList.toggle('open', on); }
+$('#rosterTab').onclick = () => { setRoster(!$('#roster').classList.contains('open')); Sync.push(); };
 
 /* ========== الاتصال المباشر (Supabase) ========== */
 const Live = (() => {
@@ -1363,7 +1374,7 @@ const Live = (() => {
   }
 
   /* --- تفاعل لحظي: تأييد واعتراض (بثّ عابر لا يُحفظ)، وأيادٍ مرفوعة (من حالة حضور الجوال) --- */
-  let room = null, hands = new Map(), rcSlide = '', handsT = null;
+  let room = null, hands = new Map(), rcSlide = '', handsT = null, viewRows = [], viewSeen = false, relay = [], relayT = null;
   const rc = { up: 0, down: 0 }, lastReact = new Map(), handSeen = new Map(), handDrawn = new Set();
   const shortName = n => (n || '').trim().split(/\s+/).slice(0, 2).join(' ');
   function drawRc(k){
@@ -1375,29 +1386,46 @@ const Live = (() => {
     if (!p || (p.k !== 'up' && p.k !== 'down') || typeof p.d !== 'string') return;
     const now = Date.now(); if (now - (lastReact.get(p.d) || 0) < 400) return; lastReact.set(p.d, now);
     rc[p.k]++; drawRc(p.k);
-    Motion.react(p.k, shortName(people.get(p.d)?.name || String(p.n || '').slice(0, 60)).split(' ')[0], colorOf(p.d));
+    const first = shortName(people.get(p.d)?.name || String(p.n || '').slice(0, 60)).split(' ')[0];
+    Motion.react(p.k, first, colorOf(p.d));
+    // المقدّم يجمع التفاعلات كل 800 جزء من الثانية ويرسلها إلى النسخ دفعة واحدة
+    if (key && !VIEW) { relay.push({ k: p.k, n: first, c: colorOf(p.d) }); if (!relayT) relayT = setTimeout(() => { sendLive('r', { l: relay.slice(-8) }); relay = []; relayT = null; }, 800); }
+  }
+  function viewReacts(p){
+    (p?.l || []).slice(0, 8).forEach(x => { if (x.k !== 'up' && x.k !== 'down') return; rc[x.k]++; Motion.react(x.k, String(x.n || '').slice(0, 30), x.c); });
+    drawRc();
   }
   function syncHands(st){
     const next = new Map();
     Object.entries(st).forEach(([d, metas]) => { const m = metas.find(x => x.hand); if (m) next.set(d, { name: people.get(d)?.name || String(m.name || '').slice(0, 80), t: Number(m.ht) || 0 }); });
     for (const [d, h] of next) if (!hands.has(d)) { handSeen.set(d, Date.now()); if (ready) Motion.notify(h.name, D.t.handAlert, 'i-hand', colorOf(d)); }
     for (const d of hands.keys()) if (!next.has(d)) { handSeen.delete(d); handDrawn.delete(d); }
-    hands = next; drawHands();
+    hands = next; drawHands(); Sync.push();
+  }
+  const handRows = () => [...hands].sort((a, b) => a[1].t - b[1].t).map(([d, h]) => ({ id: d, name: h.name, color: colorOf(d) }));
+  const handsList = () => handRows().map(r => ({ n: r.name, c: r.color }));
+  // في النسخة: قائمة الأيدي تأتي من المقدّم
+  function viewHands(list){
+    const rows = (Array.isArray(list) ? list : []).map(x => ({ id: String(x.n || ''), name: String(x.n || '').slice(0, 80), color: x.c || '' }));
+    const ids = new Set(rows.map(r => r.id));
+    rows.forEach(r => { if (!handSeen.has(r.id)) { handSeen.set(r.id, Date.now()); if (viewSeen) Motion.notify(r.name, D.t.handAlert, 'i-hand', r.color); } });
+    [...handSeen.keys()].forEach(id => { if (!ids.has(id)) { handSeen.delete(id); handDrawn.delete(id); } });
+    viewSeen = true; viewRows = rows; drawHands();
   }
   function drawHands(){
-    const box = $('#hands'), rows = [...hands].sort((a, b) => a[1].t - b[1].t), now = Date.now();
+    const box = $('#hands'), rows = VIEW ? viewRows : handRows(), now = Date.now();
     const isNew = d => now - (handSeen.get(d) || 0) < 7000;
     box.innerHTML = rows.length ? `<div class="hands-h">${ico('i-hand')}<b>${rows.length}</b></div>` : '';
-    rows.forEach(([d, h]) => {
-      const b = document.createElement('button'); b.className = 'hand' + (isNew(d) ? ' new' : '') + (handDrawn.has(d) ? '' : ' in'); handDrawn.add(d);
-      b.style.setProperty('--sc', colorOf(d) || 'var(--navy)');
+    rows.forEach(r => {
+      const b = document.createElement('button'); b.className = 'hand' + (isNew(r.id) ? ' new' : '') + (handDrawn.has(r.id) ? '' : ' in'); handDrawn.add(r.id);
+      b.style.setProperty('--sc', r.color || 'var(--navy)');
       b.innerHTML = `<span class="av">${ico('i-hand')}</span><span class="nm"></span>`;
-      b.querySelector('.av').prepend(initial(h.name)); b.querySelector('.nm').textContent = shortName(h.name);
-      b.title = h.name + ' · ' + D.t.handLower;
-      b.onclick = () => lowerHand(d);
+      b.querySelector('.av').prepend(initial(r.name)); b.querySelector('.nm').textContent = shortName(r.name);
+      b.title = VIEW ? r.name : r.name + ' · ' + D.t.handLower;
+      if (!VIEW) b.onclick = () => lowerHand(r.id);
       box.append(b);
     });
-    clearTimeout(handsT); if (rows.some(([d]) => isNew(d))) handsT = setTimeout(drawHands, 7100);
+    clearTimeout(handsT); if (rows.some(r => isNew(r.id))) handsT = setTimeout(drawHands, 7100);
   }
   // المقدّم ينزل يد متدربة بالضغط عليها، أو كل الأيدي بمفتاح H
   function lowerHand(d){ if (key && room) room.send({ type: 'broadcast', event: 'lower', payload: { d } }); }
@@ -1520,6 +1548,15 @@ const Live = (() => {
     el.classList.add('out'); setTimeout(() => el.remove(), 220);
     wallCount--; animateNum($('#wallCount'), wallCount); emptyWall();
     bump(p.device, -1); scheduleRoster();
+    sendLive('hide', { id: p.id });
+  }
+  function dropPost(id){
+    const p = posts.get(id), el = [...document.querySelectorAll('#wall .post')].find(x => x.dataset.id === String(id));
+    if (!p || !el) return;
+    el.classList.add('out'); setTimeout(() => el.remove(), 220);
+    wallCount--; animateNum($('#wallCount'), wallCount); emptyWall();
+    bump(p.device, -1); scheduleRoster();
+    if (modalId === id) closeModal();
   }
 
   function addPost(p, fresh){
@@ -1548,11 +1585,25 @@ const Live = (() => {
     ready = true;
   }
 
+  // النسخة تستعمل اتصال صفحة المتدربة نفسه (نفس الموقع) بدل فتح اتصال ثانٍ من كل جوال
+  const parentSb = () => { try { return window.parent !== window ? window.parent.AIWS?.sb || null : null; } catch (e) { return null; } };
+  const mine = [];
+  const own = (name, opts) => { const c = sb.channel(name, opts); if (VIEW) mine.push(c); return c; };
+  let tries = 0;
   function connect(){
-    if (!window.supabase) { setTimeout(connect, 500); return; }
-    sb = window.supabase.createClient(D.url, D.key, { auth: { persistSession: false } });
+    if (VIEW) {
+      const ps = parentSb();
+      if (!ps && !window.supabase) { setTimeout(connect, 300); return; }
+      if (!ps && tries++ < 20) { setTimeout(connect, 200); return; }
+      sb = ps || window.supabase.createClient(D.url, D.key, { auth: { persistSession: false } });
+      sb.getChannels().filter(c => /aiws-(deck|live)-/.test(c.topic)).forEach(c => sb.removeChannel(c));   // بقايا نسخة سابقة
+      addEventListener('pagehide', () => mine.forEach(c => sb.removeChannel(c)));
+    } else {
+      if (!window.supabase) { setTimeout(connect, 500); return; }
+      sb = window.supabase.createClient(D.url, D.key, { auth: { persistSession: false } });
+    }
     loadAll();
-    sb.channel('aiws-deck-' + D.room)
+    own('aiws-deck-' + D.room)
       .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'aiws_votes', filter: 'room=eq.' + D.room }, ({ new: v }) => {
         if (!votes[v.poll_key]) return;
         votes[v.poll_key][v.choice]++; renderPoll(v.poll_key, v.choice);
@@ -1567,15 +1618,18 @@ const Live = (() => {
         if (isNew && eventType === 'INSERT' && ready) Motion.notify(p.name, 'انضمت إلى ورشة العمل' + (SCHOOLS[p.school] ? ' · ' + SCHOOLS[p.school].name : ''), 'i-user', colorOf(p.device));
       })
       .subscribe(st => $('#liveDot').classList.toggle('on', st === 'SUBSCRIBED'));
+    if (VIEW) { openLive(); return; }
     const presence = sb.channel('aiws-room-' + D.room);
     presence.on('presence', { event: 'sync' }, () => {
       const st = presence.presenceState();
       online.clear();
       Object.entries(st).forEach(([k, metas]) => { if (metas[0]?.role === 'phone') online.add(k); });
       $$('.js-online').forEach(el => animateNum(el, online.size));
-      scheduleRoster(); syncHands(st);
-    }).on('broadcast', { event: 'react' }, ({ payload }) => onReact(payload)).subscribe();
+      scheduleRoster(); syncHands(st); Sync.push();
+    }).subscribe();
     room = presence;
+    // التأييد والاعتراض: قناة مستقلة لا تشترك فيها الجوالات، فلا تتضاعف الرسائل عليها
+    sb.channel('aiws-react-' + D.room).on('broadcast', { event: 'react' }, ({ payload }) => onReact(payload)).subscribe();
     initKey();
   }
 
@@ -1585,7 +1639,7 @@ const Live = (() => {
     const k = localStorage.getItem('aiws_key');
     if (!k) return;
     const { data } = await sb.rpc('aiws_verify', { p_room: D.room, p_secret: k });
-    if (data === true) { key = k; document.body.classList.add('presenter'); $('#liveDot').classList.add('pres'); await openCtl(); slideChanged(slides[cur]); }
+    if (data === true) { key = k; document.body.classList.add('presenter'); $('#liveDot').classList.add('pres'); await openCtl(); openLive(); slideChanged(slides[cur]); }
     else localStorage.removeItem('aiws_key');
   }
   async function askKey(){
@@ -1617,9 +1671,27 @@ const Live = (() => {
     ctl = sb.channel(name, { config: { broadcast: { self: false } } });
     ctl.on('broadcast', { event: 'm' }, ({ payload }) => onCtl(payload)).subscribe(st => { if (st === 'SUBSCRIBED') sendSlide(); });
   }
+  /* --- قناة النسخ: المقدّم يرسل حالة العرض، والنسخ في صفحات المتدربات تطبّقها --- */
+  let live = null;
+  function sendLive(event, payload){ if (live && key && !VIEW) live.send({ type: 'broadcast', event, payload }); }
+  function openLive(){
+    if (live) return;
+    live = own('aiws-live-' + D.room, { config: { broadcast: { self: false } } });
+    if (VIEW) live.on('broadcast', { event: 'st' }, ({ payload }) => Sync.apply(payload))
+      .on('broadcast', { event: 'r' }, ({ payload }) => viewReacts(payload))
+      .on('broadcast', { event: 'hide' }, ({ payload }) => dropPost(payload?.id));
+    else live.on('broadcast', { event: 'hello' }, () => Sync.push(true));
+    live.subscribe(st => { if (st !== 'SUBSCRIBED') return; if (VIEW) live.send({ type: 'broadcast', event: 'hello', payload: {} }); else Sync.push(true); });
+    if (!VIEW) setInterval(() => Sync.push(true), 5000);
+  }
+  function viewExtras(o, h){
+    if (typeof o === 'number') $$('.js-online').forEach(el => animateNum(el, o));
+    viewHands(h);
+  }
   let lastState = '';
   function slideChanged(s){
     if (rcSlide !== s.id) { rcSlide = s.id; rc.up = rc.down = 0; drawRc(); }   // عدّاد التأييد والاعتراض لكل شريحة
+    Sync.push();
     sendSlide();
     if (!sb || !key) return;
     const poll = s.dataset.poll, mode = poll ? 'poll' : (s.dataset.mode || null);
@@ -1640,7 +1712,9 @@ const Live = (() => {
     toast('صُفّرت الغرفة');
     setTimeout(() => location.reload(), 900);
   }
-  return { connect, slideChanged, askKey, resetAll, lowerHands };
+  return { connect, slideChanged, askKey, resetAll, lowerHands, viewExtras, handsList,
+    isPresenter: () => !!key && !VIEW, send: sendLive, onlineCount: () => online.size,
+    openPost: id => { const p = posts.get(id); if (p) openModal(p); } };
 })();
 
 /* ========== الحركة: شبكة عصبية، ضوء المؤشر، ميلان البطاقات، تنبيهات حية ========== */
@@ -1677,7 +1751,7 @@ const Motion = (() => {
     }
     requestAnimationFrame(frame);
   }
-  if (!reduced) { size(); addEventListener('resize', size); requestAnimationFrame(frame); }
+  if (!reduced && !VIEW) { size(); addEventListener('resize', size); requestAnimationFrame(frame); }
 
   // ضوء يتبع المؤشر
   addEventListener('mousemove', e => {
@@ -1736,6 +1810,40 @@ const Motion = (() => {
   return { slideChanged, notify, react };
 })();
 
+/* ========== مزامنة النسخ المعروضة في صفحات المتدربات ========== */
+const Sync = (() => {
+  let t = null, last = {};
+  const snap = () => ({
+    i: cur, chip: $('.fchip.on')?.dataset.k || '', plan: planSub + ':' + planRuns, quiz: quizSub,
+    ans: $$('#quizGrid .qcard').flatMap((c, i) => c.classList.contains('shown') ? [i] : []),
+    flip: $('#flip').classList.contains('on') ? 1 : 0, roster: $('#roster').classList.contains('open') ? 1 : 0,
+    modal: modalId, tm: timers.map(x => x.state()), o: Live.onlineCount(), h: Live.handsList(),
+  });
+  // عند المقدّم: الحالة كاملة بعد كل تغيير، وكل 5 ثوانٍ لمن انضم متأخرًا
+  function push(now){
+    if (!Live.isPresenter()) return;
+    clearTimeout(t);
+    t = setTimeout(() => Live.send('st', snap()), now === true ? 0 : 80);
+  }
+  // في النسخة: تطبّق ما تغيّر فقط
+  function apply(s){
+    if (!VIEW || !s || !Number.isInteger(s.i)) return;
+    if (s.i !== cur) { go(s.i); last = {}; }
+    if (s.chip !== last.chip) setChip(s.chip || '');
+    const sub = String(s.plan || '').split(':')[0];
+    if (s.plan !== last.plan && D.plans[sub]) setPlan(sub, slides[cur].id === 's-plan');
+    if (s.quiz !== last.quiz && D.quiz[s.quiz]) setQuiz(s.quiz);
+    if (String(s.ans) !== String(last.ans) || s.quiz !== last.quiz) setAns(Array.isArray(s.ans) ? s.ans : []);
+    if (s.flip !== last.flip) setFlip(!!s.flip);
+    if (s.roster !== last.roster) setRoster(!!s.roster);
+    if (s.modal !== last.modal) { if (s.modal != null) Live.openPost(s.modal); else if ($('#modal').classList.contains('on')) closeModal(); }
+    (Array.isArray(s.tm) ? s.tm : []).forEach((x, k) => timers[k]?.apply(x));
+    Live.viewExtras(s.o, s.h);
+    last = s;
+  }
+  return { push, apply };
+})();
+
 /* ========== أحداث دخول الشرائح ========== */
 let stageIv = null;
 function stageCycle(){
@@ -1754,7 +1862,7 @@ const hooks = {
 const start = parseInt(location.hash.slice(1), 10);
 cur = (start >= 1 && start <= slides.length) ? start - 1 : 0;
 window.addEventListener('load', () => Live.connect());
-addEventListener('hashchange', () => { const n = parseInt(location.hash.slice(1), 10); if (n >= 1 && n <= slides.length) go(n - 1); });
+addEventListener('hashchange', () => { if (VIEW) return; const n = parseInt(location.hash.slice(1), 10); if (n >= 1 && n <= slides.length) go(n - 1); });
 enter();
 </script>
 </body>
