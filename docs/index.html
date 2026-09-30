@@ -567,6 +567,18 @@ body.presenter .hand{pointer-events:auto;cursor:pointer}
 .hand .nm{max-width:0;overflow:hidden;white-space:nowrap;color:var(--sc);font-size:.95rem;transition:max-width .45s var(--ease-out-quart),padding .45s var(--ease-out-quart)}
 .hand.new .nm,.hand:hover .nm{max-width:190px;padding-inline:8px 12px}
 
+/* ========== سؤال متدربة على الشاشة: خلفية ضبابية وبطاقة السؤال باسم صاحبته ========== */
+.qspot{position:fixed;inset:0;z-index:58;display:grid;place-items:center;padding:60px;background:rgba(238,244,245,.55);-webkit-backdrop-filter:blur(14px) saturate(1.1);backdrop-filter:blur(14px) saturate(1.1);opacity:0;visibility:hidden;transition:opacity .45s var(--ease-out-quart),visibility .45s}
+.qspot.on{opacity:1;visibility:visible}
+.qspot-card{width:min(1040px,100%);background:#fff;border-radius:28px;padding:32px 44px 38px;border-top:6px solid var(--sc,var(--teal));box-shadow:0 40px 90px -30px rgba(21,68,90,.55);transform:translateY(24px) scale(.97);transition:transform .6s var(--ease-out-expo)}
+.qspot.on .qspot-card{transform:none}
+.qspot-tag{display:inline-flex;align-items:center;gap:8px;padding:4px 14px;border-radius:999px;background:rgba(13,169,166,.12);color:#0a7f7d;font-weight:500}
+.qspot .who{display:flex;align-items:center;gap:12px;margin:16px 0 8px}
+.qspot .who .av{width:50px;height:50px;border-radius:50%;display:grid;place-items:center;background:var(--sc,var(--navy));color:#fff;font-weight:500;font-size:1.3rem}
+.qspot .who b{font-size:1.35rem;color:var(--sc,var(--navy))}
+.qspot .who small{display:block;color:var(--muted);font-size:.95rem}
+.qspot .q{font-size:2.1rem;line-height:1.7;color:var(--ink);white-space:pre-wrap;max-height:48vh;overflow:auto}
+
 /* ========== نسخة المشاهدة داخل صفحة المتدربة (?view): لا تحكم فيها ========== */
 body.viewer{pointer-events:none;user-select:none;-webkit-user-select:none}
 body.viewer #prevBtn,body.viewer #nextBtn,body.viewer #fsBtn,body.viewer .post .hide{visibility:hidden}
@@ -706,7 +718,7 @@ body.viewer .toast{display:none}
   </section>
 
   <!-- 3: الانضمام بالجوال -->
-  <section class="slide" id="s-join" data-notes="&quot;افتحن كاميرا الجوال ووجّهنها نحو الرمز، ثم اضغطن الرابط الذي يظهر.&quot; • المطلوب في الصفحة: الاسم الثلاثي واختيار المدرسة، مرة واحدة ثم يحفظهما الجوال. • راقب عداد &quot;متصلة الآن&quot;، ومن تعذّر عليها المسح تكتب الرابط الظاهر تحت الرمز. • افتح لوحة المتدربات (⁦L⁩) لحظة ليرى الحضور الأسماء بلون كل مدرسة، ثم أغلقها. • تنبيه: الصفحة تبقى مفتوحة حتى نهاية الورشة، وتتغير وحدها مع كل نشاط. • الشرائح نفسها ظاهرة أعلى صفحة الجوال، والصوت يبقى من زوم، و&quot;تدوير الجوال أفقيًا يكبّر العرض.&quot; • عرّف بالأزرار الثلاثة الثابتة أسفل صفحة الجوال: تأييد، واعتراض، ورفع اليد، وقل: &quot;استخدمنها في أي لحظة، وأنا أراها هنا مباشرة.&quot; • &quot;جرّبن الآن: ضغطة تأييد من الجميع&quot;، فتطفو الضغطات يمين الشاشة باسم صاحبتها والعدّاد تحتها. • حين يتصل أغلب الحضور: &quot;أول سؤال وصل إلى جوالاتكن الآن.&quot;">
+  <section class="slide" id="s-join" data-notes="&quot;افتحن كاميرا الجوال ووجّهنها نحو الرمز، ثم اضغطن الرابط الذي يظهر.&quot; • المطلوب في الصفحة: الاسم الثلاثي واختيار المدرسة، مرة واحدة ثم يحفظهما الجوال. • راقب عداد &quot;متصلة الآن&quot;، ومن تعذّر عليها المسح تكتب الرابط الظاهر تحت الرمز. • افتح لوحة المتدربات (⁦L⁩) لحظة ليرى الحضور الأسماء بلون كل مدرسة، ثم أغلقها. • تنبيه: الصفحة تبقى مفتوحة حتى نهاية الورشة، وتتغير وحدها مع كل نشاط. • الشرائح نفسها ظاهرة أعلى صفحة الجوال، والصوت يبقى من زوم، و&quot;تدوير الجوال أفقيًا يكبّر العرض.&quot; • عرّف بالأزرار الأربعة الثابتة أسفل صفحة الجوال: تأييد، واعتراض، ورفع اليد، وسؤال، وقل: &quot;استخدمنها في أي لحظة، وأنا أراها هنا مباشرة.&quot; • الزر الرابع &quot;سؤال&quot; يرسل رسالة تصلني وحدي، وقد أعرضها على الشاشة أثناء الإجابة ومعها الاسم. • &quot;جرّبن الآن: ضغطة تأييد من الجميع&quot;، فتطفو الضغطات يمين الشاشة باسم صاحبتها والعدّاد تحتها. • حين يتصل أغلب الحضور: &quot;أول سؤال وصل إلى جوالاتكن الآن.&quot;">
     <div class="slide-inner join">
       <div>
         <span class="kicker reveal"><svg class="icon"><use href="#i-phone"/></svg> المشاركة من الجوال</span>
@@ -1058,6 +1070,9 @@ body.viewer .toast{display:none}
   <button class="btn primary" id="nextBtn">التالي<svg class="icon"><use href="#i-next"/></svg></button>
 </footer>
 
+<!-- سؤال متدربة على الشاشة (يُعرض من صفحة ملاحظات المقدّم) -->
+<div class="qspot" id="qspot" aria-live="polite"><div class="qspot-card"><span class="qspot-tag"><svg class="icon"><use href="#i-msg"/></svg> سؤال من المتدربات</span><div class="who"><span class="av"></span><div><b></b><small></small></div></div><p class="q"></p></div></div>
+
 <!-- تفاعل لحظي من الجوالات -->
 <aside class="hands" id="hands" aria-label="أيادٍ مرفوعة"></aside>
 <div class="rc" id="rc" aria-hidden="true"><span class="r-up"><svg class="icon"><use href="#i-thumb-up"/></svg><b id="rcUp">0</b></span><span class="r-down"><svg class="icon"><use href="#i-thumb-down"/></svg><b id="rcDown">0</b></span></div>
@@ -1151,6 +1166,7 @@ document.addEventListener('keydown', e => {
   if (VIEW) return;
   if (e.target.closest?.('input,textarea')) return;
   if ($('#modal').classList.contains('on')) { if (e.key === 'Escape') closeModal(); return; }
+  if (spot && e.key === 'Escape') { setSpot(null); Live.ctlSync(); Sync.push(); return; }
   if (e.code === 'KeyL') { setRoster(!$('#roster').classList.contains('open')); Sync.push(); return; }
   if (e.code === 'KeyH' && !e.ctrlKey && !e.metaKey) { Live.lowerHands(); return; }
   if (e.shiftKey && e.code === 'KeyR') { e.preventDefault(); Live.resetAll(); return; }
@@ -1314,6 +1330,21 @@ const SCHOOLS = Object.fromEntries((D.schools || []).map(x => [x.key, x]));
 let schoolOf = () => null;   // تُعرّف داخل Live
 const colorOf = device => SCHOOLS[schoolOf(device)]?.color || '';
 const initial = name => (name || '').replace(/^(أ\.|أ|د\.)\s*/, '').trim().charAt(0) || '•';
+
+/* ========== سؤال متدربة على الشاشة: يختاره المقدّم من صفحة الملاحظات ========== */
+let spot = null;
+function setSpot(q){
+  spot = q && q.b ? { id: q.id ?? null, b: String(q.b).slice(0, 1000), n: String(q.n || '').slice(0, 80), s: String(q.s || '').slice(0, 60), c: /^#[0-9a-f]{6}$/i.test(q.c || '') ? q.c : '' } : null;
+  const el = $('#qspot');
+  if (spot) {
+    el.style.setProperty('--sc', spot.c || 'var(--teal)');
+    el.querySelector('.av').textContent = initial(spot.n);
+    el.querySelector('b').textContent = spot.n;
+    el.querySelector('small').textContent = spot.s;
+    el.querySelector('.q').textContent = spot.b;
+  }
+  el.classList.toggle('on', !!spot);
+}
 
 /* ========== عرض المشاركة كاملة ========== */
 let modalId = null;
@@ -1657,10 +1688,11 @@ const Live = (() => {
     if (!m || seenMsg.has(m.id)) return; seenMsg.add(m.id);
     if (m.t === 'hello') sendSlide();
     else if (m.t === 'go') { if (m.to === 'next') go(cur + 1); else if (m.to === 'prev') go(cur - 1); }
+    else if (m.t === 'q') { setSpot(m.q); sendSlide(); Sync.push(); }
   }
   function sendSlide(){
     if (!ctl && !bc) return;
-    const m = { t: 'slide', i: cur, id: Math.random().toString(36).slice(2) }; seenMsg.add(m.id);
+    const m = { t: 'slide', i: cur, q: spot?.id ?? null, id: Math.random().toString(36).slice(2) }; seenMsg.add(m.id);
     try { bc?.postMessage(m); } catch (e) {}
     ctl?.send({ type: 'broadcast', event: 'm', payload: m });
   }
@@ -1712,7 +1744,7 @@ const Live = (() => {
     toast('صُفّرت الغرفة');
     setTimeout(() => location.reload(), 900);
   }
-  return { connect, slideChanged, askKey, resetAll, lowerHands, viewExtras, handsList,
+  return { connect, slideChanged, askKey, resetAll, lowerHands, viewExtras, handsList, ctlSync: sendSlide,
     isPresenter: () => !!key && !VIEW, send: sendLive, onlineCount: () => online.size,
     openPost: id => { const p = posts.get(id); if (p) openModal(p); } };
 })();
@@ -1817,7 +1849,7 @@ const Sync = (() => {
     i: cur, chip: $('.fchip.on')?.dataset.k || '', plan: planSub + ':' + planRuns, quiz: quizSub,
     ans: $$('#quizGrid .qcard').flatMap((c, i) => c.classList.contains('shown') ? [i] : []),
     flip: $('#flip').classList.contains('on') ? 1 : 0, roster: $('#roster').classList.contains('open') ? 1 : 0,
-    modal: modalId, tm: timers.map(x => x.state()), o: Live.onlineCount(), h: Live.handsList(),
+    modal: modalId, tm: timers.map(x => x.state()), o: Live.onlineCount(), h: Live.handsList(), qs: spot,
   });
   // عند المقدّم: الحالة كاملة بعد كل تغيير، وكل 5 ثوانٍ لمن انضم متأخرًا
   function push(now){
@@ -1838,6 +1870,7 @@ const Sync = (() => {
     if (s.roster !== last.roster) setRoster(!!s.roster);
     if (s.modal !== last.modal) { if (s.modal != null) Live.openPost(s.modal); else if ($('#modal').classList.contains('on')) closeModal(); }
     (Array.isArray(s.tm) ? s.tm : []).forEach((x, k) => timers[k]?.apply(x));
+    if (JSON.stringify(s.qs || null) !== JSON.stringify(last.qs || null)) setSpot(s.qs);
     Live.viewExtras(s.o, s.h);
     last = s;
   }

@@ -108,12 +108,23 @@ details.prompt .btn{margin:0 14px 14px;min-height:44px;font-size:.95rem;backgrou
 .stage-hint{flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .stage-bar button{border:0;background:#EEF4F4;color:var(--ink);border-radius:999px;padding:0 12px;min-height:32px;font-size:.8rem;font-family:inherit}
 body:not(.watch) .stage-hint,body:not(.watch) .stage-live i{display:none}
+/* رسالة المقدّم لكل الجوالات */
+.announce{border:2px solid var(--sand);background:#FFFDF6}
+.announce .ann-head{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.announce .pulse{background:#a8914a;margin-bottom:6px}
+.announce p{white-space:pre-wrap;word-break:break-word;font-size:1.02rem}
+.announce a{color:var(--blue);word-break:break-all;direction:ltr;unicode-bidi:isolate}
+.ann-x{border:0;background:#F3EEDD;color:#7b6c3a;border-radius:999px;width:36px;height:36px;display:grid;place-items:center}
+.announce.flash{animation:annFlash 1.2s var(--ease)}
+@keyframes annFlash{30%{transform:scale(1.02);box-shadow:0 0 0 6px rgba(193,180,137,.35)}}
+.sheet-card textarea{min-height:120px}
+.sheet-card .row .btn{flex:1}
 /* شريط التفاعل اللحظي: ظاهر دائمًا أسفل الصفحة */
 .rbar{position:fixed;z-index:50;left:0;right:0;bottom:0;display:flex;justify-content:center;gap:8px;padding:8px calc(env(safe-area-inset-right) + 12px) calc(env(safe-area-inset-bottom) + 8px) calc(env(safe-area-inset-left) + 12px);background:rgba(255,255,255,.92);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);border-top:1px solid var(--line)}
 .rbtn{position:relative;flex:1;max-width:180px;min-height:58px;display:grid;justify-items:center;align-content:center;gap:1px;border-radius:16px;border:1.5px solid var(--line);background:#fff;color:var(--ink);font-size:.84rem;line-height:1.4;transition:transform .12s var(--ease),background .2s,border-color .2s,color .2s}
 .rbtn .icon{width:26px;height:26px}
 .rbtn:active{transform:scale(.94)}
-.rbtn.up>.icon{color:var(--green)} .rbtn.down>.icon{color:#c0563f} .rbtn.hand>.icon{color:#b0811a}
+.rbtn.up>.icon{color:var(--green)} .rbtn.down>.icon{color:#c0563f} .rbtn.hand>.icon{color:#b0811a} .rbtn.ask>.icon{color:var(--blue)}
 .rbtn.pop{animation:pop .4s var(--ease)}
 @keyframes pop{35%{transform:scale(1.12)}}
 .rbtn .fly{position:absolute;top:0;left:50%;pointer-events:none;animation:fly .9s ease-out forwards}
@@ -143,7 +154,8 @@ body:not(.watch) .stage-hint,body:not(.watch) .stage-live i{display:none}
 /* الجوال أفقيًا: العرض يملأ الشاشة، والأزرار عمود شفاف على طرفها، والتصويت فوق العرض */
 @media (orientation:landscape) and (max-height:560px){
   body.watch{padding:0;overflow:hidden;background:#0b2230}
-  body.watch .wrap>*:not(.stage):not(#liveSlot){display:none!important}
+  body.watch .wrap>*:not(.stage):not(#liveSlot):not(#announce){display:none!important}
+  body.watch #announce{position:fixed;z-index:47;top:8px;left:50%;transform:translateX(-50%);width:min(520px,62vw);max-height:40dvh;overflow:auto;padding:10px 14px;background:rgba(255,253,246,.96)}
   body.watch .stage{position:fixed;inset:0;z-index:40;display:grid;place-items:center;border:0;border-radius:0;box-shadow:none;background:#0b2230}
   body.watch .stage-box{width:min(100vw,calc(100dvh * 16 / 9));border-radius:0}
   body.watch .stage-bar{display:none}
@@ -177,6 +189,11 @@ body:not(.watch) .stage-hint,body:not(.watch) .stage-live i{display:none}
   <section class="stage" id="stage">
     <div class="stage-box" id="stageBox"><iframe id="stageFrame" title="{{join-page.stage_title|text}}" tabindex="-1"></iframe></div>
     <div class="stage-bar"><span class="stage-live"><i></i>{{join-page.stage_title}}</span><span class="stage-hint">{{join-page.stage_hint}}</span><button type="button" id="stageToggle"></button></div>
+  </section>
+
+  <section class="card announce" id="announce" hidden>
+    <div class="ann-head"><span class="pulse">{{join-page.announce_title}}</span><button type="button" class="ann-x" id="annX" aria-label="{{join-page.announce_close|text}}"><svg class="icon"><use href="#i-x"/></svg></button></div>
+    <p id="annText"></p>
   </section>
 
   <section class="hero">
@@ -229,7 +246,18 @@ body:not(.watch) .stage-hint,body:not(.watch) .stage-live i{display:none}
   <button class="rbtn up" id="rUp"><svg class="icon"><use href="#i-thumb-up"/></svg><span>{{join-page.react_up}}</span></button>
   <button class="rbtn down" id="rDown"><svg class="icon"><use href="#i-thumb-down"/></svg><span>{{join-page.react_down}}</span></button>
   <button class="rbtn hand" id="rHand" aria-pressed="false"><svg class="icon"><use href="#i-hand"/></svg><span id="rHandTxt">{{join-page.hand_raise}}</span></button>
+  <button class="rbtn ask" id="rAsk"><svg class="icon"><use href="#i-msg"/></svg><span>{{join-page.ask_button}}</span></button>
 </nav>
+
+<!-- سؤال أو رسالة خاصة إلى المقدّم -->
+<div class="sheet" id="askSheet" hidden>
+  <form class="sheet-card" id="askForm">
+    <h2>{{join-page.ask_title}}</h2>
+    <p>{{join-page.ask_hint}}</p>
+    <textarea id="askText" maxlength="1000" placeholder="{{join-page.ask_placeholder|text}}"></textarea>
+    <div class="row"><button type="button" class="btn ghost" id="askCancel">{{join-page.ask_cancel}}</button><button class="btn" id="askSend">{{join-page.ask_send}}</button></div>
+  </form>
+</div>
 
 <!-- الاسم الثلاثي: يُطلب مرة واحدة -->
 <div class="sheet" id="sheet" hidden>
@@ -459,6 +487,47 @@ $('#rUp').onclick = e => react('up', e.currentTarget);
 $('#rDown').onclick = e => react('down', e.currentTarget);
 $('#rHand').onclick = () => { if (canReact()) setHand(!hand); };
 
+/* ---------- سؤال أو رسالة خاصة إلى المقدّم (لا تُقرأ إلا من صفحة ملاحظاته) ---------- */
+function openAsk(){ if (!name) { openSheet(); return; } $('#askSheet').hidden = false; setTimeout(() => $('#askText').focus(), 200); }
+const closeAsk = () => { $('#askSheet').hidden = true; $('#askText').blur(); };
+$('#rAsk').onclick = openAsk;
+$('#askCancel').onclick = closeAsk;
+$('#askSheet').addEventListener('click', e => { if (e.target.id === 'askSheet') closeAsk(); });
+$('#askForm').onsubmit = async e => {
+  e.preventDefault();
+  const body = $('#askText').value.trim();
+  if (!body) { $('#askText').focus(); return; }
+  if (!sb) { toast(D.t.error_net, true); return; }
+  const btn = $('#askSend'); btn.disabled = true;
+  const { error } = await sb.from('aiws_questions').insert({ room: D.room, device, author: name, school: school || null, body });
+  btn.disabled = false;
+  if (error) { toast(/rate_limited/.test(error.message) ? D.t.error_rate : D.t.error_net, true); return; }
+  $('#askText').value = ''; closeAsk(); toast(D.t.ask_sent);
+};
+
+/* ---------- رسالة المقدّم لكل الجوالات: تصل مع حالة الغرفة ---------- */
+let annAt = null;
+function linkify(el, text){
+  String(text).split(/(https?:\/\/[^\s<>"']+)/g).forEach((part, i) => {
+    if (i % 2) { const a = document.createElement('a'); a.href = part; a.target = '_blank'; a.rel = 'noopener'; a.textContent = part; el.append(a); }
+    else if (part) el.append(part);
+  });
+}
+function renderAnnounce(s){
+  const text = s.announce || '', at = s.announce_at || '', box = $('#announce');
+  if (!text) { box.hidden = true; annAt = at; return; }
+  const p = $('#annText'); p.textContent = ''; linkify(p, text);
+  const dismissed = store.get('ann_x', '');
+  box.hidden = dismissed === at;
+  if (annAt !== null && at !== annAt && dismissed !== at) {
+    toast(D.t.announce_new); try { navigator.vibrate?.(120); } catch (e) {}
+    box.classList.remove('flash'); void box.offsetWidth; box.classList.add('flash');
+    if (!document.body.classList.contains('watch')) box.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+  annAt = at;
+}
+$('#annX').onclick = () => { store.set('ann_x', annAt); $('#announce').hidden = true; };
+
 /* ---------- العرض المباشر ---------- */
 window.AIWS = { get sb(){ return sb; } };   // تستعمله النسخة المضمَّنة بدل فتح اتصال ثانٍ
 const frame = $('#stageFrame'), stageBox = $('#stageBox'), FRAME_SRC = '../?view=1';
@@ -494,11 +563,11 @@ function applyState(s){
     if (known !== null) { store.set('voted', {}); store.set('sent', []); renderSent(); $('#liveSlot').dataset.sig = ''; setHand(false, true); register(); }
     store.set('epoch', s.epoch);
   }
-  state = s; renderState();
+  state = s; renderState(); renderAnnounce(s);
 }
 async function fetchState(){
   if (!sb) return;
-  const { data, error } = await sb.from('aiws_state').select('mode,poll_key,epoch').eq('room', D.room).maybeSingle();
+  const { data, error } = await sb.from('aiws_state').select('mode,poll_key,epoch,announce,announce_at').eq('room', D.room).maybeSingle();
   if (!error && data) applyState(data);
 }
 function connect(){

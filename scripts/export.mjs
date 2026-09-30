@@ -39,7 +39,13 @@ const [people, posts, votes] = await Promise.all([
   rest('aiws_posts', 'id,device,author,body,topic,image_path,created_at'),
   rest('aiws_votes', 'poll_key,choice,device,author,created_at'),
 ]);
-console.log(`المتدربات: ${people.length} · المشاركات: ${posts.length} · الأصوات: ${votes.length}`);
+// رسائل المتدربات إلى المقدّم خاصة: تُقرأ بمفتاح المقدّم، ولا تدخل التقرير المطبوع
+let questions = [];
+if (fs.existsSync(path.join(root, 'secrets/presenter-key.txt'))) {
+  const r = await fetch(`${cfg.supabaseUrl}/rest/v1/rpc/aiws_questions_list`, { method: 'POST', headers, body: JSON.stringify({ p_room: cfg.room, p_secret: read('secrets/presenter-key.txt').trim() }) });
+  if (r.ok) questions = (await r.json()).reverse(); else console.warn('تعذّر جلب رسائل المتدربات:', r.status);
+}
+console.log(`المتدربات: ${people.length} · المشاركات: ${posts.length} · الأصوات: ${votes.length} · الرسائل: ${questions.length}`);
 
 /* ---------- مجلد التصدير والصور ---------- */
 const stamp = new Date().toISOString().slice(0, 16).replace(/[:T]/g, '-');
@@ -73,7 +79,8 @@ const works = posts.filter(p => p.topic !== 'word');
 
 /* ---------- الملفات ---------- */
 const csv = rows => '﻿' + rows.map(r => r.map(c => `"${String(c ?? '').replace(/"/g, '""')}"`).join(',')).join('\r\n');
-fs.writeFileSync(path.join(dir, 'data.json'), JSON.stringify({ exported_at: new Date().toISOString(), room: cfg.room, schools, polls, people, posts, votes }, null, 2));
+fs.writeFileSync(path.join(dir, 'data.json'), JSON.stringify({ exported_at: new Date().toISOString(), room: cfg.room, schools, polls, people, posts, votes, questions }, null, 2));
+fs.writeFileSync(path.join(dir, 'questions.csv'), csv([['الوقت', 'الاسم', 'المدرسة', 'الرسالة', 'تمت'], ...questions.map(q => [q.created_at, q.author || '', schools.find(s => s.key === q.school)?.name || '', q.body, q.done ? 'نعم' : ''])]));
 fs.writeFileSync(path.join(dir, 'trainees.csv'), csv([['الاسم', 'المدرسة', 'عدد المشاركات'], ...roster.map(r => [r.name, r.school?.name || '', r.n])]));
 fs.writeFileSync(path.join(dir, 'posts.csv'), csv([['الوقت', 'الاسم', 'المدرسة', 'النوع', 'النص', 'الصورة'],
   ...posts.map(p => [p.created_at, nameOf(p.device), schoolOf(p.device)?.name || '', { share: 'مشاركة', create: 'تحدّي الإبداع', word: 'كلمة' }[p.topic], p.body, p.local_image || ''])]));
@@ -131,14 +138,14 @@ ${works.map(p => `<div class="post" style="--sc:${schoolOf(p.device)?.color || '
 </body></html>`;
 fs.writeFileSync(path.join(dir, 'report.html'), html);
 console.log('✓ التصدير في:', path.relative(root, dir));
-console.log('  التقرير: report.html (افتحه واطبعه PDF) · trainees.csv · posts.csv · data.json · images/');
+console.log('  التقرير: report.html (افتحه واطبعه PDF) · trainees.csv · posts.csv · questions.csv (خاص) · data.json · images/');
 
 /* ---------- الحذف (اختياري) ---------- */
 if (del) {
   const secret = read('secrets/presenter-key.txt').trim();
   const r = await fetch(`${cfg.supabaseUrl}/rest/v1/rpc/aiws_reset`, { method: 'POST', headers, body: JSON.stringify({ p_room: cfg.room, p_secret: secret, p_what: 'all' }) });
   if (!r.ok) { console.error('✗ تعذّر الحذف:', r.status, await r.text()); process.exit(1); }
-  console.log('✓ حُذفت الأسماء والمشاركات والأصوات من قاعدة البيانات.');
+  console.log('✓ حُذفت الأسماء والمشاركات والأصوات والرسائل من قاعدة البيانات.');
   console.log('  الصور المرفوعة تُحذف يدويًا من لوحة Supabase: Storage ثم aiws-uploads.');
 } else {
   console.log('للحذف من قاعدة البيانات بعد التأكد من التقرير: pnpm run export -- --delete');

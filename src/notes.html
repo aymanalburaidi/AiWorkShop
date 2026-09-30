@@ -59,7 +59,44 @@ input:focus{border-color:var(--teal)}
 .chip.late b{color:var(--red)} .chip.early b{color:#5eead4} .chip.ok b{color:#86efac}
 .bar{height:4px;border-radius:4px;background:rgba(255,255,255,.1);overflow:hidden}
 .bar i{display:block;height:100%;width:0;background:var(--grad);transition:width .6s var(--ease)}
-.main{display:grid;grid-template-columns:2.2fr 1fr;gap:14px;min-height:0}
+.main{display:grid;grid-template-columns:2fr 1.1fr;gap:14px;min-height:0}
+.side{display:flex;flex-direction:column;gap:12px;overflow:auto;min-height:0}
+.pane{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:12px 14px}
+.pane h3{display:flex;align-items:center;gap:8px;font-size:1rem;margin-bottom:8px}
+.badge{background:var(--red);color:#fff;border-radius:999px;padding:0 8px;font-size:.8rem;line-height:1.6}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;text-align:center}
+.stat b{display:block;font-size:1.5rem;line-height:1.3;font-variant-numeric:tabular-nums}
+.stat small{color:var(--muted);font-size:.72rem}
+.stat.pulse b{animation:statPulse .6s var(--ease)}
+@keyframes statPulse{40%{transform:scale(1.35);color:#fde68a}}
+.stat.hot b{color:#fdba74}
+.hlist{display:grid;gap:6px;margin-top:8px}
+.hlist:empty{display:none}
+.hrow{display:flex;align-items:center;gap:8px;background:rgba(253,186,116,.12);border-radius:12px;padding:4px 6px 4px 10px}
+.hrow i{width:9px;height:9px;border-radius:50%;background:var(--sc,#fdba74);flex:none}
+.hrow span{flex:1;font-size:.92rem}
+.btn.sm{min-height:34px;padding:0 12px;font-size:.85rem;border-radius:10px}
+.inbox{display:grid;gap:8px}
+.inbox .empty{color:var(--muted);font-size:.88rem}
+.msg{background:rgba(255,255,255,.05);border:1px solid var(--line);border-radius:14px;padding:8px 10px;transition:opacity .3s}
+.msg.fresh{animation:msgIn .8s var(--ease);border-color:#fdba74}
+@keyframes msgIn{from{opacity:0;transform:translateY(-8px)}}
+.msg.done{opacity:.45}
+.msg.spot{border-color:#5eead4;box-shadow:0 0 0 2px rgba(94,234,212,.3)}
+.msg .mh{display:flex;align-items:center;gap:6px;font-size:.85rem}
+.msg .mh i{width:8px;height:8px;border-radius:50%;background:var(--sc,var(--muted));flex:none}
+.msg .mh b{color:var(--sc,var(--ink))}
+.msg .mh small{margin-inline-start:auto;color:var(--muted);direction:ltr}
+.msg p{font-size:.98rem;line-height:1.7;margin:4px 0 6px;white-space:pre-wrap;word-break:break-word}
+.msg .ma{display:flex;gap:6px}
+.msg .ma .show.on{background:#0da9a6;border-color:#0da9a6;color:#fff}
+textarea{width:100%;min-height:70px;font-family:inherit;font-size:16px;color:var(--ink);background:rgba(255,255,255,.06);border:1.5px solid var(--line);border-radius:12px;padding:8px 10px;outline:none;resize:vertical}
+textarea:focus{border-color:var(--teal)}
+.ann-row{display:flex;gap:6px;margin-top:6px}
+.ann-now{margin-top:8px;font-size:.88rem;color:var(--muted);white-space:pre-wrap;word-break:break-word}
+.ann-now span{color:var(--ink)}
+.flashbox{position:fixed;z-index:80;top:14px;left:50%;transform:translate(-50%,-140%);background:#fdba74;color:#1f2937;padding:10px 18px;border-radius:14px;font-weight:500;box-shadow:0 14px 30px -12px rgba(0,0,0,.5);transition:transform .35s var(--ease);max-width:90vw}
+.flashbox.on{transform:translate(-50%,0)}
 .now,.nextc{background:var(--panel);border:1px solid var(--line);border-radius:22px;padding:18px 22px;overflow:auto;min-height:0}
 .lbl{display:inline-flex;align-items:center;gap:8px;font-size:.82rem;color:#0f2f3e;background:var(--sand);padding:1px 12px;border-radius:999px}
 .nextc .lbl{background:rgba(255,255,255,.12);color:var(--muted);margin-bottom:8px}
@@ -109,7 +146,7 @@ input:focus{border-color:var(--teal)}
 @media (max-width:760px){
   body{font-size:17px}
   .app{gap:10px}
-  .main{grid-template-columns:1fr;grid-template-rows:minmax(0,1fr) auto}
+  .main{grid-template-columns:1fr;grid-template-rows:minmax(0,1fr) minmax(0,42%)}
   .nextc{padding:10px 16px}
   .nextc .note,.keys,#plannedChip{display:none}
   .now{padding:14px 14px}
@@ -143,6 +180,7 @@ input:focus{border-color:var(--teal)}
 </div>
 
 <!-- اللوحة -->
+<div class="flashbox" id="flashbox"></div>
 <div class="app" id="app" hidden>
   <div>
     <div class="top">
@@ -165,13 +203,34 @@ input:focus{border-color:var(--teal)}
       <div class="cue" id="cue" hidden><svg class="icon"><use href="#i-next"/></svg><small>{{presenter-page.then}}</small><b id="cueTitle"></b></div>
       <p class="waiting" id="waiting">{{presenter-page.waiting}}</p>
     </section>
-    <section class="nextc" id="nextBox">
-      <span class="lbl">{{presenter-page.next}}</span>
-      <h3 id="nextTitle"></h3>
-      <div class="meta" id="nextMeta"></div>
-      <div class="note" id="nextNote"></div>
-      <p class="keys">{{presenter-page.keys_hint}}</p>
-    </section>
+    <aside class="side">
+      <section class="pane">
+        <div class="stats">
+          <div class="stat" id="sOnline"><b id="stOnline">0</b><small>{{presenter-page.online}}</small></div>
+          <div class="stat" id="sHands"><b id="stHands">0</b><small>{{presenter-page.hands}}</small></div>
+          <div class="stat" id="sUp"><b id="stUp">0</b><small>{{presenter-page.react_up}}</small></div>
+          <div class="stat" id="sDown"><b id="stDown">0</b><small>{{presenter-page.react_down}}</small></div>
+        </div>
+        <div class="hlist" id="hlist"></div>
+      </section>
+      <section class="pane">
+        <h3><svg class="icon"><use href="#i-msg"/></svg>{{presenter-page.inbox_title}}<b class="badge" id="unread" hidden>0</b></h3>
+        <div class="inbox" id="inbox"></div>
+      </section>
+      <section class="nextc" id="nextBox">
+        <span class="lbl">{{presenter-page.next}}</span>
+        <h3 id="nextTitle"></h3>
+        <div class="meta" id="nextMeta"></div>
+        <div class="note" id="nextNote"></div>
+      </section>
+      <section class="pane">
+        <h3><svg class="icon"><use href="#i-send"/></svg>{{presenter-page.announce_title}}</h3>
+        <textarea id="annText" maxlength="1000" placeholder="{{presenter-page.announce_placeholder|text}}"></textarea>
+        <div class="ann-row"><button class="btn primary sm" id="annSend">{{presenter-page.announce_send}}</button><button class="btn sm" id="annClear">{{presenter-page.announce_clear}}</button></div>
+        <p class="ann-now" id="annNow" hidden><small>{{presenter-page.announce_current}}</small> <span></span></p>
+        <p class="keys">{{presenter-page.keys_hint}}</p>
+      </section>
+    </aside>
   </div>
 
   <div class="foot">
@@ -196,6 +255,7 @@ const D = {{DATA}};
 const $ = s => document.querySelector(s);
 const $$ = s => [...document.querySelectorAll(s)];
 const ico = id => `<svg class="icon"><use href="#${id}"/></svg>`;
+const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 const fmt = s => { const a = Math.abs(Math.round(s)); return Math.floor(a / 60) + ':' + String(a % 60).padStart(2, '0'); };
 const LAST = D.slides.length - 1;
 let sb = null, key = null, ctl = null, bc = null, cur = 0, linked = false, enterAt = Date.now();
@@ -251,6 +311,7 @@ function setSlide(i){
   i = Math.max(0, Math.min(LAST, i));
   if (i === cur) return;
   cur = i; enterAt = Date.now();
+  rUp = rDown = 0; drawReacts();   // تأييد واعتراض الشريحة الحالية
   if (!t0 && cur > 0) { t0 = Date.now() - D.slides[cur].at * 1000; saveT(); }   // يبدأ المؤقّت تلقائيًا مع أول انتقال
   render(true);
 }
@@ -315,7 +376,10 @@ setInterval(tick, 1000);
 async function sha(s){ const b = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(s)); return [...new Uint8Array(b)].map(x => x.toString(16).padStart(2, '0')).join(''); }
 function onMsg(m){
   if (!m || seen.has(m.id)) return; seen.add(m.id);
-  if (m.t === 'slide' && Number.isInteger(m.i)) { setLinked(true); setSlide(m.i); }
+  if (m.t === 'slide' && Number.isInteger(m.i)) {
+    setLinked(true); setSlide(m.i);
+    if ('q' in m && (m.q ?? null) !== spotId) { spotId = m.q ?? null; drawInbox(); }
+  }
 }
 function send(m){ m.id = Math.random().toString(36).slice(2); seen.add(m.id); try { bc?.postMessage(m); } catch (e) {} ctl?.send({ type: 'broadcast', event: 'm', payload: m }); }
 async function start(){
@@ -326,7 +390,105 @@ async function start(){
   ctl.on('broadcast', { event: 'm' }, ({ payload }) => onMsg(payload)).subscribe(st => { if (st === 'SUBSCRIBED') send({ t: 'hello' }); });
   send({ t: 'hello' });
   document.addEventListener('visibilitychange', () => { if (!document.hidden) send({ t: 'hello' }); });
+  startLive();
 }
+
+/* ---------- المتدربات الآن: الحضور والأيدي والتفاعل ---------- */
+const SC = Object.fromEntries((D.schools || []).map(s => [s.key, s]));
+let room = null, hands = new Map(), liveReady = false, rUp = 0, rDown = 0, spotId = null, flashT = null;
+function flash(msg){
+  const f = $('#flashbox'); f.textContent = msg; f.classList.add('on');
+  clearTimeout(flashT); flashT = setTimeout(() => f.classList.remove('on'), 4500);
+}
+function pulse(id){ const el = $(id); el.classList.remove('pulse'); void el.offsetWidth; el.classList.add('pulse'); }
+function drawReacts(k){ $('#stUp').textContent = rUp; $('#stDown').textContent = rDown; if (k) pulse(k === 'up' ? '#sUp' : '#sDown'); }
+function drawHands(){
+  const rows = [...hands].sort((a, b) => a[1].t - b[1].t);
+  $('#stHands').textContent = rows.length; $('#sHands').classList.toggle('hot', rows.length > 0);
+  const box = $('#hlist'); box.innerHTML = '';
+  rows.forEach(([d, h]) => {
+    const r = document.createElement('div'); r.className = 'hrow'; r.style.setProperty('--sc', SC[h.school]?.color || '#fdba74');
+    r.innerHTML = '<i></i><span></span><button class="btn sm"></button>';
+    r.querySelector('span').textContent = h.name; r.querySelector('button').textContent = D.t.lower;
+    r.querySelector('button').onclick = () => lower(d);
+    box.append(r);
+  });
+  if (rows.length > 1) { const b = document.createElement('button'); b.className = 'btn sm'; b.textContent = D.t.lower_all; b.onclick = () => lower('*'); box.append(b); }
+}
+const lower = d => room?.send({ type: 'broadcast', event: 'lower', payload: { d } });
+function startLive(){
+  room = sb.channel('aiws-room-' + D.room);
+  room.on('presence', { event: 'sync' }, () => {
+    const st = room.presenceState(), next = new Map(); let online = 0;
+    Object.entries(st).forEach(([d, metas]) => {
+      if (metas.some(m => m.role === 'phone')) online++;
+      const m = metas.find(x => x.hand); if (m) next.set(d, { name: String(m.name || '').slice(0, 80), school: m.school, t: Number(m.ht) || 0 });
+    });
+    for (const [d, h] of next) if (!hands.has(d) && liveReady) { flash(h.name + ' ' + D.t.hand_alert); pulse('#sHands'); }
+    if (Number($('#stOnline').textContent) !== online) { $('#stOnline').textContent = online; pulse('#sOnline'); }
+    hands = next; liveReady = true; drawHands();
+  }).subscribe();
+  sb.channel('aiws-react-' + D.room).on('broadcast', { event: 'react' }, ({ payload: p }) => {
+    if (p?.k === 'up') rUp++; else if (p?.k === 'down') rDown++; else return;
+    drawReacts(p.k);
+  }).subscribe();
+  loadInbox(); setInterval(() => { if (!document.hidden) loadInbox(); }, 4000);
+  loadAnnounce();
+}
+
+/* ---------- رسائل المتدربات: خاصة، تُقرأ بمفتاح المقدّم فقط ---------- */
+let inbox = [], seenQ = null, freshQ = new Set();
+async function loadInbox(){
+  const { data, error } = await sb.rpc('aiws_questions_list', { p_room: D.room, p_secret: key });
+  if (error || !Array.isArray(data)) return;
+  if (seenQ) data.filter(q => !seenQ.has(q.id)).forEach(q => { freshQ.add(q.id); flash(D.t.new_msg + ' ' + (q.author || '')); });
+  seenQ = new Set(data.map(q => q.id));
+  if (JSON.stringify(data) === JSON.stringify(inbox)) return;
+  inbox = data; drawInbox();
+}
+function drawInbox(){
+  const box = $('#inbox'); box.innerHTML = '';
+  if (!inbox.length) box.innerHTML = '<p class="empty">' + esc(D.t.inbox_empty) + '</p>';
+  inbox.forEach(q => {
+    const sc = SC[q.school], el = document.createElement('div');
+    el.className = 'msg' + (q.done ? ' done' : '') + (freshQ.has(q.id) ? ' fresh' : '') + (spotId === q.id ? ' spot' : '');
+    if (sc) el.style.setProperty('--sc', sc.color);
+    el.innerHTML = '<div class="mh"><i></i><b></b><span></span><small></small></div><p></p><div class="ma"><button class="btn sm show"></button><button class="btn sm done"></button></div>';
+    el.querySelector('b').textContent = q.author || '';
+    el.querySelector('.mh span').textContent = sc ? '· ' + sc.name : '';
+    el.querySelector('small').textContent = new Date(q.created_at).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
+    el.querySelector('p').textContent = q.body;
+    const show = el.querySelector('.show'), done = el.querySelector('.done');
+    show.textContent = spotId === q.id ? D.t.spot_hide : D.t.spot_show; show.classList.toggle('on', spotId === q.id);
+    show.onclick = () => send({ t: 'q', q: spotId === q.id ? null : { id: q.id, b: q.body, n: q.author, s: sc?.name || '', c: sc?.color || '' } });
+    done.textContent = q.done ? D.t.undo : D.t.done;
+    done.onclick = async () => {
+      const { error } = await sb.rpc('aiws_question_done', { p_room: D.room, p_secret: key, p_id: q.id, p_done: !q.done });
+      if (!error) { q.done = !q.done; freshQ.delete(q.id); drawInbox(); }
+    };
+    box.append(el);
+  });
+  setTimeout(() => freshQ.clear(), 1500);
+  const pending = inbox.filter(q => !q.done).length;
+  $('#unread').hidden = !pending; $('#unread').textContent = pending;
+  document.title = (pending ? '(' + pending + ') ' : '') + D.t.page_title;
+}
+
+/* ---------- رسالة لكل الجوالات ---------- */
+async function loadAnnounce(){
+  const { data } = await sb.from('aiws_state').select('announce').eq('room', D.room).maybeSingle();
+  showAnn(data?.announce || '');
+}
+function showAnn(t){ $('#annNow').hidden = !t; $('#annNow span').textContent = t; }
+async function announce(t){
+  const bs = [$('#annSend'), $('#annClear')]; bs.forEach(b => b.disabled = true);
+  const { error } = await sb.rpc('aiws_announce', { p_room: D.room, p_secret: key, p_text: t });
+  bs.forEach(b => b.disabled = false);
+  if (error) return;
+  showAnn(t); if (t) { $('#annText').value = ''; flash(D.t.announce_sent); }
+}
+$('#annSend').onclick = () => { const t = $('#annText').value.trim(); if (t) announce(t); };
+$('#annClear').onclick = () => announce('');
 /* تحكم احتياطي في شرائح العرض من هذه الصفحة */
 function go(to){
   if (linked) { send({ t: 'go', to }); return; }
@@ -336,6 +498,7 @@ $('#sNext').onclick = e => { e.currentTarget.blur(); go('next'); };
 $('#sPrev').onclick = e => { e.currentTarget.blur(); go('prev'); };
 document.addEventListener('keydown', e => {
   if ($('#app').hidden || e.ctrlKey || e.metaKey || e.altKey) return;
+  if (e.target.closest?.('input,textarea')) return;
   if ([' ', 'ArrowDown', 'Enter'].includes(e.key)) { e.preventDefault(); step(1); }
   else if (['ArrowUp', 'Backspace'].includes(e.key)) { e.preventDefault(); step(-1); }
   else if (['ArrowLeft', 'PageDown'].includes(e.key)) { e.preventDefault(); go('next'); }

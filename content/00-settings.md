@@ -38,6 +38,9 @@ https://go.yafea.org.sa/ayman
 ## roster_empty
 تظهر أسماء المتدربات هنا بعد انضمامهن من الجوال.
 
+## qspot_label
+سؤال من المتدربات
+
 ## hands_title
 أيادٍ مرفوعة
 

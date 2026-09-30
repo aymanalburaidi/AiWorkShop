@@ -62,6 +62,66 @@
 - watch | انتبه | alert
 - go | انتقل | arrow
 
+## online
+المتصلات
+
+## hands
+أيادٍ مرفوعة
+
+## react_up
+تأييد
+
+## react_down
+اعتراض
+
+## hand_alert
+رفعت يدها
+
+## lower
+إنزال
+
+## lower_all
+إنزال الكل
+
+## inbox_title
+رسائل المتدربات
+
+## inbox_empty
+لا رسائل بعد، ورسائل زر "سؤال" في الجوال تصل هنا وحدها.
+
+## new_msg
+رسالة جديدة من
+
+## spot_show
+على الشاشة
+
+## spot_hide
+إخفاء من الشاشة
+
+## done
+تم
+
+## undo
+إعادة
+
+## announce_title
+رسالة لكل الجوالات
+
+## announce_placeholder
+نص أو رابط يظهر أعلى صفحة المتدربات
+
+## announce_send
+إرسال للجميع
+
+## announce_clear
+حذف الرسالة
+
+## announce_current
+الظاهرة الآن:
+
+## announce_sent
+أُرسلت الرسالة إلى الجوالات.
+
 ## end
 نهاية العرض
 

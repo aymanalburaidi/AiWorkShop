@@ -178,7 +178,7 @@ const slideList = [...deckHtml.matchAll(/<section class="slide" id="([^"]+)"[^>]
   const dur = sched[m[1]] ?? 60, o = { id: m[1], title: t ? strip(t[1]) : m[1], steps: noteSteps(noteRef[m[1]]).map(s => ({ k: s.k, h: inline(s.text) })), at, dur };
   at += dur; return o;
 });
-const notesData = { url: cfg.supabaseUrl, key: cfg.supabaseKey, room: cfg.room, slides: slideList, types: noteTypes,
+const notesData = { url: cfg.supabaseUrl, key: cfg.supabaseKey, room: cfg.room, slides: slideList, types: noteTypes, schools: live.schools,
   t: Object.fromEntries(Object.entries(C['presenter-page']).filter(([k]) => !['schedule', 'note_types'].includes(k)).map(([k, v]) => [k, plain(v)])) };
 fs.mkdirSync(path.join(out, 'notes'), { recursive: true });
 fs.writeFileSync(path.join(out, 'notes/index.html'), render(read('src/notes.html'), notesData));
