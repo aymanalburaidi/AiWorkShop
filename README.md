@@ -3,7 +3,9 @@
 عرض تقديمي تفاعلي (للشاشة) وصفحة مشاركة للجوال، منشوران على GitHub Pages.
 
 - العرض: https://aymanalburaidi.github.io/AiWorkShop/
-- صفحة المتدربات (الجوال): https://aymanalburaidi.github.io/AiWorkShop/join/
+- صفحة المتدربات (الجوال): https://go.yafea.org.sa/VKVV (رابط مختصر يحوّل إلى https://aymanalburaidi.github.io/AiWorkShop/join/)
+
+الرابط المكتوب على شاشة العرض هو المختصر (`joinShortUrl` في `config.json`)، ورمز QR يفتح الرابط المباشر.
 
 ## تعديل النصوص
 

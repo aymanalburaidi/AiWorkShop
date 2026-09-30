@@ -6,7 +6,7 @@
 | المدة | 40 دقيقة، وخطة الاختصار إلى 30 دقيقة في آخر الدليل |
 | مقدّم ورشة العمل | أ. أيمن صالح البريدي |
 | العرض | https://aymanalburaidi.github.io/AiWorkShop/ |
-| صفحة المتدربات | https://aymanalburaidi.github.io/AiWorkShop/join/ |
+| صفحة المتدربات | https://go.yafea.org.sa/VKVV |
 | ملاحظات المقدّم | https://aymanalburaidi.github.io/AiWorkShop/notes/ (بكلمة السر) |
 | رابط المقدّم | في `secrets/presenter-link.txt` (لا يُشارك) |
 

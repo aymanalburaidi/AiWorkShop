@@ -89,7 +89,8 @@ const R = {
   notes: id => esc(noteSteps(id).map(s => plain(s.text)).join(' • ')),
   include: file => read('src/' + file),
   joinurl: () => esc(joinUrl),
-  joinurl_display: () => esc(joinUrl.replace(/^https?:\/\//, '').replace(/\/$/, '')),
+  // الرابط المكتوب على الشاشة: المختصر من config.json إن وُجد (يحوّل إلى صفحة المتدربات)، ورمز QR يبقى على الرابط المباشر
+  joinurl_display: () => esc(cfg.joinShortUrl || joinUrl.replace(/^https?:\/\//, '').replace(/\/$/, '')),
 };
 function promptList(id) {
   return Object.keys(C[id]).filter(k => /^prompt\d+\.title$/.test(k)).map(k => k.split('.')[0])
