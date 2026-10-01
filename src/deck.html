@@ -1523,7 +1523,7 @@ const Live = (() => {
     cloud.append(b); setTimeout(() => b.remove(), 1300);
     if (who?.author) {
       const t = document.createElement('div'); t.className = 'wtag';
-      t.textContent = who.author.trim().split(/\s+/).slice(0, 2).join(' ');
+      t.textContent = who.author.trim().split(/\s+/)[0];   // الاسم الأول فقط
       t.style.cssText = `left:${cx}px;top:${Math.min(p.y + p.h, cloud.clientHeight - 30)}px;--c:${who.color || 'var(--teal)'}`;
       cloud.append(t); setTimeout(() => t.remove(), 2800);
     }
