@@ -106,9 +106,9 @@ details.prompt .btn{margin:0 14px 14px;min-height:44px;font-size:.95rem;backgrou
 .stage-bar{display:flex;align-items:center;gap:8px;padding:5px 10px;font-size:.8rem;color:var(--muted)}
 .stage-live{display:inline-flex;align-items:center;gap:6px;color:var(--ink);font-weight:500}
 .stage-live i{width:8px;height:8px;border-radius:50%;background:#e5484d;animation:blink 1.4s infinite}
-.stage-hint{flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.stage-bar .stage-live{flex:1}
 .stage-bar button{border:0;background:#EEF4F4;color:var(--ink);border-radius:999px;padding:0 12px;min-height:32px;font-size:.8rem;font-family:inherit}
-body:not(.watch) .stage-hint,body:not(.watch) .stage-live i{display:none}
+body:not(.watch) .stage-live i{display:none}
 /* رسالة المقدّم لكل الجوالات */
 .announce{border:2px solid var(--sand);background:#FFFDF6}
 .announce .ann-head{display:flex;align-items:center;justify-content:space-between;gap:8px}
@@ -155,13 +155,19 @@ body:not(.watch) .stage-hint,body:not(.watch) .stage-live i{display:none}
 .toast.on{transform:none;visibility:visible}
 /* وضع المسرح: العرض يملأ الشاشة، والأزرار عمود شفاف على طرفها، والتصويت والرسالة فوق العرض.
    يعمل تلقائيًا في الجوال أفقيًا، وبزر "ملء الشاشة" في التابلت واللابتوب */
+body{--tw:100vw;--th:100dvh}
 body.watch.theater{padding:0;overflow:hidden;background:#0b2230}
+/* الجوال عموديًا مع زر ملء الشاشة: الصفحة كلها تدور 90 درجة، فيُشاهد العرض أفقيًا ولو كان تدوير الشاشة مقفلًا */
+body.watch.theater.rot{--tw:100dvh;--th:100vw;position:fixed;top:0;left:100vw;width:100dvh;height:100vw;min-height:0;transform-origin:0 0;transform:rotate(90deg)}
+/* الآيفون أفقيًا: مساحة تمرير صغيرة ليخفي Safari شريطه عند السحب */
+body.watch.theater.ios:not(.rot){overflow-y:auto;scrollbar-width:none}
+body.watch.theater.ios:not(.rot)::after{content:"";display:block;height:calc(100lvh + 2px)}
 body.watch.theater .wrap>header,body.watch.theater .site-foot,body.watch.theater .side>*:not(#liveSlot):not(#announce){display:none!important}
-body.watch.theater #announce{position:fixed;z-index:47;top:8px;left:50%;transform:translateX(-50%);width:min(520px,62vw);max-height:40dvh;overflow:auto;padding:10px 14px;background:rgba(255,253,246,.96)}
+body.watch.theater #announce{position:fixed;z-index:47;top:8px;left:50%;transform:translateX(-50%);width:min(520px,calc(var(--tw) * .62));max-height:calc(var(--th) * .4);overflow:auto;padding:10px 14px;background:rgba(255,253,246,.96)}
 body.watch.theater .stage{position:fixed;inset:0;z-index:40;display:grid;place-items:center;border:0;border-radius:0;box-shadow:none;background:#0b2230}
-body.watch.theater .stage-box{width:min(100vw,calc(100dvh * 16 / 9));border-radius:0}
+body.watch.theater .stage-box{width:min(var(--tw),calc(var(--th) * 16 / 9));border-radius:0}
 body.watch.theater .stage-bar{display:none}
-body.watch.theater #liveSlot{position:fixed;z-index:48;left:calc(env(safe-area-inset-left) + 78px);bottom:10px;width:min(340px,44vw);max-height:calc(100dvh - 20px);overflow:auto}
+body.watch.theater #liveSlot{position:fixed;z-index:48;left:calc(env(safe-area-inset-left) + 66px);bottom:10px;width:min(340px,calc(var(--tw) * .44));max-height:calc(var(--th) - 20px);overflow:auto;scrollbar-width:none}
 body.watch.theater #liveSlot .card{padding:12px;background:rgba(255,255,255,.94)}
 /* الأسئلة والخيارات ظاهرة على الشريحة نفسها، فيكفي هنا أرقام الخيارات */
 body.watch.theater #liveSlot h2{display:none}
@@ -170,23 +176,33 @@ body.watch.theater #liveSlot .opts{grid-template-columns:repeat(auto-fit,minmax(
 body.watch.theater #liveSlot .opt{min-height:48px;justify-content:center;padding:4px}
 body.watch.theater #liveSlot .opt>span:not(.n){display:none}
 body.watch.theater #liveSlot .done-msg{margin-top:6px;font-size:.85rem}
-body.watch.theater .rbar{left:calc(env(safe-area-inset-left) + 10px);right:auto;top:50%;bottom:auto;transform:translateY(-50%);flex-direction:column;gap:10px;padding:0;background:none;border:0;-webkit-backdrop-filter:none;backdrop-filter:none}
-body.watch.theater .rbtn{flex:none;width:56px;min-height:56px;opacity:.5;background:rgba(255,255,255,.3);border-color:rgba(255,255,255,.4);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
+body.watch.theater .rbar{left:calc(env(safe-area-inset-left) + 10px);right:auto;top:50%;bottom:auto;transform:translateY(-50%);flex-direction:column;gap:8px;padding:0;background:none;border:0;-webkit-backdrop-filter:none;backdrop-filter:none}
+body.watch.theater .rbtn{flex:none;width:46px;min-height:46px;border-radius:14px;opacity:.5;background:rgba(255,255,255,.3);border-color:rgba(255,255,255,.4);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
 body.watch.theater .rbtn span{display:none}
+body.watch.theater .rbtn .icon{width:22px;height:22px}
 body.watch.theater .rbtn:active,body.watch.theater .rbtn.pop,body.watch.theater .rbtn.hand[aria-pressed="true"]{opacity:.95}
 body.watch.theater .rbtn:hover{opacity:.85}
 .theater-x{display:none;position:fixed;z-index:49;bottom:calc(env(safe-area-inset-bottom) + 12px);left:calc(env(safe-area-inset-left) + 16px);width:44px;height:44px;border-radius:50%;border:1px solid rgba(255,255,255,.4);background:rgba(11,34,48,.55);color:#fff;place-items:center;-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
 body.watch.theater.manual .theater-x{display:grid}
+/* ملء الشاشة الحقيقي حيث يدعمه المتصفح (أندرويد والحاسب والتابلت) */
+.theater-fs{display:none;position:fixed;z-index:49;top:calc(env(safe-area-inset-top) + 10px);left:calc(env(safe-area-inset-left) + 10px);width:40px;height:40px;border-radius:12px;border:1px solid rgba(255,255,255,.4);background:rgba(11,34,48,.45);color:#fff;place-items:center;opacity:.7}
+body.watch.theater.can-fs:not(.is-fs) .theater-fs{display:grid}
+/* نافذة التصويت والكلمة فوق العرض: تُغلق، وتعود بزر صغير */
+.slot-x{display:none;position:absolute;top:8px;left:8px;width:32px;height:32px;border-radius:50%;border:0;background:#EEF4F4;color:var(--ink);place-items:center}
+body.watch.theater .slot-x{display:grid}
+body.watch.theater #liveSlot .card{position:relative}
+body.watch.theater.slot-off #liveSlot{display:none!important}
+.slot-chip{display:none;position:fixed;z-index:48;left:calc(env(safe-area-inset-left) + 66px);bottom:10px;align-items:center;gap:6px;padding:6px 14px;border-radius:999px;border:0;background:var(--teal);color:#fff;font-family:inherit;font-size:.9rem;opacity:.9}
+body.watch.theater.slot-off.has-slot .slot-chip{display:inline-flex}
+.ios-tip{position:fixed;z-index:49;top:calc(env(safe-area-inset-top) + 10px);left:50%;transform:translateX(-50%);background:rgba(11,34,48,.8);color:#fff;font-size:.85rem;padding:6px 14px;border-radius:999px;white-space:nowrap;pointer-events:none;animation:tagLife 5s ease forwards}
+@keyframes tagLife{0%{opacity:0}10%{opacity:1}85%{opacity:1}100%{opacity:0}}
 
 /* التابلت واللابتوب */
-.stage-full{display:none}
+.stage-full{display:inline-flex;align-items:center;gap:6px}
 body:not(.watch) .stage-full{display:none!important}
 @media (min-width:700px){
   .sheet{align-items:center}
   .wrap{max-width:720px}
-  .stage-hint{display:none}
-  .stage-full{display:inline-flex;align-items:center;gap:6px}
-  .stage-bar .stage-live{flex:1}
 }
 /* الشاشات الواسعة: العرض المباشر في عمود ثابت، والأنشطة بجانبه */
 @media (min-width:1000px){
@@ -209,7 +225,7 @@ body:not(.watch) .stage-full{display:none!important}
   <!-- العرض المباشر: يتبع شريحة المقدّم ونقراته، والصوت من زوم -->
   <section class="stage" id="stage">
     <div class="stage-box" id="stageBox"><iframe id="stageFrame" title="{{join-page.stage_title|text}}" tabindex="-1"></iframe></div>
-    <div class="stage-bar"><span class="stage-live"><i></i>{{join-page.stage_title}}</span><span class="stage-hint">{{join-page.stage_hint}}</span><button type="button" class="stage-full" id="stageFull"><svg class="icon"><use href="#i-max"/></svg>{{join-page.stage_full}}</button><button type="button" id="stageToggle"></button></div>
+    <div class="stage-bar"><span class="stage-live"><i></i>{{join-page.stage_title}}</span><button type="button" class="stage-full" id="stageFull"><svg class="icon"><use href="#i-max"/></svg>{{join-page.stage_full}}</button><button type="button" id="stageToggle"></button></div>
   </section>
 
   <div class="side">
@@ -266,6 +282,8 @@ body:not(.watch) .stage-full{display:none!important}
 </div>
 
 <button type="button" class="theater-x" id="theaterX" aria-label="{{join-page.stage_exit|text}}"><svg class="icon"><use href="#i-x"/></svg></button>
+<button type="button" class="theater-fs" id="theaterFs" aria-label="{{join-page.stage_full|text}}"><svg class="icon"><use href="#i-max"/></svg></button>
+<button type="button" class="slot-chip" id="slotChip"></button>
 
 <!-- تفاعل لحظي يظهر على شاشة العرض فورًا -->
 <nav class="rbar" aria-label="{{join-page.react_label|text}}">
@@ -441,6 +459,7 @@ function renderState(){
   if (slot.dataset.sig === sig) return;
   slot.dataset.sig = sig;
   slot.innerHTML = '';
+  setSlotOff(false);
   if (state.mode === 'poll' && D.polls[state.poll_key]) renderPoll(slot, state.poll_key);
   else if (state.mode === 'word') renderWord(slot);
   const fold = $('#promptsCard'), g = create ? 'create' : state.mode === 'share' ? 'share' : '';
@@ -451,12 +470,23 @@ function renderState(){
   if (state.mode === 'poll' || state.mode === 'word') slot.scrollIntoView({ behavior: 'smooth', block: 'start' });
   else if (g) fold.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
+// نافذة التصويت والكلمة فوق العرض في وضع المسرح: تُغلق بعد الإجابة، وتعود بزر صغير حتى يبدأ نشاط آخر
+const slotX = () => '<button type="button" class="slot-x" aria-label="' + esc(D.t.slot_close) + '">' + ico('i-x') + '</button>';
+function wireSlotX(slot){ slot.querySelector('.slot-x').onclick = () => setSlotOff(true); }
+function setSlotOff(off){
+  const slot = $('#liveSlot'), has = !!slot.firstElementChild;
+  document.body.classList.toggle('slot-off', off && has);
+  document.body.classList.toggle('has-slot', has);
+  $('#slotChip').innerHTML = ico(state.mode === 'word' ? 'i-cloud' : 'i-vote') + esc(state.mode === 'word' ? D.t.word_title : D.t.poll_now);
+}
+$('#slotChip').onclick = () => setSlotOff(false);
 function renderPoll(slot, p){
   const poll = D.polls[p], voted = store.get('voted', {})[p];
-  slot.innerHTML = `<section class="card live-card"><span class="pulse">${esc(D.t.poll_now)}</span><h2>${esc(poll.question)}</h2>
+  slot.innerHTML = `<section class="card live-card">${slotX()}<span class="pulse">${esc(D.t.poll_now)}</span><h2>${esc(poll.question)}</h2>
     <div class="opts ${voted !== undefined ? 'done' : ''}">${poll.options.map((o, i) => `<button class="opt ${voted === i ? 'picked' : ''}" data-i="${i}"><span class="n">${i + 1}</span><span>${esc(o)}</span></button>`).join('')}</div>
     <div class="done-msg" ${voted === undefined ? 'hidden' : ''}>${ico('i-check-circle')}<span>${esc(D.t.poll_done)}</span></div></section>`;
   slot.querySelectorAll('.opt').forEach(b => b.onclick = () => vote(p, Number(b.dataset.i), slot));
+  wireSlotX(slot);
 }
 async function vote(p, i, slot){
   const voted = store.get('voted', {});
@@ -468,10 +498,12 @@ async function vote(p, i, slot){
   if (error && error.code !== '23505') { opts.classList.remove('done'); opts.children[i].classList.remove('picked'); toast(D.t.error_net, true); return; }
   voted[p] = i; store.set('voted', voted);
   slot.querySelector('.done-msg').hidden = false;
+  if (document.body.classList.contains('theater')) setTimeout(() => setSlotOff(true), 1400);   // بعد التصويت لا تبقى النافذة فوق العرض
 }
 function renderWord(slot){
-  slot.innerHTML = `<section class="card live-card"><span class="pulse">${esc(D.t.word_title)}</span><h2>${esc(D.t.word_question)}</h2>
+  slot.innerHTML = `<section class="card live-card">${slotX()}<span class="pulse">${esc(D.t.word_title)}</span><h2>${esc(D.t.word_question)}</h2>
     <form class="word-row"><input maxlength="40" enterkeyhint="send" placeholder="${esc(D.t.word_placeholder)}"><button class="btn">${esc(D.t.word_button)}</button></form></section>`;
+  wireSlotX(slot);
   const f = slot.querySelector('form'), inp = f.querySelector('input'), btn = f.querySelector('button');
   f.onsubmit = async e => {
     e.preventDefault();
@@ -579,25 +611,43 @@ function setWatch(on){
 $('#stageToggle').onclick = () => setWatch(!watching);
 // وضع المسرح: تلقائي في الجوال أفقيًا، ويدوي بزر "ملء الشاشة" في الشاشات الأكبر
 const landPhone = matchMedia('(orientation:landscape) and (max-height:560px)');
+const portraitPhone = matchMedia('(orientation:portrait) and (max-width:699px)');
+const fsEl = () => document.fullscreenElement || document.webkitFullscreenElement;
+const isIOS = /iP(hone|od|ad)/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+document.body.classList.toggle('ios', isIOS);
+document.body.classList.toggle('can-fs', !!(document.fullscreenEnabled || document.webkitFullscreenEnabled));
 let theaterBtn = false;
 function applyTheater(){
-  document.body.classList.toggle('theater', watching && (landPhone.matches || theaterBtn));
-  document.body.classList.toggle('manual', theaterBtn);
+  const b = document.body.classList, on = watching && (landPhone.matches || theaterBtn);
+  b.toggle('theater', on);
+  b.toggle('manual', theaterBtn);
+  b.toggle('rot', on && theaterBtn && portraitPhone.matches);   // جوال عمودي: يدور العرض بدل أن يصغر
+  b.toggle('is-fs', !!fsEl());
   fit();
+  if (on && isIOS && !b.contains('rot') && !store.get('ios_tip', false)) {
+    store.set('ios_tip', true);
+    const t = document.createElement('div'); t.className = 'ios-tip'; t.textContent = D.t.ios_tip;
+    document.body.append(t); setTimeout(() => t.remove(), 5200);
+  }
 }
 landPhone.addEventListener?.('change', applyTheater);
-const fsEl = () => document.fullscreenElement || document.webkitFullscreenElement;
-$('#stageFull').onclick = () => {
+portraitPhone.addEventListener?.('change', applyTheater);
+function enterFull(){
   theaterBtn = true; applyTheater();
   const d = document.documentElement;
-  try { (d.requestFullscreen || d.webkitRequestFullscreen)?.call(d)?.catch?.(() => {}); } catch (e) {}
-};
+  try {
+    const r = (d.requestFullscreen || d.webkitRequestFullscreen)?.call(d);
+    r?.then?.(() => { applyTheater(); return screen.orientation?.lock?.('landscape'); })?.catch?.(() => {});
+  } catch (e) {}
+}
+$('#stageFull').onclick = enterFull;
+$('#theaterFs').onclick = enterFull;
 function exitTheater(){
   theaterBtn = false; applyTheater();
   if (fsEl()) try { (document.exitFullscreen || document.webkitExitFullscreen).call(document)?.catch?.(() => {}); } catch (e) {}
 }
 $('#theaterX').onclick = exitTheater;
-['fullscreenchange', 'webkitfullscreenchange'].forEach(ev => document.addEventListener(ev, () => { if (!fsEl() && theaterBtn) { theaterBtn = false; applyTheater(); } }));
+['fullscreenchange', 'webkitfullscreenchange'].forEach(ev => document.addEventListener(ev, () => { if (!fsEl() && theaterBtn) theaterBtn = false; applyTheater(); }));
 document.addEventListener('keydown', e => { if (e.key === 'Escape' && theaterBtn) exitTheater(); });
 document.addEventListener('visibilitychange', keepAwake);
 document.addEventListener('pointerdown', keepAwake, { passive: true });
