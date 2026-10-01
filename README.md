@@ -78,7 +78,15 @@ AIWS_ROOM=hs7-ai-test AIWS_OUT=.test-build node scripts/build.mjs
 pnpm run export
 ```
 
-يصدّر تقريرًا قابلًا للطباعة (`report.html`) مع ملفات CSV والصور إلى `exports/` (لا يُرفع إلى GitHub). وبعد التأكد من التقرير: `pnpm run export -- --delete` لحذف البيانات من قاعدة البيانات. الصور تُحذف من لوحة Supabase.
+تقرير PDF مستقل لكل مدرسة شريكة (بلا مدرسة المتطوعات، مع دمج الأسماء المكررة):
+
+```bash
+node scripts/school-reports.mjs --exclude="نورة القحطاني"
+```
+
+يقرأ آخر مجلد في `exports/`، و`--exclude` يستبعد أشخاصًا وكل مشاركاتهم (يكفي جزء من الاسم).
+
+الأمر الأول `pnpm run export` يصدّر تقريرًا قابلًا للطباعة (`report.html`) مع ملفات CSV والصور إلى `exports/` (لا يُرفع إلى GitHub). وبعد التأكد من التقرير: `pnpm run export -- --delete` لحذف البيانات من قاعدة البيانات. الصور تُحذف من لوحة Supabase.
 
 ## البيانات
 
