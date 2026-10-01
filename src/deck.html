@@ -466,7 +466,7 @@ body:not(.presenter) .post .hide{display:none}
 .roster-tab{order:2;pointer-events:auto;align-self:center;writing-mode:vertical-rl;display:flex;align-items:center;gap:8px;padding:16px 9px;border:0;border-radius:0 14px 14px 0;background:var(--navy);color:#fff;box-shadow:var(--shadow);font-size:.95rem;transition:transform .3s var(--ease-out-quart)}
 .roster-tab .icon{transform:rotate(90deg)}
 .roster-tab b{background:var(--green);border-radius:999px;padding:4px 2px;font-variant-numeric:tabular-nums}
-.roster-panel{pointer-events:auto;width:340px;background:rgba(255,255,255,.97);backdrop-filter:blur(10px);border:1px solid var(--line);border-inline-start:0;border-radius:0 20px 20px 0;box-shadow:0 30px 60px -30px rgba(21,68,90,.45);display:flex;flex-direction:column;transform:translateX(-105%);transition:transform .38s var(--ease-out-expo);overflow:hidden}
+.roster-panel{pointer-events:auto;width:380px;background:rgba(255,255,255,.97);backdrop-filter:blur(10px);border:1px solid var(--line);border-inline-start:0;border-radius:0 20px 20px 0;box-shadow:0 30px 60px -30px rgba(21,68,90,.45);display:flex;flex-direction:column;transform:translateX(-105%);transition:transform .38s var(--ease-out-expo);overflow:hidden}
 .roster.open .roster-panel{transform:none}
 .roster:not(.open) .roster-panel{position:absolute;left:0;top:0;bottom:0}
 .roster.open .roster-tab{margin-left:-1px}
@@ -477,15 +477,16 @@ body:not(.presenter) .post .hide{display:none}
 .roster-head p{color:var(--muted);font-size:.84rem}
 .roster-sum{margin-top:8px;color:var(--muted)}
 .roster-sum b{color:var(--ink);font-size:1.4rem;font-variant-numeric:tabular-nums}
-.roster-list{list-style:none;overflow-y:auto;padding:10px 12px 16px;display:grid;gap:6px;align-content:start;flex:1}
-.roster-list li{display:grid;grid-template-columns:28px 1fr auto;align-items:center;gap:10px;padding:8px 10px;border-radius:12px;background:#F7FAFA;position:relative;overflow:hidden}
+.roster-list{list-style:none;overflow-y:auto;padding:10px 12px 16px;display:flex;flex-direction:column;gap:6px;flex:1;min-height:0;overscroll-behavior:contain;scrollbar-width:thin}   /* min-height:0 يسمح بالتمرير بدل قص القائمة الطويلة */
+.roster-list li{flex:none;display:grid;grid-template-columns:28px 1fr auto;align-items:center;gap:10px;padding:8px 10px;border-radius:12px;background:#F7FAFA;position:relative;overflow:hidden}
 .roster-list li .bar{position:absolute;inset:0 0 0 auto;background:linear-gradient(90deg,rgba(13,169,166,.06),rgba(7,168,105,.14));transform-origin:right;transition:transform .6s var(--ease-in-out-cubic)}
 .roster-list li>*:not(.bar){position:relative}
 .roster-list .rk{width:28px;height:28px;border-radius:9px;display:grid;place-items:center;background:rgba(21,68,90,.07);font-size:.85rem}
 .roster-list li:nth-child(1) .rk{background:#c1b489;color:#fff}
 .roster-list li:nth-child(2) .rk{background:#9fb3bb;color:#fff}
 .roster-list li:nth-child(3) .rk{background:#b08a6a;color:#fff}
-.roster-list .nm{font-size:.95rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:flex;align-items:center;gap:6px}
+.roster-list .nm{font-size:.95rem;line-height:1.4;display:flex;align-items:center;gap:6px;min-width:0}
+.roster-list .nm span{overflow-wrap:anywhere}   /* الاسم الطويل ينزل سطرًا بدل أن يُقص */
 .roster-list .nm i{width:7px;height:7px;border-radius:50%;background:var(--grey);flex:none}
 .roster-list .nm i.on{background:var(--green)}
 .roster-list .ct{min-width:34px;text-align:center;padding:2px 8px;border-radius:999px;background:var(--navy);color:#fff;font-variant-numeric:tabular-nums}
@@ -1729,8 +1730,7 @@ const Live = (() => {
     Sync.push();
     sendSlide();
     if (!sb || !key) return;
-    const poll = s.dataset.poll, mode = poll ? 'poll' : (s.dataset.mode || null);
-    if (!mode) return;
+    const poll = s.dataset.poll, mode = poll ? 'poll' : (s.dataset.mode || 'idle');   // شريحة بلا نشاط تُغلق النشاط السابق في بوابة الحضور
     const sig = mode + ':' + (poll || '');
     if (sig === lastState) return;
     lastState = sig;
