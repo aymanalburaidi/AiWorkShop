@@ -87,55 +87,90 @@ for (const sc of partners) {
   const html = `<!DOCTYPE html><html lang="ar" dir="rtl"><head><meta charset="UTF-8"><title>تقرير ورشة العمل - ${esc(sc.name)}</title>
 <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500&display=swap" rel="stylesheet">
 <style>
-@page{size:A4;margin:14mm 13mm}
-:root{--sc:${sc.color};--ink:#15445a;--muted:#5B7380;--line:#DDE7E8}
-*{box-sizing:border-box}
-body{font-family:Tajawal,'Segoe UI',Tahoma,sans-serif;color:var(--ink);margin:0;line-height:1.75;font-size:12.5pt}
-header{display:flex;align-items:center;justify-content:space-between;border-bottom:3px solid var(--sc);padding-bottom:10px}
-header img{height:52px}
-h1{font-weight:500;font-size:20pt;margin:16px 0 2px;line-height:1.4}
-.school{font-size:16pt;color:var(--sc);font-weight:500;margin:0}
-h2{font-weight:500;font-size:14pt;border-bottom:2px solid var(--sc);padding-bottom:3px;margin:22px 0 10px;break-after:avoid}
+@page{size:A4;margin:12mm 12mm 14mm}
+/* ألوان هوية وزارة التعليم الأساسية */
+:root{--navy:#15445a;--green:#07a869;--teal:#0da9a6;--blue:#3d7eb9;--sand:#c1b489;--grey:#c2c1c1;--muted:#5B7380;--line:#DDE7E8;--soft:#F3F7F8}
+*{box-sizing:border-box;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+body{font-family:Tajawal,'Segoe UI',Tahoma,sans-serif;color:var(--navy);margin:0;line-height:1.75;font-size:12pt}
+.logos{display:flex;align-items:center;justify-content:space-between}
+.logos img{height:50px}
+.rule{height:5px;border-radius:3px;margin:10px 0 14px;background:linear-gradient(90deg,var(--blue),var(--teal),var(--green))}
+.eyebrow{display:inline-block;font-size:10.5pt;color:var(--green);font-weight:500;letter-spacing:.02em}
+h1{font-weight:500;font-size:21pt;margin:0 0 12px;line-height:1.35}
+/* بطاقة البيانات: المدرسة والمديرة ومقدّم ورشة العمل والتاريخ */
+.meta{display:grid;grid-template-columns:1fr 1fr;background:var(--navy);color:#fff;border-radius:16px;overflow:hidden}
+.meta div{padding:10px 16px;border-top:1px solid rgba(255,255,255,.14)}
+.meta div:nth-child(-n+2){border-top:0}
+.meta div:nth-child(even){border-inline-start:1px solid rgba(255,255,255,.14)}
+.meta small{display:block;font-size:9.5pt;color:#9fd8d4;line-height:1.5}
+.meta b{font-weight:500;font-size:13pt;line-height:1.5}
+.meta span{display:block;font-size:10pt;color:#d5e4e8}
+h2{display:flex;align-items:center;gap:8px;font-weight:500;font-size:14pt;margin:22px 0 10px;padding-bottom:4px;border-bottom:1px solid var(--line);break-after:avoid}
+h2::before{content:"";width:10px;height:10px;border-radius:3px;background:var(--green);flex:none}
 .muted{color:var(--muted)}
-.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
-.box{border:1px solid var(--line);border-top:3px solid var(--sc);border-radius:12px;padding:10px 12px}
-.box b{font-size:20pt;font-weight:500;display:block;line-height:1.3;font-variant-numeric:tabular-nums}
-table{width:100%;border-collapse:collapse}
-td,th{border-bottom:1px solid var(--line);padding:5px 8px;text-align:right;font-weight:400;vertical-align:top}
-th{color:var(--muted);font-size:10.5pt}
+/* بطاقات الملخص: لون من الهوية لكل بطاقة */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.stat{border-radius:14px;padding:12px 14px 10px;color:#fff;min-height:96px}
+.stat b{display:block;font-size:24pt;font-weight:500;line-height:1.2;font-variant-numeric:tabular-nums}
+.stat span{display:block;font-size:10.5pt;line-height:1.5;opacity:.95}
+.s1{background:var(--navy)}.s2{background:var(--green)}.s3{background:var(--teal)}.s4{background:var(--blue)}
+/* الاستطلاعان */
+.poll{break-inside:avoid;border:1px solid var(--line);border-radius:14px;padding:10px 14px;margin-bottom:10px}
+.poll .q{font-weight:500;margin:0 0 4px}
+.poll .q small{font-weight:400;color:var(--muted)}
+.opt{display:grid;grid-template-columns:44% 1fr 40px;align-items:center;gap:10px;padding:3px 0}
+.track{height:10px;border-radius:6px;background:var(--soft);overflow:hidden}
+.fill{height:100%;border-radius:6px;background:linear-gradient(90deg,var(--teal),var(--green))}
+.opt .c{text-align:center;font-variant-numeric:tabular-nums;font-weight:500}
+/* جدول المتدربات */
+table{width:100%;border-collapse:separate;border-spacing:0;border:1px solid var(--line);border-radius:14px;overflow:hidden}
+th{background:var(--navy);color:#fff;font-weight:500;font-size:10.5pt;padding:7px 10px;text-align:right}
+td{padding:6px 10px;border-top:1px solid var(--line);text-align:right;font-weight:400}
+tr:nth-child(odd) td{background:var(--soft)}
 tr{break-inside:avoid}
-.num{width:40px;color:var(--muted)}.n{width:90px;text-align:center;font-variant-numeric:tabular-nums}
-.bar{height:9px;border-radius:5px;background:var(--sc)}
-.poll{break-inside:avoid;margin-bottom:12px}
-.post{border:1px solid var(--line);border-inline-start:4px solid var(--sc);border-radius:12px;padding:10px 14px;margin-bottom:10px;break-inside:avoid}
+.num{width:44px;color:var(--muted);text-align:center}
+.n{width:110px;text-align:center}
+.pill{display:inline-block;min-width:34px;padding:0 10px;border-radius:999px;background:#e3f5ee;color:#067a4d;font-weight:500;font-variant-numeric:tabular-nums}
+.pill.zero{background:#eef1f2;color:var(--muted)}
+/* إبداعات المتدربات */
+.post{border:1px solid var(--line);border-radius:14px;overflow:hidden;margin-bottom:12px;break-inside:avoid}
+.post .head{display:flex;align-items:center;justify-content:space-between;gap:10px;background:var(--soft);border-bottom:1px solid var(--line);padding:7px 14px}
+.post .head b{font-weight:500}
+.tag{font-size:9.5pt;padding:1px 10px;border-radius:999px;background:var(--sand);color:#fff}
+.post .body{padding:10px 14px}
 .post p{white-space:pre-wrap;margin:0;word-break:break-word}
-.post img{max-width:100%;max-height:300px;border-radius:8px;display:block;margin-bottom:8px}
-.who{font-weight:500}.tag{font-size:9.5pt;padding:1px 8px;border-radius:999px;background:#f3efe2;color:#7b6c3a}
-footer{margin-top:24px;font-size:9.5pt;color:var(--muted);border-top:1px solid var(--line);padding-top:6px}
+.post img{max-width:100%;max-height:300px;border-radius:8px;display:block;margin:0 auto 8px}
+footer{margin-top:22px;font-size:9.5pt;color:var(--muted);border-top:1px solid var(--line);padding-top:6px}
 </style></head><body>
-<header><img src="images/moe-logo.png" alt="وزارة التعليم"><img src="images/yafea-logo.png" alt="يافع المستقبل"></header>
-<h1>تقرير ورشة عمل "الذكاء الاصطناعي في خدمة المعلم والمعلمة"</h1>
-<p class="school">${esc(sc.name)}</p>
-<p class="muted">${esc(date)}م · ${esc(hijri)} · مديرة المدرسة: ${esc(sc.principal)} · مقدّم ورشة العمل: ${esc(settings.presenter_name)}</p>
+<div class="logos"><img src="images/moe-logo.png" alt="وزارة التعليم"><img src="images/yafea-logo.png" alt="يافع المستقبل"></div>
+<div class="rule"></div>
+<span class="eyebrow">تقرير ورشة العمل</span>
+<h1>الذكاء الاصطناعي في خدمة المعلم والمعلمة</h1>
+<section class="meta">
+  <div><small>المدرسة</small><b>${esc(sc.name)}</b></div>
+  <div><small>مديرة المدرسة</small><b>${esc(sc.principal)}</b></div>
+  <div><small>مقدّم ورشة العمل</small><b>${esc(settings.presenter_name)}</b></div>
+  <div><small>التاريخ</small><b>${esc(date)}م</b><span>${esc(hijri)}</span></div>
+</section>
 
 <h2>ملخص</h2>
-<div class="grid">
-<div class="box"><b>${roster.length}</b>${unit(roster.length, 'متدربة', 'متدربتان', 'متدربات')} ${unit(roster.length, 'مسجلة', 'مسجلتان', 'مسجلات')}</div>
-<div class="box"><b>${active}</b>${unit(active, 'متدربة', 'متدربتان', 'متدربات')} ${unit(active, 'شاركت', 'شاركتا', 'شاركن')}</div>
-<div class="box"><b>${total}</b>${unit(total, 'مشاركة', 'مشاركتان', 'مشاركات')} (تصويت، كلمات، أعمال)</div>
-<div class="box"><b>${works.length}</b>${unit(works.length, 'عمل', 'عملان', 'أعمال')} على جدار الإبداعات${images ? ` (${images} ${unit(images, 'صورة', 'صورتان', 'صور')})` : ''}</div>
+<div class="stats">
+<div class="stat s1"><b>${roster.length}</b><span>${unit(roster.length, 'متدربة', 'متدربتان', 'متدربات')} ${unit(roster.length, 'مسجلة', 'مسجلتان', 'مسجلات')}</span></div>
+<div class="stat s2"><b>${active}</b><span>${unit(active, 'متدربة', 'متدربتان', 'متدربات')} ${unit(active, 'شاركت', 'شاركتا', 'شاركن')}</span></div>
+<div class="stat s3"><b>${total}</b><span>${unit(total, 'مشاركة', 'مشاركتان', 'مشاركات')} (تصويت، كلمات، أعمال)</span></div>
+<div class="stat s4"><b>${works.length}</b><span>${unit(works.length, 'عمل', 'عملان', 'أعمال')} على جدار الإبداعات${images ? ` (${images} ${unit(images, 'صورة', 'صورتان', 'صور')})` : ''}</span></div>
 </div>
 
 <h2>نتائج الاستطلاعين</h2>
-${polls.map(p => `<div class="poll"><p><b>${esc(p.question)}</b> <span class="muted">(${p.total} ${unit(p.total, 'صوت', 'صوتان', 'أصوات')})</span></p><table>${p.options.map((o, i) => `<tr><td style="width:46%">${esc(o)}</td><td style="width:44%"><div class="bar" style="width:${p.total ? p.counts[i] / p.total * 100 : 0}%"></div></td><td class="n">${p.counts[i]}</td></tr>`).join('')}</table></div>`).join('')}
+${polls.map(p => `<div class="poll"><p class="q">${esc(p.question)} <small>(${p.total} ${unit(p.total, 'صوت', 'صوتان', 'أصوات')})</small></p>${p.options.map((o, i) => `<div class="opt"><span>${esc(o)}</span><div class="track"><div class="fill" style="width:${p.total ? p.counts[i] / p.total * 100 : 0}%"></div></div><span class="c">${p.counts[i]}</span></div>`).join('')}</div>`).join('')}
 
 <h2>المتدربات</h2>
 <table><tr><th class="num">#</th><th>الاسم</th><th class="n">المشاركات</th></tr>
-${roster.map((r, i) => `<tr><td class="num">${i + 1}</td><td>${esc(r.name)}</td><td class="n">${r.n}</td></tr>`).join('')}
+${roster.map((r, i) => `<tr><td class="num">${i + 1}</td><td>${esc(r.name)}</td><td class="n"><span class="pill${r.n ? '' : ' zero'}">${r.n}</span></td></tr>`).join('')}
 </table>
 
 <h2>إبداعات المتدربات</h2>
-${works.map(p => `<div class="post">${p.local_image ? `<img src="${esc(p.local_image)}" alt="">` : ''}<p class="who">${esc(personOf.get(p.device).name)} ${p.topic === 'create' ? '<span class="tag">تحدّي الإبداع</span>' : ''}</p>${p.body ? `<p>${linkify(p.body)}</p>` : ''}</div>`).join('') || '<p class="muted">لا أعمال</p>'}
+${works.map(p => `<div class="post"><div class="head"><b>${esc(personOf.get(p.device).name)}</b>${p.topic === 'create' ? '<span class="tag">تحدّي الإبداع</span>' : ''}</div><div class="body">${p.local_image ? `<img src="${esc(p.local_image)}" alt="">` : ''}${p.body ? `<p>${linkify(p.body)}</p>` : ''}</div></div>`).join('') || '<p class="muted">لا أعمال</p>'}
 
 <footer>يقتصر التقرير على منسوبات ${esc(sc.name)} المسجلات في بوابة الحضور. الأسماء المكررة دُمجت، وكل متدربة يُحتسب لها صوت واحد في كل استطلاع.</footer>
 </body></html>`;
@@ -144,8 +179,16 @@ ${works.map(p => `<div class="post">${p.local_image ? `<img src="${esc(p.local_i
   fs.writeFileSync(htmlFile, html);
   if (browser) {
     const pdf = path.join(dir, `تقرير ورشة العمل - ${sc.name}.pdf`);
+    const t0 = Date.now();
     execFileSync(browser, ['--headless=new', '--disable-gpu', '--no-pdf-header-footer', '--virtual-time-budget=15000',
       `--print-to-pdf=${pdf}`, pathToFileURL(htmlFile).href], { stdio: 'ignore' });
+    // Edge قد يعود قبل أن يكمل كتابة الملف: ننتظر حتى يُكتب ويثبت حجمه
+    const sleep = ms => Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, ms);
+    for (let i = 0, last = -1; i < 80; i++) {
+      const st = fs.existsSync(pdf) && fs.statSync(pdf);
+      if (st && st.mtimeMs >= t0 - 1000 && st.size > 0 && st.size === last) break;
+      last = st ? st.size : -1; sleep(250);
+    }
     console.log('✓', path.relative(root, pdf));
   }
 }
