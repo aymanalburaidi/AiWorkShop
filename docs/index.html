@@ -420,12 +420,38 @@ body:not(.presenter) .post .hide{display:none}
 .modal-body .who .av{width:38px;height:38px;border-radius:50%;display:grid;place-items:center;background:var(--grad);color:#fff;font-weight:500}
 
 /* سحابة الكلمات */
-.cloud{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:10px 22px;min-height:340px;padding:30px;background:rgba(255,255,255,.7);border:1px solid var(--line);border-radius:24px}
-.cloud .word{display:inline-block;line-height:1.3;font-weight:500;transition:font-size .6s var(--ease-out-quart);animation:wordIn .7s var(--ease-out-expo) both}
-.cloud .word.pop{animation:wordPop .6s var(--ease-out-quart)}
-@keyframes wordIn{from{opacity:0;transform:scale(.4)}}
-@keyframes wordPop{40%{transform:scale(1.18)}}
-.cloud-empty{color:var(--muted)}
+.cloud{position:relative;overflow:hidden;height:clamp(300px,46vh,540px);background:radial-gradient(120% 90% at 50% 55%,#fff 0%,rgba(255,255,255,.75) 60%,rgba(240,247,247,.7) 100%);border:1px solid var(--line);border-radius:24px}
+.cloud::before{content:"";position:absolute;left:50%;top:52%;width:70%;aspect-ratio:1;transform:translate(-50%,-50%);border-radius:50%;background:radial-gradient(closest-side,rgba(13,169,166,.12),rgba(61,126,185,.06) 55%,transparent 72%);animation:breathe 7s ease-in-out infinite alternate;pointer-events:none}
+@keyframes breathe{to{transform:translate(-50%,-50%) scale(1.12);opacity:.7}}
+.cloud .w{position:absolute;left:0;top:0;transition:transform .9s var(--ease-out-expo)}
+.cloud .w .in{display:inline-flex;align-items:flex-start;gap:.12em;color:var(--c);font-weight:500;line-height:1.35;white-space:nowrap;transition:font-size .7s var(--ease-out-quart);animation:wordFloat var(--fd,5s) ease-in-out infinite alternate}
+.cloud .w .tx{display:inline-block}
+.cloud .w sup{direction:ltr;unicode-bidi:isolate;font-size:.34em;line-height:1.5;color:#fff;background:var(--c);border-radius:999px;padding:0 .55em;margin-top:.25em;font-variant-numeric:tabular-nums}
+.cloud .w sup:empty{display:none}
+.cloud .w.top .tx{background:linear-gradient(115deg,#07a869,#0da9a6 45%,#3d7eb9 90%);background-size:200% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:shimmerText 6s linear infinite;filter:drop-shadow(0 8px 22px rgba(13,169,166,.28))}
+@keyframes shimmerText{to{background-position:-200% 0}}
+@keyframes wordFloat{from{transform:translateY(calc(var(--fy,4px) * -1)) rotate(-.5deg)}to{transform:translateY(var(--fy,4px)) rotate(.5deg)}}
+/* كلمة جديدة: تطير من الأسفل ضبابية ثم تستقر */
+.cloud .w.new .in{animation:wordFly 1.15s var(--ease-out-expo) both,wordFloat var(--fd,5s) ease-in-out 1.15s infinite alternate}
+@keyframes wordFly{0%{opacity:0;transform:translateY(160px) scale(.35);filter:blur(10px)}55%{opacity:1;transform:translateY(-10px) scale(1.14);filter:blur(0)}100%{transform:none}}
+/* كلمة مكررة: تنبض */
+.cloud .w.pop .tx{animation:wordPop .75s var(--ease-out-quart)}
+@keyframes wordPop{35%{transform:scale(1.28)}70%{transform:scale(.96)}}
+/* عند دخول الشريحة: تظهر الكلمات تباعًا */
+.cloud .w.intro .in{animation:wordIntro .8s var(--ease-out-expo) both,wordFloat var(--fd,5s) ease-in-out .8s infinite alternate;animation-delay:calc(var(--i,0) * 70ms),calc(var(--i,0) * 70ms + .8s)}
+@keyframes wordIntro{from{opacity:0;transform:scale(.6);filter:blur(6px)}}
+.burst{position:absolute;width:0;height:0;pointer-events:none;z-index:2}
+.burst::before{content:"";position:absolute;left:-70px;top:-70px;width:140px;height:140px;border-radius:50%;border:2px solid var(--c);animation:burstRing 1.1s var(--ease-out-quart) forwards}
+.burst i{position:absolute;left:-4px;top:-4px;width:8px;height:8px;border-radius:50%;background:var(--c);transform:rotate(var(--a)) translateX(10px);animation:burstSpark 1s var(--ease-out-quart) forwards}
+@keyframes burstRing{from{transform:scale(.15);opacity:.9}to{transform:scale(1.7);opacity:0}}
+@keyframes burstSpark{to{transform:rotate(var(--a)) translateX(110px) scale(.4);opacity:0}}
+.wtag{position:absolute;z-index:3;transform:translateX(-50%);font-size:.9rem;font-weight:500;color:#fff;background:var(--c);padding:2px 12px;border-radius:999px;white-space:nowrap;pointer-events:none;box-shadow:0 8px 20px -8px rgba(21,68,90,.4);animation:tagLife 2.8s ease forwards}
+@keyframes tagLife{0%{opacity:0;transform:translate(-50%,8px)}12%{opacity:1;transform:translate(-50%,0)}80%{opacity:1}100%{opacity:0;transform:translate(-50%,-4px)}}
+.cloud-empty{position:absolute;inset:0;display:grid;place-content:center;justify-items:center;gap:12px;color:var(--muted);font-size:1.1rem}
+.cloud-empty .dots{display:flex;gap:8px}
+.cloud-empty .dots i{width:10px;height:10px;border-radius:50%;background:var(--teal);animation:emptyDot 1.4s ease-in-out infinite}
+.cloud-empty .dots i:nth-child(2){animation-delay:.2s}.cloud-empty .dots i:nth-child(3){animation-delay:.4s}
+@keyframes emptyDot{0%,100%{opacity:.25;transform:translateY(0)}50%{opacity:1;transform:translateY(-6px)}}
 
 /* تحدّي الإبداع */
 .challenge-head{display:flex;justify-content:space-between;align-items:center;gap:28px;margin-bottom:18px}
@@ -1515,26 +1541,106 @@ const Live = (() => {
     .replace(/[^\p{L}\p{N}\s]/gu, '').trim().replace(/\s+/g, ' ').toLowerCase();
   const hash = s => [...s].reduce((h, c) => (h * 31 + c.charCodeAt(0)) >>> 0, 7);
   const WCOL = ['#15445a', '#07a869', '#0da9a6', '#3d7eb9', '#7258a4', '#a39463', '#218caa'];
-  const wordEls = new Map();
-  function addWord(body, fresh){
+  /* --- سحابة الكلمات: تخطيط حلزوني من المركز، الأكثر تكرارًا في الوسط وأكبر حجمًا.
+     الكلمة الجديدة تطير من الأسفل وتستقر مع وميض واسم صاحبتها، والمكررة تكبر وتنبض، وكل الكلمات تطفو بهدوء --- */
+  const wordEls = new Map(), placedAt = new Map();
+  const mctx = document.createElement('canvas').getContext('2d');
+  let cloudRO = null, layoutT = null;
+  function addWord(body, fresh, author, color){
     const k = norm(body || ''); if (!k) return;
-    const e = words.get(k) || { text: body.trim().slice(0, 40), n: 0 }; e.n++; words.set(k, e);
-    renderCloud(fresh ? k : null);
+    const e = words.get(k) || { text: body.trim().slice(0, 40), n: 0, t: words.size }; e.n++; words.set(k, e);
+    renderCloud(fresh ? k : null, fresh ? { author, color } : null);
   }
-  function renderCloud(bumpKey){
+  function renderCloud(bumpKey, who){
     const cloud = $('#cloud');
     animateNum($('#wordCount'), [...words.values()].reduce((a, b) => a + b.n, 0));
-    if (!words.size) { cloud.innerHTML = `<span class="cloud-empty">${escHtml(D.t.wordEmpty)}</span>`; return; }
+    if (!words.size) {
+      wordEls.clear(); placedAt.clear();
+      cloud.innerHTML = `<div class="cloud-empty"><span class="dots"><i></i><i></i><i></i></span>${escHtml(D.t.wordEmpty)}</div>`;
+      return;
+    }
     cloud.querySelector('.cloud-empty')?.remove();
-    const max = Math.max(...[...words.values()].map(w => w.n));
-    [...words.entries()].sort((a, b) => hash(a[0]) - hash(b[0])).forEach(([k, w]) => {
-      let el = wordEls.get(k);
-      if (!el) { el = document.createElement('span'); el.className = 'word'; el.textContent = w.text; el.style.color = WCOL[hash(k) % WCOL.length]; wordEls.set(k, el); }
-      el.style.fontSize = (1.05 + 2.8 * Math.sqrt(w.n / max)) + 'rem';
-      el.title = w.n;
-      cloud.append(el);
-      if (k === bumpKey && w.n > 1) { el.classList.remove('pop'); void el.offsetWidth; el.classList.add('pop'); }
+    if (!cloudRO && window.ResizeObserver) {
+      cloudRO = new ResizeObserver(() => { clearTimeout(layoutT); layoutT = setTimeout(layoutCloud, 120); });
+      cloudRO.observe(cloud);
+      document.fonts?.ready.then(() => words.size && layoutCloud());
+    }
+    for (const [k, w] of words) if (!wordEls.has(k)) {
+      const el = document.createElement('div');
+      el.className = 'w' + (k === bumpKey ? ' new' : '');
+      el.innerHTML = '<span class="in"><span class="tx"></span><sup></sup></span>';
+      el.querySelector('.tx').textContent = w.text;
+      el.style.setProperty('--c', WCOL[hash(k) % WCOL.length]);
+      el.style.setProperty('--fd', (4 + hash(k) % 4) + 's');
+      el.style.setProperty('--fy', (3 + hash(k) % 4) + 'px');
+      cloud.append(el); wordEls.set(k, el);
+    }
+    layoutCloud();
+    if (bumpKey) celebrate(bumpKey, who);
+  }
+  // حلزون يبدأ من المركز ويتمدد أفقيًا بنسبة الصندوق، وأول موضع لا يتقاطع مع ما سبقه
+  function spiral(w, h, placed, W, H){
+    const stretch = Math.min(W / H, 2.6);
+    for (let i = 0; i < 1400; i++) {
+      const a = i * .3, r = 2.6 * a;
+      const x = W / 2 + r * Math.cos(a) * stretch - w / 2, y = H / 2 + r * Math.sin(a) - h / 2;
+      if (x < 10 || y < 8 || x + w > W - 10 || y + h > H - 8) { if (r > W) break; continue; }
+      if (placed.every(p => x + w <= p.x || p.x + p.w <= x || y + h <= p.y || p.y + p.h <= y)) return { x, y };
+    }
+    return null;
+  }
+  function layoutCloud(){
+    const cloud = $('#cloud'), W = cloud.clientWidth, H = cloud.clientHeight;
+    if (!W || !H || !words.size) return;
+    const list = [...words.entries()].sort((a, b) => b[1].n - a[1].n || a[1].t - b[1].t);
+    const shown = list.slice(0, 60), max = shown[0][1].n;
+    let scale = 1, placed = null;
+    for (let tries = 0; tries < 8 && !placed; tries++, scale *= .86) {
+      const maxPx = Math.min(H * .3, W * .11) * scale, minPx = Math.max(16, maxPx * .3), out = [];
+      for (const [k, w] of shown) {
+        const px = Math.round(minPx + (maxPx - minPx) * Math.sqrt(w.n / max));
+        mctx.font = `500 ${px}px Tajawal, system-ui, sans-serif`;
+        const bw = mctx.measureText(w.text).width + (w.n > 1 ? px * .62 : 0) + 20, bh = px * 1.4 + 6;
+        const pos = spiral(bw, bh, out, W, H);
+        if (!pos) { out.length = 0; break; }
+        out.push({ k, px, n: w.n, w: bw, h: bh, ...pos });
+      }
+      if (out.length === shown.length) placed = out;
+    }
+    if (!placed) return;
+    const keep = new Set(placed.map(p => p.k));
+    wordEls.forEach((el, k) => { el.hidden = !keep.has(k); });
+    placed.forEach((p, i) => {
+      const el = wordEls.get(p.k);
+      if (!el.dataset.placed) { el.style.transition = 'none'; el.style.transform = `translate(${p.x}px,${p.y}px)`; void el.offsetWidth; el.style.transition = ''; el.dataset.placed = 1; }
+      else el.style.transform = `translate(${p.x}px,${p.y}px)`;
+      el.querySelector('.in').style.fontSize = p.px + 'px';
+      el.querySelector('sup').textContent = p.n > 1 ? '×' + p.n : '';
+      el.classList.toggle('top', i === 0 && (p.n > 1 || placed.length === 1));
+      placedAt.set(p.k, p);
     });
+  }
+  function celebrate(k, who){
+    const p = placedAt.get(k), el = wordEls.get(k); if (!p || !el || reduced) return;
+    const cloud = $('#cloud'), c = el.style.getPropertyValue('--c'), cx = p.x + p.w / 2, cy = p.y + p.h / 2;
+    if (!el.classList.contains('new')) { el.classList.remove('pop'); void el.offsetWidth; el.classList.add('pop'); }
+    const b = document.createElement('div'); b.className = 'burst';
+    b.style.cssText = `left:${cx}px;top:${cy}px;--c:${c}`;
+    b.innerHTML = Array.from({ length: 10 }, (_, i) => `<i style="--a:${i * 36 + (hash(k) % 30)}deg"></i>`).join('');
+    cloud.append(b); setTimeout(() => b.remove(), 1300);
+    if (who?.author) {
+      const t = document.createElement('div'); t.className = 'wtag';
+      t.textContent = who.author.trim().split(/\s+/).slice(0, 2).join(' ');
+      t.style.cssText = `left:${cx}px;top:${Math.min(p.y + p.h, cloud.clientHeight - 30)}px;--c:${who.color || 'var(--teal)'}`;
+      cloud.append(t); setTimeout(() => t.remove(), 2800);
+    }
+    setTimeout(() => el.classList.remove('new'), 1300);
+  }
+  // عند دخول الشريحة: الكلمات الموجودة تظهر تباعًا من الأكبر إلى الأصغر
+  function cloudIntro(){
+    if (reduced) return;
+    [...wordEls.values()].filter(el => !el.hidden).sort((a, b) => parseFloat(b.querySelector('.in').style.fontSize) - parseFloat(a.querySelector('.in').style.fontSize))
+      .forEach((el, i) => { el.classList.remove('intro'); el.style.setProperty('--i', i); void el.offsetWidth; el.classList.add('intro'); });
   }
 
   /* --- جدار الإبداعات --- */
@@ -1599,7 +1705,7 @@ const Live = (() => {
     posts.set(p.id, p);
     if (p.author && !people.has(p.device)) setPerson(p.device, p.author);
     bump(p.device, 1); scheduleRoster(fresh ? p.device : null);
-    if (p.topic === 'word') addWord(p.body, fresh); else addWallPost(p, fresh);
+    if (p.topic === 'word') addWord(p.body, fresh && ready, p.author, colorOf(p.device)); else addWallPost(p, fresh);
     if (fresh && ready) Motion.notify(p.author || 'متدربة', p.topic === 'word' ? '"' + (p.body || '').slice(0, 30) + '"' : (p.image_path ? 'رفعت صورة' : p.topic === 'create' ? 'شاركت إبداعًا' : 'أرسلت مشاركة'), p.topic === 'word' ? 'i-cloud' : p.image_path ? 'i-image' : 'i-msg', colorOf(p.device));
   }
 
@@ -1748,7 +1854,7 @@ const Live = (() => {
     toast('صُفّرت الغرفة');
     setTimeout(() => location.reload(), 900);
   }
-  return { connect, slideChanged, askKey, resetAll, lowerHands, viewExtras, handsList, ctlSync: sendSlide,
+  return { connect, slideChanged, askKey, resetAll, lowerHands, viewExtras, handsList, ctlSync: sendSlide, cloudIntro,
     isPresenter: () => !!key && !VIEW, send: sendLive, onlineCount: () => online.size,
     openPost: id => { const p = posts.get(id); if (p) openModal(p); } };
 })();
@@ -1893,6 +1999,7 @@ const hooks = {
   's-plan': () => setTimeout(runPlan, 500),
   's-quiz': renderQuiz,
   's-close': () => setTimeout(() => confetti(), 800),
+  's-word': () => setTimeout(() => Live.cloudIntro(), 350),
 };
 
 /* ========== التشغيل ========== */

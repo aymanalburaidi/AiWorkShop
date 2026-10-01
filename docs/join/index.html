@@ -498,6 +498,7 @@ function renderState(){
   $('#shareTitle').textContent = create ? D.t.create_title : D.t.share_title;
   $('#shareHint').textContent = create ? D.t.create_hint : D.t.share_hint;
   $('#shareCard').classList.toggle('live-card', create || state.mode === 'share');
+  $('#shareCard').hidden = !(create || state.mode === 'share');   // لا تظهر إلا وقت النشاط، حتى لا يسبق الإرسالُ الفهمَ
   if (slot.dataset.sig === sig) return;
   slot.dataset.sig = sig;
   slot.innerHTML = '';
