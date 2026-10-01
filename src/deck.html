@@ -1736,7 +1736,7 @@ const Live = (() => {
     lastState = sig;
     // الطلب لا يُرسل إلا عند انتظار نتيجته
     sb.rpc('aiws_set_state', { p_room: D.room, p_secret: key, p_mode: mode, p_poll: poll || null })
-      .then(({ error }) => { if (error) { lastState = ''; toast('تعذّر تحديث الجوالات'); } });
+      .then(({ error }) => { if (error) { lastState = ''; toast('تعذّر تحديث بوابة الحضور'); } });
   }
   // تصفير الغرفة (Shift+R): يمسح الأصوات والمشاركات والأسماء، ويبلغ الجوالات
   async function resetAll(){
