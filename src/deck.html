@@ -474,7 +474,11 @@ body:not(.presenter) .post .hide{display:none}
 .rs span{font-size:.88rem;color:var(--sc);font-weight:500}
 .rs b{font-size:1.1rem;color:var(--sc);font-variant-numeric:tabular-nums}
 .rs small{grid-column:2/4;color:var(--muted);font-size:.78rem;margin-top:-4px}
-.roster-list li{border-inline-start:3px solid var(--sc,transparent)}
+/* كل متدربات المدرسة بلون واحد: الإطار والاسم والترتيب */
+.roster-list li{--c:var(--sc,var(--navy));border:1px solid color-mix(in srgb,var(--c) 35%,transparent);border-inline-start:4px solid var(--c);background:color-mix(in srgb,var(--c) 6%,#fff)}
+.roster-list li .nm span{color:var(--c);font-weight:500}
+.roster-list li .rk,.roster-list li:nth-child(n) .rk{background:color-mix(in srgb,var(--c) 14%,#fff);color:var(--c)}
+.roster-list li .bar{background:linear-gradient(90deg,transparent,color-mix(in srgb,var(--c) 14%,transparent))}
 .post.has-school{border-top:3px solid var(--sc)}
 
 /* ========== الخاتمة ========== */
@@ -1380,8 +1384,7 @@ const Live = (() => {
       if (!li) { li = document.createElement('li'); li.dataset.d = r.d; li.innerHTML = '<span class="bar"></span><span class="rk"></span><span class="nm"><i></i><span></span></span><span class="ct"></span>'; }
       li.querySelector('.rk').textContent = i + 1;
       li.querySelector('.nm span').textContent = r.name;
-      li.querySelector('.nm span').style.color = SCHOOLS[r.sc]?.color || '';
-      li.style.setProperty('--sc', SCHOOLS[r.sc]?.color || 'transparent');
+      if (SCHOOLS[r.sc]) li.style.setProperty('--sc', SCHOOLS[r.sc].color); else li.style.removeProperty('--sc');
       li.querySelector('.nm i').classList.toggle('on', online.has(r.d));
       li.querySelector('.bar').style.transform = `scaleX(${r.n / max})`;
       const ct = li.querySelector('.ct'); ct.textContent = r.n;
