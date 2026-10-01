@@ -187,7 +187,7 @@ textarea:focus{border-color:var(--teal)}
 <div class="app" id="app" hidden>
   <div>
     <div class="top">
-      <div class="pos"><b id="pos">1</b><span id="total"></span><div class="link" id="link"><span class="dot"></span><span id="linkTxt"></span></div></div>
+      <div class="pos"><span>{{presenter-page.slide_word}}</span><b id="pos">1</b><span id="total"></span><div class="link" id="link"><span class="dot"></span><span id="linkTxt"></span></div></div>
       <div class="clock">
         <div class="chip" id="plannedChip"><small>{{presenter-page.planned}}</small><b id="planned">0:00</b></div>
         <div class="chip" id="leftChip"><small id="leftLbl">{{presenter-page.slide_left}}</small><b id="left">0:00</b></div>
@@ -291,7 +291,7 @@ $('#lockForm').onsubmit = e => { e.preventDefault(); $('#err').hidden = true; co
 })();
 
 /* ---------- الشريحة: تتبع العرض تلقائيًا ---------- */
-$('#total').textContent = '/ ' + D.slides.length;
+$('#total').textContent = D.t.slide_of + ' ' + D.slides.length;   // الشريحة 6 من 21
 function render(animate){
   const s = D.slides[cur], n = D.slides[cur + 1];
   if (pos[cur] === undefined) pos[cur] = 0;
