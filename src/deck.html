@@ -689,7 +689,7 @@ body.viewer .toast,body.viewer .roster-tab{display:none}   /* زر لوحة ال
         <h2 class="split">{{join.title}}</h2>
         <p class="lead reveal">{{join.lead}}</p>
         <ol class="join-steps">{{@steps join.steps}}</ol>
-        <div class="online reveal"><span class="dot"></span><b class="js-online" data-unit="online">0</b> <span>{{@unit online}}</span></div>
+        <div class="online reveal"><span class="dot"></span><b class="js-joined" data-unit="joined">0</b> <span>{{@unit joined}}</span></div>
       </div>
       <div>
         <div class="qr-big"><img src="assets/join-qr.svg" alt="رمز الانضمام"></div>
@@ -1390,12 +1390,20 @@ const Live = (() => {
   /* --- لوحة المتدربات --- */
   function bump(device, n){ contrib.set(device, Math.max(0, (contrib.get(device) || 0) + n)); }
   let rosterT = null, rosterBump = null;
-  function scheduleRoster(dev){ if (dev) rosterBump = dev; clearTimeout(rosterT); rosterT = setTimeout(renderRoster, ready ? 60 : 0); }
+  function scheduleRoster(dev){ if (dev) rosterBump = personKey(dev); clearTimeout(rosterT); rosterT = setTimeout(renderRoster, ready ? 60 : 0); }
+  // من دخلت باسمها نفسه من جهاز أو متصفح آخر تُحسب مرة واحدة، وتُجمع مشاركاتها
+  const nameKey = p => (p.school || '') + '|' + String(p.name || '').replace(/[ً-ْـ]/g, '').replace(/[إأآ]/g, 'ا').replace(/ى/g, 'ي').replace(/ة/g, 'ه').replace(/\s+/g, ' ').trim();
+  const personKey = device => people.has(device) ? nameKey(people.get(device)) : device;
   function renderRoster(){
-    const list = $('#rosterList');
-    const rows = [...people.values()].map(p => ({ d: p.device, name: p.name, sc: p.school, n: contrib.get(p.device) || 0 }))
-      .sort((a, b) => b.n - a.n || a.name.localeCompare(b.name, 'ar'));
+    const list = $('#rosterList'), byKey = new Map();
+    people.forEach(p => {
+      const k = nameKey(p), r = byKey.get(k);
+      if (r) { r.n += contrib.get(p.device) || 0; r.on = r.on || online.has(p.device); }
+      else byKey.set(k, { d: k, name: p.name, sc: p.school, n: contrib.get(p.device) || 0, on: online.has(p.device) });
+    });
+    const rows = [...byKey.values()].sort((a, b) => b.n - a.n || a.name.localeCompare(b.name, 'ar'));
     animateNum($('#rosterCount'), rows.length);
+    $$('.js-joined').forEach(el => animateNum(el, rows.length));
     animateNum($('#rosterSum'), [...contrib.values()].reduce((a, b) => a + b, 0));
     $('#rosterSchools').innerHTML = (D.schools || []).map(sc => {
       const mine = rows.filter(r => r.sc === sc.key);
@@ -1412,7 +1420,7 @@ const Live = (() => {
       li.querySelector('.rk').textContent = i + 1;
       li.querySelector('.nm span').textContent = r.name;
       if (SCHOOLS[r.sc]) li.style.setProperty('--sc', SCHOOLS[r.sc].color); else li.style.removeProperty('--sc');
-      li.querySelector('.nm i').classList.toggle('on', online.has(r.d));
+      li.querySelector('.nm i').classList.toggle('on', r.on);
       li.querySelector('.bar').style.transform = `scaleX(${r.n / max})`;
       const ct = li.querySelector('.ct'); ct.textContent = r.n;
       if (r.d === rosterBump) { ct.classList.remove('pop'); void ct.offsetWidth; ct.classList.add('pop'); }
@@ -1648,7 +1656,7 @@ const Live = (() => {
       .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'aiws_posts', filter: 'room=eq.' + D.room }, ({ new: p }) => addPost(p, true))
       .on('postgres_changes', { event: '*', schema: 'public', table: 'aiws_people', filter: 'room=eq.' + D.room }, ({ eventType, new: p }) => {
         if (!p || !p.device) return;
-        const isNew = !people.has(p.device);
+        const k = nameKey(p), isNew = ![...people.values()].some(x => nameKey(x) === k);
         setPerson(p.device, p.name, p.school); scheduleRoster(); recolor(p.device);
         if (isNew && eventType === 'INSERT' && ready) Motion.notify(p.name, 'انضمت إلى ورشة العمل' + (SCHOOLS[p.school] ? ' · ' + SCHOOLS[p.school].name : ''), 'i-user', colorOf(p.device));
       })
@@ -1659,7 +1667,6 @@ const Live = (() => {
       const st = presence.presenceState();
       online.clear();
       Object.entries(st).forEach(([k, metas]) => { if (metas[0]?.role === 'phone') online.add(k); });
-      $$('.js-online').forEach(el => animateNum(el, online.size));
       scheduleRoster(); syncHands(st); Sync.push();
     }).subscribe();
     room = presence;
@@ -1720,8 +1727,7 @@ const Live = (() => {
     live.subscribe(st => { if (st !== 'SUBSCRIBED') return; if (VIEW) live.send({ type: 'broadcast', event: 'hello', payload: {} }); else Sync.push(true); });
     if (!VIEW) setInterval(() => Sync.push(true), 5000);
   }
-  function viewExtras(o, h){
-    if (typeof o === 'number') $$('.js-online').forEach(el => animateNum(el, o));
+  function viewExtras(h){
     viewHands(h);
   }
   let lastState = '';
@@ -1748,7 +1754,7 @@ const Live = (() => {
     setTimeout(() => location.reload(), 900);
   }
   return { connect, slideChanged, askKey, resetAll, lowerHands, viewExtras, handsList, ctlSync: sendSlide, cloudIntro,
-    isPresenter: () => !!key && !VIEW, send: sendLive, onlineCount: () => online.size,
+    isPresenter: () => !!key && !VIEW, send: sendLive,
     openPost: id => { const p = posts.get(id); if (p) openModal(p); } };
 })();
 
@@ -1852,7 +1858,7 @@ const Sync = (() => {
     i: cur, chip: $('.fchip.on')?.dataset.k || '', plan: planSub + ':' + planRuns, quiz: quizSub,
     ans: $$('#quizGrid .qcard').flatMap((c, i) => c.classList.contains('shown') ? [i] : []),
     flip: $('#flip').classList.contains('on') ? 1 : 0, roster: $('#roster').classList.contains('open') ? 1 : 0,
-    modal: modalId, tm: timers.map(x => x.state()), o: Live.onlineCount(), h: Live.handsList(), qs: spot,
+    modal: modalId, tm: timers.map(x => x.state()), h: Live.handsList(), qs: spot,
   });
   // عند المقدّم: الحالة كاملة بعد كل تغيير، وكل 5 ثوانٍ لمن انضم متأخرًا
   function push(now){
@@ -1874,7 +1880,7 @@ const Sync = (() => {
     if (s.modal !== last.modal) { if (s.modal != null) Live.openPost(s.modal); else if ($('#modal').classList.contains('on')) closeModal(); }
     (Array.isArray(s.tm) ? s.tm : []).forEach((x, k) => timers[k]?.apply(x));
     if (JSON.stringify(s.qs || null) !== JSON.stringify(last.qs || null)) setSpot(s.qs);
-    Live.viewExtras(s.o, s.h);
+    Live.viewExtras(s.h);
     last = s;
   }
   return { push, apply };

@@ -67,7 +67,11 @@ const schoolOf = d => schools.find(s => s.key === personOf.get(d)?.school);
 const count = new Map();
 [...posts.map(p => p.device), ...votes.map(v => v.device)].forEach(d => count.set(d, (count.get(d) || 0) + 1));
 const devices = [...new Set([...people.map(p => p.device), ...count.keys()])];
-const roster = devices.map(d => ({ name: nameOf(d), school: schoolOf(d), n: count.get(d) || 0 }))
+// الاسم نفسه في المدرسة نفسها من جهاز آخر: شخص واحد تُجمع مشاركاته
+const nameKey = d => (personOf.get(d)?.school || '') + '|' + nameOf(d).replace(/[ً-ْـ]/g, '').replace(/[إأآ]/g, 'ا').replace(/ى/g, 'ي').replace(/ة/g, 'ه').replace(/\s+/g, ' ').trim();
+const byKey = new Map();
+devices.forEach(d => { const k = nameKey(d), r = byKey.get(k); if (r) r.n += count.get(d) || 0; else byKey.set(k, { name: nameOf(d), school: schoolOf(d), n: count.get(d) || 0 }); });
+const roster = [...byKey.values()]
   .sort((a, b) => b.n - a.n || a.name.localeCompare(b.name, 'ar'));
 const pollResults = Object.entries(polls).map(([k, p]) => {
   const c = p.options.map((_, i) => votes.filter(v => v.poll_key === k && v.choice === i).length);
