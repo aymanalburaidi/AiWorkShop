@@ -78,7 +78,7 @@ AIWS_ROOM=hs7-ai-test AIWS_OUT=.test-build node scripts/build.mjs
 pnpm run export
 ```
 
-تقرير PDF مستقل لكل مدرسة شريكة (بلا مدرسة المتطوعات، مع دمج الأسماء المكررة):
+تقرير PDF مستقل لكل مدرسة شريكة (بلا مدرسة المتطوعات، مع دمج الأسماء المكررة، وبلا سحابة الكلمات):
 
 ```bash
 node scripts/school-reports.mjs --exclude="نورة القحطاني"

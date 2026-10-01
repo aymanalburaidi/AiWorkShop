@@ -2,6 +2,7 @@
 // الاستخدام: node scripts/school-reports.mjs [مجلد التصدير] [--exclude=اسم،اسم]
 // - مدارس الشراكة فقط (content/02-partners.md)، لا المدارس الإضافية مثل مدرسة المتطوعات
 // - الأسماء المكررة في المدرسة نفسها تُدمج (اختلاف الهمزة والتاء المربوطة والألف المقصورة والمسافات)
+// - لا سحابة كلمات في التقرير (الكلمات تُحتسب ضمن مشاركات كل متدربة فقط)
 // - --exclude يستبعد أشخاصًا وكل مشاركاتهم؛ يكفي جزء من الاسم مثل "نورة القحطاني"
 import fs from 'node:fs';
 import path from 'node:path';
@@ -75,17 +76,6 @@ for (const sc of partners) {
     const counts = p.options.map((_, i) => vlist.filter(v => v.poll_key === k && v.choice === i).length);
     return { ...p, counts, total: counts.reduce((a, b) => a + b, 0) };
   });
-
-  // الكلمات: تُدمج "تطوير" و"التطوير"، ويُستبعد ما كُتب فيه اسم شخص بدل كلمة
-  const allNames = [...persons.values()].map(r => new Set(tokens(r.name)));
-  const looksLikeName = w => { const t = tokens(w); return t.length >= 3 && allNames.some(n => t.filter(x => n.has(x)).length >= 2); };
-  const words = new Map();
-  data.posts.filter(p => mine(p) && p.topic === 'word' && !looksLikeName(p.body)).forEach(p => {
-    const k = norm(p.body).replace(/^ال(?=\S{3,})/, '');
-    const e = words.get(k) || { text: p.body.trim(), n: 0 }; e.n++;
-    if (p.body.trim().length < e.text.length) e.text = p.body.trim();
-    words.set(k, e);
-  });
   const works = data.posts.filter(p => mine(p) && p.topic !== 'word');
 
   const count = r => data.posts.filter(p => r.devices.has(p.device)).length + vlist.filter(v => r.devices.has(v.device)).length;
@@ -117,7 +107,6 @@ tr{break-inside:avoid}
 .num{width:40px;color:var(--muted)}.n{width:90px;text-align:center;font-variant-numeric:tabular-nums}
 .bar{height:9px;border-radius:5px;background:var(--sc)}
 .poll{break-inside:avoid;margin-bottom:12px}
-.words{line-height:2.2}.words span{display:inline-block;margin:0 9px;color:var(--sc)}
 .post{border:1px solid var(--line);border-inline-start:4px solid var(--sc);border-radius:12px;padding:10px 14px;margin-bottom:10px;break-inside:avoid}
 .post p{white-space:pre-wrap;margin:0;word-break:break-word}
 .post img{max-width:100%;max-height:300px;border-radius:8px;display:block;margin-bottom:8px}
@@ -139,9 +128,6 @@ footer{margin-top:24px;font-size:9.5pt;color:var(--muted);border-top:1px solid v
 
 <h2>نتائج الاستطلاعين</h2>
 ${polls.map(p => `<div class="poll"><p><b>${esc(p.question)}</b> <span class="muted">(${p.total} ${unit(p.total, 'صوت', 'صوتان', 'أصوات')})</span></p><table>${p.options.map((o, i) => `<tr><td style="width:46%">${esc(o)}</td><td style="width:44%"><div class="bar" style="width:${p.total ? p.counts[i] / p.total * 100 : 0}%"></div></td><td class="n">${p.counts[i]}</td></tr>`).join('')}</table></div>`).join('')}
-
-<h2>سحابة الكلمات</h2>
-<p class="words">${[...words.values()].sort((a, b) => b.n - a.n).map(w => `<span style="font-size:${12 + Math.min(w.n, 5) * 3}pt">${esc(w.text)}${w.n > 1 ? ` <small class="muted">(${w.n})</small>` : ''}</span>`).join('') || '<span class="muted">لا كلمات</span>'}</p>
 
 <h2>المتدربات</h2>
 <table><tr><th class="num">#</th><th>الاسم</th><th class="n">المشاركات</th></tr>
